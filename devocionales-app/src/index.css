@@ -1,0 +1,403 @@
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  max-width: 1600px; /* Establece el ancho máximo */
+  margin: 0 auto; /* Centra el contenido horizontalmente */
+}
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover {
+  border-color: #646cff;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgb(253, 202, 60);
+  height: 80px;
+  width: 1600px;
+}
+
+.icon {
+  width: 70px;
+  height: 70px;
+  display: inline-flex;
+}
+
+.footer {
+  border-top: 1px solid rgb(253, 202, 60);
+  height: 50px;
+  text-align: center;
+}
+
+.detalle {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.detalle img {
+  margin-top: 30px;
+  width: 300px;
+  height: 300px;
+}
+
+.tabla {
+  width: 1000px;
+}
+
+.links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 30px;
+}
+
+/* Estilos personalizados para centrar los encabezados en react-quill */
+.ql-editor h1,
+.ql-editor h2,
+.ql-editor h3,
+.ql-editor h4,
+.ql-editor h5,
+.ql-editor h6 {
+  text-align: center;
+}
+
+/* Establece el tamaño de la altura del editor de react-quill */
+.ql-editor {
+  width: 600px;
+  min-height: fit-content; /* Ajusta el tamaño del ancho según sea necesario */
+  overflow-x: auto;
+}
+
+.titulo {
+  border-radius: 5px;
+  border: 3px solid rgb(227, 225, 225);
+
+}
+
+.titulo:hover {
+  background-color: #565656;
+  
+}
+
+.titulo:active {
+  background-color: rgb(46, 46, 46);
+  box-shadow: 0 5px #310038;
+  transform: translateY(3px);
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover {
+  border-color: #646cff;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+.icon {
+  width: 70px;
+  height: 70px;
+  display: inline-flex;
+}
+
+.footer {
+  border-top: 1px solid rgb(253, 202, 60);
+  height: 50px;
+  text-align: center;
+}
+
+.links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 30px;
+}
+.devocionales-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.devocionales {
+  width: calc(50% - 20px); /* Ancho ajustado para los devocionales */
+  margin-right: 20px; /* Espacio entre los contenedores */
+}
+
+.versiculos-container {
+  width: calc(40%); /* Ancho ajustado para los versículos */
+}
+ 
+.book-selector {
+  position: relative;
+}
+
+.book-selector input[type="text"] {
+  width: 100%;
+  padding: 8px 30px 8px 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.book-selector select {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 30%;
+  border: none;
+  background-color: transparent;
+  color: #333;
+  font-size: 16px;
+  padding: 8px;
+  appearance: none;
+}
+  
+
+
+/* Estilos personalizados para centrar los encabezados en react-quill */
+.ql-editor h1,
+.ql-editor h2,
+.ql-editor h3,
+.ql-editor h4,
+.ql-editor h5,
+.ql-editor h6 {
+  text-align: center;
+}
+
+/* Establece el tamaño de la altura del editor de react-quill */
+.ql-editor {
+  width: 600px;
+  min-height: fit-content; /* Ajusta el tamaño del ancho según sea necesario */
+  overflow-x: auto;
+}
+
+.titulo {
+  border-radius: 5px;
+  border: 3px solid rgb(227, 225, 225);
+
+}
+
+.titulo:hover {
+  background-color: #565656;
+  
+}
+
+.titulo:active {
+  background-color: rgb(46, 46, 46);
+  box-shadow: 0 5px #310038;
+  transform: translateY(3px);
+}
+
+
+
+/* Estilos responsivos */
+@media (max-width: 767px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+    width: 100%;
+    padding: 10px;
+  }
+
+  .icon {
+    width: 40px;
+    height: 90px;
+    display: inline-flex;
+  }
+
+  .links {
+    grid-template-columns: 1fr;
+    grid-gap: 10px;
+    margin-top: 10px;
+  }
+
+  .ql-editor {
+    width: 25em;
+    overflow-x: auto;
+    height: auto;
+  }
+
+  .tabla {
+    width: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  .verse-search-container {
+    width: 100%; /* En dispositivos pequeños, ocupa todo el ancho */
+    margin-left: 0; /* Anula el margen izquierdo */
+  }
+}
+
+/* Estilos responsivos */
+@media (max-width: 767px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+    width: 100%;
+    padding: 10px;
+  }
+
+  .icon {
+    width: 40px;
+    height: 90px;
+    display: inline-flex;
+  }
+
+  .links {
+    grid-template-columns: 1fr;
+    grid-gap: 10px;
+    margin-top: 10px;
+  }
+
+  .ql-editor {
+    width: 25em;
+    overflow-x: auto;
+    height: auto;
+  }
+
+  .tabla {
+    width: 100%;
+  }
+  
+}
