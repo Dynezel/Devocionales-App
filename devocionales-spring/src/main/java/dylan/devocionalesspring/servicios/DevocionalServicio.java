@@ -1,12 +1,14 @@
 package dylan.devocionalesspring.servicios;
 
 import dylan.devocionalesspring.entidades.Devocional;
+import dylan.devocionalesspring.entidades.Usuario;
 import dylan.devocionalesspring.repositorios.DevocionalRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,13 +19,16 @@ public class DevocionalServicio {
     private DevocionalRepositorio devocionalRepositorio;
 
     @Transactional
-    public Devocional crearDevocional(String nombre, String descripcion, LocalDate fechaCreacion) {
+    public Devocional crearDevocional(String nombre, String descripcion, LocalDate fechaCreacion, Usuario usuario) {
         Devocional devocional = new Devocional();
         devocional.setNombre(nombre);
         devocional.setDescripcion(descripcion);
         devocional.setFechaCreacion(fechaCreacion);
+        devocional.setAutor(usuario);
 
         devocional = devocionalRepositorio.save(devocional);
+
+        usuario.setDevocionales(Collections.singletonList(devocional));
 
         return devocional;
     }

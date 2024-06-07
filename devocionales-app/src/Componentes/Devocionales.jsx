@@ -4,6 +4,7 @@ import { conseguirDatosBiblia } from "../Servicios/bibliaServicio";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // Importa los estilos de ReactQuill
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function Devocionales() {
   const [devocionales, setDevocionales] = useState([]);
@@ -122,8 +123,11 @@ export default function Devocionales() {
                   value={devocional.descripcion}
                   readOnly={true}
                   modules={modules}
-                />
+                />  
                 <p>Fecha de Creación: {devocional.fechaCreacion}</p>
+                <p> Autor:
+                <Link to = {`/usuario/perfil/${devocional.autor.idUsuario}`}> {devocional.autor.nombre} </Link>
+                </p>
               </div>
             )}
           </div>

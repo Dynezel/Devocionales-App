@@ -46,7 +46,11 @@ export default function RegistrarUsuario() {
           },
         }
       );
-      console.log("Respuesta del servidor: POR FAVOR", response.data);
+      console.log("Se ha registrado con exito al usuario", response.data);
+      if (response.status === 200) {
+        // Redirigir a la página principal
+        window.location.href = '/login';
+      }
     }
      catch (error) {
       console.error("Error al registrar usuario:", error);

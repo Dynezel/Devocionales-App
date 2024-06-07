@@ -1,6 +1,7 @@
 package dylan.devocionalesspring.entidades;
 
-
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dylan.devocionalesspring.enumeraciones.Rol;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -12,6 +13,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idUsuario")
 public class Usuario implements Serializable {
 
     @Id
@@ -32,8 +34,11 @@ public class Usuario implements Serializable {
     @Enumerated
     private Rol rol;
 
-    @OneToMany
+    @OneToMany(mappedBy = "autor")
     private List<Devocional> devocionales;
+
+    @OneToMany(mappedBy = "autor")
+    private List<Comentario> comentarios;
 
 }
 // private String resetPwToken;

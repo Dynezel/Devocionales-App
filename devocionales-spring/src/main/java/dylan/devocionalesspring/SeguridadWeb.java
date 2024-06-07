@@ -1,5 +1,6 @@
 package dylan.devocionalesspring;
 
+import dylan.devocionalesspring.servicios.DevocionalServicio;
 import dylan.devocionalesspring.servicios.UsuarioServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,13 +22,8 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SeguridadWeb {
 
-    final
+    @Autowired
     UsuarioServicio usuarioServicio;
-
-    public SeguridadWeb(UsuarioServicio usuarioServicio) {
-        this.usuarioServicio = usuarioServicio;
-    }
-
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -43,10 +39,10 @@ public class SeguridadWeb {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        // Permitir peticiones desde el origen específico de tu aplicación React
-        config.addAllowedOrigin("http://localhost:5173"); // Reemplaza esto con la URL de tu frontend React
+        config.addAllowedOrigin("http://localhost:5173"); // La URL de tu frontend React
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
+        config.setAllowCredentials(true); // Permitir cookies de sesión
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }

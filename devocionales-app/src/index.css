@@ -65,6 +65,8 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -87,10 +89,75 @@ button:focus-visible {
   width: 1600px;
 }
 
+.nav-container {
+  display: flex;
+  justify-content: space-between; /* Mueve todos los elementos al lado derecho */
+  align-items: center;
+  width: 100%; /* Asegura que el contenedor ocupe todo el ancho de la pantalla */
+  margin-left: 20px; /* Mueve los elementos más hacia la derecha */
+  padding-right: 20px; /* Añade un poco de espacio entre los elementos y el borde derecho */
+}
+
+.links {
+  margin-left: 1000px;
+  display: flex;
+  align-items: center;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  margin-left: 20px; /* Ajusta el margen entre los enlaces y el perfil de usuario */
+}
+
+.user-profile div {
+  margin-right: 10px;
+}
+
+.user-profile img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%; /* Añade un borde redondeado a la imagen de perfil */
+}
+
+.user-profile .dropdown-menu {
+  position: absolute;
+  top: 100%; /* Coloca el menú debajo del nombre de usuario */
+  right: 0; /* Coloca el menú a la derecha del nombre de usuario */
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 8px 0;
+  list-style: none;
+  display: none; /* Inicialmente oculta el menú */
+}
+
+.user-profile:hover .dropdown-menu {
+  display: block; /* Muestra el menú cuando se pasa el ratón sobre el nombre de usuario */
+}
+
+.dropdown-menu li {
+  padding: 8px 16px;
+}
+
+.dropdown-menu li:hover {
+  background-color: #e9e9e9;
+}
+
+.nav-items {
+  display: flex;
+  align-items: center;
+}
+
+.nav-items > * {
+  margin-right: 40px; /* Ajusta el margen entre los elementos de navegación */
+}
+
 .icon {
   width: 70px;
   height: 70px;
-  display: inline-flex;
+  justify-content: baseline;
+  margin-right: 70px;
 }
 
 .footer {

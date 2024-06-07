@@ -8,6 +8,8 @@ import java.util.Map;
 import dylan.devocionalesspring.entidades.Usuario;
 import dylan.devocionalesspring.enumeraciones.Rol;
 import dylan.devocionalesspring.excepciones.MiExcepcion;
+import dylan.devocionalesspring.excepciones.UsuarioNoEncontradoExcepcion;
+import dylan.devocionalesspring.servicios.UsuarioDetalles;
 import dylan.devocionalesspring.servicios.UsuarioServicio;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +18,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.core.Authentication;
 
 @RestController
 @CrossOrigin("http://localhost:5173")
@@ -49,15 +53,10 @@ public class UsuarioControlador {
     }
 
     // Endpoint para obtener el perfil del usuario
-    @PreAuthorize("hasAnyRole('ROLE_USUARIO','ROLE_ADMIN')")
     @GetMapping("/perfil")
-    public ResponseEntity<Usuario> obtenerPerfil(HttpSession session) {
-        Usuario usuario = (Usuario) session.getAttribute("usuariosession");
-        if (usuario != null) {
-            return ResponseEntity.ok(usuario);
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+    public Usuario obtenerPerfilUsuario(Authentication authentication) throws UsuarioNoEncontradoExcepcion {
+        String email = authentication.getName();
+        return usuarioServicio.obtenerPerfilUsuario(email);
     }
 
     // Endpoint para subir la foto de perfil
@@ -77,6 +76,11 @@ public class UsuarioControlador {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+    }
+
+    @GetMapping("/perfil/{idUsuario}")
+    public Usuario obtenerCualquierPerfilUsuario(@PathVariable Long idUsuario) throws UsuarioNoEncontradoExcepcion {
+        return usuarioServicio.obtenerUsuarioPorId(idUsuario);
     }
 
     // Endpoint para modificar los datos del usuario

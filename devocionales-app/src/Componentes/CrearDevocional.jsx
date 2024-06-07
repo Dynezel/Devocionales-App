@@ -22,6 +22,8 @@ export default function CrearDevocional() {
         nombre,
         descripcion,
         fechaCreacion: fechaActual
+      }, {
+        withCredentials: true
       });
       console.log("Respuesta del servidor: ", response.data);
       navigate("/")

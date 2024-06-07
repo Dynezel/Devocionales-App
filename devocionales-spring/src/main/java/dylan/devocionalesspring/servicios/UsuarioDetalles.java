@@ -1,25 +1,24 @@
 package dylan.devocionalesspring.servicios;
 
+import dylan.devocionalesspring.entidades.Usuario;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
 
-public class UsuarioDetalles extends User {
+@Getter
+public class UsuarioDetalles extends User{
 
-    private Long idCodigoTributario;
+    // Getters y setters adicionales
+    private Long idUsuario;
 
-    public UsuarioDetalles(String username, String password, Collection<? extends GrantedAuthority> authorities, Long idCodigoTributario) {
-        super(username, password, authorities);
-        this.idCodigoTributario = idCodigoTributario;
+    public UsuarioDetalles(String nombre, String contrasenia, Collection<? extends GrantedAuthority> authorities, Long idUsuario) {
+        super(nombre, contrasenia, authorities);
+        this.idUsuario = idUsuario;
     }
 
-    // Métodos adicionales, como getters y setters
-    public Long getIdCodigoTributario() {
-        return idCodigoTributario;
-    }
-
-    public void setIdCodigoTributario(Long idCodigoTributario) {
-        this.idCodigoTributario = idCodigoTributario;
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
     }
 }

@@ -102,9 +102,7 @@ public class UsuarioServicio implements UserDetailsService {
     }
 
     @Override
-
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-
         Usuario usuario = usuarioRepositorio.buscarPorEmail(email);
 
         if (usuario == null) {
@@ -115,8 +113,9 @@ public class UsuarioServicio implements UserDetailsService {
         GrantedAuthority p = new SimpleGrantedAuthority("ROLE_" + usuario.getRol().toString());
         permisos.add(p);
 
+        // Obtener la sesión y agregar el usuario a la sesión
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        HttpSession session = request.getSession(true);
+        HttpSession session = attr.getRequest().getSession(true);
         session.setAttribute("usuariosession", usuario);
 
         return new UsuarioDetalles(
@@ -127,9 +126,28 @@ public class UsuarioServicio implements UserDetailsService {
         );
     }
 
+    // Nuevo método para obtener el perfil completo del usuario
+    public Usuario obtenerPerfilUsuario(String email) throws UsuarioNoEncontradoExcepcion {
+        Usuario usuario = usuarioRepositorio.buscarPorEmail(email);
+        if (usuario == null) {
+            throw new UsuarioNoEncontradoExcepcion("No se encontró un usuario con el email: " + email);
+        }
+        usuario.setFotoPerfil(usuario.getFotoPerfil());
+        return usuario;
+    }
+
+    public Usuario obtenerUsuarioPorId(Long idUsuario) throws UsuarioNoEncontradoExcepcion {
+        Usuario usuario = usuarioRepositorio.buscarPorIdUsuario(idUsuario);
+        if (usuario == null) {
+            throw new UsuarioNoEncontradoExcepcion("No se encontró un usuario con el id: " + idUsuario);
+        }
+        usuario.setFotoPerfil(usuario.getFotoPerfil());
+        return usuario;
+    }
+
     @Transactional(readOnly = true)
-    public Usuario getOne(Long idCodigoTributario) {
-        return usuarioRepositorio.getOne(idCodigoTributario);
+    public Usuario getOne(Long idUsuario) {
+        return usuarioRepositorio.getOne(idUsuario);
     }
 
     @Transactional(readOnly = true)
