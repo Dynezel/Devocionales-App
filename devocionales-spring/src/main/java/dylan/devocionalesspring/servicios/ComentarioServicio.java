@@ -1,6 +1,7 @@
 package dylan.devocionalesspring.servicios;
 
 import dylan.devocionalesspring.entidades.Comentario;
+import dylan.devocionalesspring.entidades.Usuario;
 import dylan.devocionalesspring.repositorios.ComentarioRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,8 @@ public class ComentarioServicio {
     @Autowired
     private ComentarioRepositorio comentarioRepositorio;
 
-    public Comentario guardarComentario(Comentario comentario) {
+    public Comentario guardarComentario(Comentario comentario, Usuario usuario) {
+        comentario.setAutor(usuario);
         return comentarioRepositorio.save(comentario);
     }
 

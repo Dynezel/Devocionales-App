@@ -5,8 +5,9 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // Importa los estilos de ReactQuill
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Comentarios from "./Comentarios";
 
-export default function Devocionales() {
+export default function Devocional() {
   const [devocionales, setDevocionales] = useState([]);
   const [devocionalExpandido, setDevocionalExpandido] = useState(null);
   const [bookAbbr, setBookAbbr] = useState("");
@@ -128,6 +129,8 @@ export default function Devocionales() {
                 <p> Autor:
                 <Link to = {`/usuario/perfil/${devocional.autor.idUsuario}`}> {devocional.autor.nombre} </Link>
                 </p>
+                
+                <Comentarios devocionalId={devocional.id} />
               </div>
             )}
           </div>
@@ -174,40 +177,40 @@ export default function Devocionales() {
         </form>
         {verseData ? (
   <div>
-    {verse ? (
-      <div>
-        <h3> Capitulo {chapter} Versículo {verse}</h3>{" "}
-        {/* Muestra el número del versículo seleccionado */}
-        {verseData.vers && verseData.vers[verse - 1] && (
-          <div>
-            <p>
-              <strong>{verse}</strong>. {verseData.vers[verse - 1].verse}
-            </p>{" "}
-            {/* Muestra el versículo seleccionado */}
-            {verseData.vers[verse - 1].study && (
-              <p>Estudio: {verseData.vers[verse - 1].study}</p>
-            )}{" "}
-            {/* Muestra el estudio si existe */}
-          </div>
-        )}
-      </div>
-    ) : (
-      <div>
-        <h3>Capítulo {chapter}</h3>
-        {verseData.vers && // Agregar esta verificación para evitar errores
-          verseData.vers.map((verseItem, index) => (
-            <div key={index}>
-              <p>
-                <strong>{index + 1}</strong>. {verseItem.verse}
-              </p>
-              {verseItem.study && <p>Estudio: {verseItem.study}</p>}
-            </div>
-          ))}
-      </div>
-    )}
-  </div>
-) : null}
-      </div>
+  {verse ? (
+    <div>
+      <h3> Capitulo {chapter} Versículo {verse}</h3>{" "}
+      {/* Muestra el número del versículo seleccionado */}
+      {verseData.vers && verseData.vers[verse - 1] && (
+        <div>
+          <p>
+            <strong>{verse}</strong>. {verseData.vers[verse - 1].verse}
+          </p>{" "}
+          {/* Muestra el versículo seleccionado */}
+          {verseData.vers[verse - 1].study && (
+            <p>Estudio: {verseData.vers[verse - 1].study}</p>
+          )}{" "}
+          {/* Muestra el estudio si existe */}
+        </div>
+      )}
     </div>
-  );
+  ) : (
+    <div>
+      <h3>Capítulo {chapter}</h3>
+      {verseData.vers && // Agregar esta verificación para evitar errores
+        verseData.vers.map((verseItem, index) => (
+          <div key={index}>
+            <p>
+              <strong>{index + 1}</strong>. {verseItem.verse}
+            </p>
+            {verseItem.study && <p>Estudio: {verseItem.study}</p>}
+          </div>
+        ))}
+    </div>
+  )}
+</div>
+) : null}
+    </div>
+  </div>
+);
 }
