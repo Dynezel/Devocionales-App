@@ -12,6 +12,7 @@ import Login from './Componentes/Login'
 import Welcome from './Componentes/Welcome'
 import Perfil from './Componentes/Perfil'
 import PerfilUsuario from './Componentes/PerfilUsuario'
+import Prueba from './Componentes/Prueba'
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
       <NavBar/>
       <Routes>
       <Route path="/" element={<Devocionales />} />
+      <Route path="/prueba" element={<Prueba />} />
       <Route path="/devocionales/crear" element={<CrearDevocional />} />
       <Route path="/devocionales/modificar/:id" element= { <ModificarDevocional/> } />
       <Route path="/devocionales/eliminar/:id" element= { <EliminarDevocional/> } />

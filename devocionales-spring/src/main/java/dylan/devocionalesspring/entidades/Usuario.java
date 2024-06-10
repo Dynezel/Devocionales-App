@@ -37,7 +37,7 @@ public class Usuario implements Serializable {
     @OneToMany(mappedBy = "autor")
     private List<Devocional> devocionales;
 
-    @OneToMany(mappedBy = "autor")
+    @OneToMany(mappedBy = "usuario")
     private List<Comentario> comentarios;
 
 }

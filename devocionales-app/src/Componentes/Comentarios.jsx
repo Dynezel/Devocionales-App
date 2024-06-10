@@ -11,42 +11,40 @@ export default function Comentarios({ devocionalId }) {
       try {
         const response = await axios.get('http://localhost:8080/usuario/perfil', { withCredentials: true });
         setUser(response.data);
-        console.log("HASF")
       } catch (error) {
-  
         console.error('Error fetching user', error);
       }
     };
-  
+
     fetchUser();
   }, []);
 
   useEffect(() => {
     const fetchComentarios = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/comentarios/devocional/${devocionalId}`);
+        const response = await axios.get(`http://localhost:8080/devocionales/${devocionalId}/comentarios`);
+        console.log(response.data); // Inspecciona la respuesta de la API
         setComentarios(response.data);
       } catch (error) {
         console.error('Error al cargar comentarios', error);
       }
     };
-
+  
     fetchComentarios();
   }, [devocionalId]);
 
   const handleAgregarComentario = async () => {
     try {
-      const response = await axios.post('http://localhost:8080/comentarios/agregar', {
+      const response = await axios.post('http://localhost:8080/comentarios', {
         texto: nuevoComentario,
-        fechaCreacion: new Date(),
-        devocional: { id: devocionalId }
+        devocional: { id: devocionalId },
       }, {
         withCredentials: true
       });
       setComentarios([...comentarios, response.data]);
-      setNuevoComentario("");
+      setNuevoComentario('');
     } catch (error) {
-      console.error("Error al agregar comentario", error);
+      console.error('Error al agregar comentario', error);
     }
   };
 
@@ -57,7 +55,7 @@ export default function Comentarios({ devocionalId }) {
         <ul>
           {comentarios.map((comentario) => (
             <li key={comentario.id}>
-              <strong>{comentario.autor.nombre}:</strong> {comentario.texto}
+              <strong>{comentario.usuario.nombre}:</strong> {comentario.texto}
             </li>
           ))}
         </ul>

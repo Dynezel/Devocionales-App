@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { conseguirDatos } from "../Servicios/devocionalServicio";
 import { conseguirDatosBiblia } from "../Servicios/bibliaServicio";
 import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css"; // Importa los estilos de ReactQuill
+import "react-quill/dist/quill.snow.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import Comentarios from "./Comentarios";
@@ -12,13 +12,12 @@ export default function Devocional() {
   const [devocionalExpandido, setDevocionalExpandido] = useState(null);
   const [bookAbbr, setBookAbbr] = useState("");
   const [bookName, setBookName] = useState("");
-  const [book, setBook] = useState("");
   const [chapter, setChapter] = useState("");
   const [verse, setVerse] = useState("");
   const [verseData, setVerseData] = useState(null);
   const [libros, setLibros] = useState([]);
   const [capitulos, setCapitulos] = useState([]);
-  const [versiculos, setVersiculos] = useState([])
+  const [versiculos, setVersiculos] = useState([]);
 
   const modules = {
     toolbar: false,
@@ -31,6 +30,7 @@ export default function Devocional() {
     const traerDatos = async () => {
       try {
         const datos = await conseguirDatos();
+        console.log("Datos recibidos:", datos);
         setDevocionales(datos);
       } catch (error) {
         console.error("Error al traer los datos: ", error);
@@ -104,37 +104,61 @@ export default function Devocional() {
     setVerse(selectedVerse);
   };
 
+  const renderDevocionalContent = (devocional) => {
+    if (!devocional || !devocional.autor) {
+      return <p>Información del devocional no disponible.</p>;
+    }
+
+    const { descripcion, fechaCreacion, autor } = devocional;
+
+    return (
+      <div>
+        <ReactQuill
+          theme="snow"
+          value={descripcion || "Descripción no disponible"}
+          readOnly={true}
+          modules={modules}
+        />
+        <p>Fecha de Creación: {fechaCreacion || "Fecha no disponible"}</p>
+        <p>
+          Autor:
+          {autor.idUsuario ? (
+            <Link to={`/usuario/perfil/${autor.idUsuario}`}>
+              {autor.nombre || "Nombre no disponible"}
+            </Link>
+          ) : (
+            "Información del autor no disponible"
+          )}
+        </p>
+        <Comentarios devocionalId={devocional.id} />
+      </div>
+    );
+  };
+
   return (
     <div className="devocionales-container">
-      <div className="devocionales">
-        {/* Renderiza tus devocionales aquí */}
-        {devocionales.map((devocional) => (
-          <div key={devocional.id} className="devocional">
-            <h3
-              className="titulo"
-              onClick={() => toggleExpandido(devocional.id)}
-              style={{ cursor: "pointer" }}
-            >
-              {devocional.nombre}
-            </h3>
-            {devocionalExpandido === devocional.id && (
-              <div>
-                <ReactQuill
-                  theme="snow"
-                  value={devocional.descripcion}
-                  readOnly={true}
-                  modules={modules}
-                />  
-                <p>Fecha de Creación: {devocional.fechaCreacion}</p>
-                <p> Autor:
-                <Link to = {`/usuario/perfil/${devocional.autor.idUsuario}`}> {devocional.autor.nombre} </Link>
-                </p>
-                
-                <Comentarios devocionalId={devocional.id} />
-              </div>
-            )}
-          </div>
-        ))}
+      <div className="devocacionales">
+        {devocionales.map((devocional) => {
+          if (!devocional || typeof devocional !== "object" || !devocional.id) {
+            return (
+              <p key={Math.random()}>Datos del devocional no disponibles.</p>
+            );
+          }
+
+          return (
+            <div key={devocional.id} className="devocional">
+              <h3
+                className="titulo"
+                onClick={() => toggleExpandido(devocional.id)}
+                style={{ cursor: "pointer" }}
+              >
+                {devocional.nombre || "Nombre no disponible"}
+              </h3>
+              {devocionalExpandido === devocional.id &&
+                renderDevocionalContent(devocional)}
+            </div>
+          );
+        })}
       </div>
       <div className="versiculos-container">
         <h2>Buscar Capítulo</h2>
@@ -176,41 +200,44 @@ export default function Devocional() {
           )}
         </form>
         {verseData ? (
-  <div>
-  {verse ? (
-    <div>
-      <h3> Capitulo {chapter} Versículo {verse}</h3>{" "}
-      {/* Muestra el número del versículo seleccionado */}
-      {verseData.vers && verseData.vers[verse - 1] && (
-        <div>
-          <p>
-            <strong>{verse}</strong>. {verseData.vers[verse - 1].verse}
-          </p>{" "}
-          {/* Muestra el versículo seleccionado */}
-          {verseData.vers[verse - 1].study && (
-            <p>Estudio: {verseData.vers[verse - 1].study}</p>
-          )}{" "}
-          {/* Muestra el estudio si existe */}
-        </div>
-      )}
-    </div>
-  ) : (
-    <div>
-      <h3>Capítulo {chapter}</h3>
-      {verseData.vers && // Agregar esta verificación para evitar errores
-        verseData.vers.map((verseItem, index) => (
-          <div key={index}>
-            <p>
-              <strong>{index + 1}</strong>. {verseItem.verse}
-            </p>
-            {verseItem.study && <p>Estudio: {verseItem.study}</p>}
+          <div>
+            {verse ? (
+              <div>
+                <h3>
+                  Capítulo {chapter} Versículo {verse}
+                </h3>{" "}
+                {/* Muestra el número del versículo seleccionado */}
+                {verseData.vers && verseData.vers[verse - 1] && (
+                  <div>
+                    <p>
+                      <strong>{verse}</strong>.{" "}
+                      {verseData.vers[verse - 1].verse}
+                    </p>{" "}
+                    {/* Muestra el versículo seleccionado */}
+                    {verseData.vers[verse - 1].study && (
+                      <p>Estudio: {verseData.vers[verse - 1].study}</p>
+                    )}{" "}
+                    {/* Muestra el estudio si existe */}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div>
+                <h3>Capítulo {chapter}</h3>
+                {verseData.vers && // Agregar esta verificación para evitar errores
+                  verseData.vers.map((verseItem, index) => (
+                    <div key={index}>
+                      <p>
+                        <strong>{index + 1}</strong>. {verseItem.verse}
+                      </p>
+                      {verseItem.study && <p>Estudio: {verseItem.study}</p>}
+                    </div>
+                  ))}
+              </div>
+            )}
           </div>
-        ))}
+        ) : null}
+      </div>
     </div>
-  )}
-</div>
-) : null}
-    </div>
-  </div>
-);
+  );
 }

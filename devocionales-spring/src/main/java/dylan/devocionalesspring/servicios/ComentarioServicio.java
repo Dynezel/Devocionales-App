@@ -15,11 +15,11 @@ public class ComentarioServicio {
     private ComentarioRepositorio comentarioRepositorio;
 
     public Comentario guardarComentario(Comentario comentario, Usuario usuario) {
-        comentario.setAutor(usuario);
+        comentario.setUsuario(usuario);
         return comentarioRepositorio.save(comentario);
     }
 
-    public List<Comentario> obtenerComentariosPorDevocional(int devocionalId) {
+    public List<Comentario> obtenerComentariosPorDevocional(Long devocionalId) {
         return comentarioRepositorio.findByDevocionalId(devocionalId);
     }
 }

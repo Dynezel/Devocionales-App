@@ -27,10 +27,6 @@ public class Imagen implements Serializable {
     @Column(name = "contenido", columnDefinition="BLOB")
     private byte[] contenido;
 
-    @ManyToOne // Agrega esta anotación para definir la relación con Devocional
-    @JoinColumn(name = "devocionales_id") // Nombre de la columna en la tabla Devocional
-    private Devocional devocional; // Nombre de la propiedad en Imagen que se refiere a Devocional
-
     @Override
     public int hashCode() {
         final int prime = 31;

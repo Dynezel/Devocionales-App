@@ -145,6 +145,15 @@ public class UsuarioServicio implements UserDetailsService {
         return usuario;
     }
 
+    public Usuario obtenerUsuarioPorNombre(String nombre) throws UsuarioNoEncontradoExcepcion {
+        Usuario usuario = usuarioRepositorio.buscarPorNombre(nombre);
+        if (usuario == null) {
+            throw new UsuarioNoEncontradoExcepcion("No se encontró un usuario con el nombre: " + nombre);
+        }
+        usuario.setFotoPerfil(usuario.getFotoPerfil());
+        return usuario;
+    }
+
     @Transactional(readOnly = true)
     public Usuario getOne(Long idUsuario) {
         return usuarioRepositorio.getOne(idUsuario);
