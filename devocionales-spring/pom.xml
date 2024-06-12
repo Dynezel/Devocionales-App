@@ -69,6 +69,19 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
+			<!-- Dependencia de MapStruct -->
+			<dependency>
+				<groupId>org.mapstruct</groupId>
+				<artifactId>mapstruct</artifactId>
+				<version>1.5.2.Final</version>
+			</dependency>
+			<!-- Procesador de anotaciones para MapStruct -->
+			<dependency>
+				<groupId>org.mapstruct</groupId>
+				<artifactId>mapstruct-processor</artifactId>
+				<version>1.5.2.Final</version>
+				<scope>provided</scope>
+			</dependency>
 
 		<!--JWT Import-->
 		<dependency>

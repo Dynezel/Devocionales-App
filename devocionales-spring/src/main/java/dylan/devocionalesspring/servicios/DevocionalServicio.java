@@ -1,17 +1,20 @@
 package dylan.devocionalesspring.servicios;
 
+import dylan.devocionalesspring.dto.UsuarioDTO;
 import dylan.devocionalesspring.entidades.Devocional;
+import dylan.devocionalesspring.dto.DevocionalDTO;
+import dylan.devocionalesspring.mapper.DevocionalMapper;
 import dylan.devocionalesspring.entidades.Usuario;
+import dylan.devocionalesspring.mapper.UsuarioMapper;
 import dylan.devocionalesspring.repositorios.DevocionalRepositorio;
 import dylan.devocionalesspring.repositorios.UsuarioRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class DevocionalServicio {
@@ -22,27 +25,20 @@ public class DevocionalServicio {
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
 
-    @Transactional
-    public Devocional crearDevocional(String nombre, String descripcion, LocalDate fechaCreacion, Usuario usuario) {
-        Devocional devocional = new Devocional();
-        devocional.setNombre(nombre);
-        devocional.setDescripcion(descripcion);
-        devocional.setFechaCreacion(fechaCreacion);
-        devocional.setAutor(usuario);
+    @Autowired
+    UsuarioMapper usuarioMapper;
 
+    @Autowired
+    DevocionalMapper devocionalMapper;
+
+    public DevocionalDTO crearDevocional(DevocionalDTO devocionalDTO) {
+        Devocional devocional = devocionalMapper.toDevocional(devocionalDTO);
         devocional = devocionalRepositorio.save(devocional);
-
-        // Agregar el nuevo devocional a la lista de devocionales del usuario
-        List<Devocional> devocionalesUsuario = usuario.getDevocionales();
-        devocionalesUsuario.add(devocional);
-        usuario.setDevocionales(devocionalesUsuario);
-
-        return devocional;
+        return devocionalMapper.toDevocionalDTO(devocional);
     }
 
     @Transactional
     public boolean modificarDevocional(int id, String nombre, String descripcion) {
-
         Optional<Devocional> respuesta = devocionalRepositorio.findById(id);
         if (respuesta.isPresent()) {
             Devocional devocional = respuesta.get();
@@ -51,36 +47,27 @@ public class DevocionalServicio {
 
             devocionalRepositorio.save(devocional);
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
-    public List<Devocional> listarDevocionales() {
-        return devocionalRepositorio.findAll();
+    public List<DevocionalDTO> obtenerTodosDevocionales() {
+        return devocionalRepositorio.findAll().stream()
+                .map(devocionalMapper::toDevocionalDTO)
+                .collect(Collectors.toList());
     }
 
-    public Devocional encontrarDevocionalPorId(int id) {
-        Optional<Devocional> devocionalOptional = devocionalRepositorio.findById(id);
-        return devocionalOptional.orElse(null); // Devuelve null si la tarea no se encuentra
+    public Optional<Devocional> obtenerDevocionalPorId(int id) {
+        return devocionalRepositorio.findById(id);
+    }
+
+    public Usuario obtenerUsuarioPorId(Long idUsuario) {
+        return usuarioRepositorio.findById(idUsuario).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
 
     @Transactional
-    public List<Devocional> listarDevocionalesConAutores() {
-        List<Devocional> devocionales = devocionalRepositorio.findAll();
-
-        for (Devocional devocional : devocionales) {
-            Long autorId = devocional.getAutor().getIdUsuario();
-            Usuario autor = usuarioRepositorio.findById(autorId).orElse(null);
-            devocional.setAutor(autor);
-        }
-
-        return devocionales;
-    }
-
     public void eliminarDevocional(int id) {
         devocionalRepositorio.deleteById(id);
     }
-
 }

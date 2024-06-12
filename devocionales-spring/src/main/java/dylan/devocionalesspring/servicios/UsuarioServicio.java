@@ -1,13 +1,14 @@
 package dylan.devocionalesspring.servicios;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import dylan.devocionalesspring.entidades.Imagen;
 import dylan.devocionalesspring.entidades.Usuario;
+import dylan.devocionalesspring.dto.UsuarioDTO;
+import dylan.devocionalesspring.mapper.UsuarioMapper;
 import dylan.devocionalesspring.enumeraciones.Rol;
 import dylan.devocionalesspring.excepciones.MiExcepcion;
 import dylan.devocionalesspring.excepciones.UsuarioNoEncontradoExcepcion;
@@ -15,10 +16,8 @@ import dylan.devocionalesspring.repositorios.UsuarioRepositorio;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,8 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 
 @Service
 @Transactional
@@ -40,6 +37,9 @@ public class UsuarioServicio implements UserDetailsService {
 
     @Autowired
     private HttpServletRequest request;
+
+    @Autowired
+    UsuarioMapper usuarioMapper;
 
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -134,6 +134,22 @@ public class UsuarioServicio implements UserDetailsService {
         }
         usuario.setFotoPerfil(usuario.getFotoPerfil());
         return usuario;
+    }
+
+    // Método para obtener el perfil completo del usuario como UsuarioDTO
+    public UsuarioDTO obtenerPerfilUsuarioDTO(String email) throws UsuarioNoEncontradoExcepcion {
+        Usuario usuario = usuarioRepositorio.buscarPorEmail(email);
+        if (usuario == null) {
+            throw new UsuarioNoEncontradoExcepcion("No se encontró un usuario con el email: " + email);
+        }
+
+        // Aquí puedes realizar cualquier manipulación adicional que necesites en la entidad usuario
+        usuario.setFotoPerfil(usuario.getFotoPerfil()); // Si necesitas actualizar la foto de perfil o algún otro atributo
+
+        // Convertir la entidad Usuario a UsuarioDTO
+        UsuarioDTO usuarioDTO = usuarioMapper.toUsuarioDTO(usuario);
+
+        return usuarioDTO;
     }
 
     public Usuario obtenerUsuarioPorId(Long idUsuario) throws UsuarioNoEncontradoExcepcion {

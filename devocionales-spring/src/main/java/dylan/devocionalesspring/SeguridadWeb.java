@@ -1,6 +1,5 @@
 package dylan.devocionalesspring;
 
-import dylan.devocionalesspring.servicios.DevocionalServicio;
 import dylan.devocionalesspring.servicios.UsuarioServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +27,8 @@ public class SeguridadWeb {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {

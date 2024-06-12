@@ -14,7 +14,6 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Devocional {
 
     @Id
@@ -24,11 +23,12 @@ public class Devocional {
     private String descripcion;
     private LocalDate fechaCreacion;
 
-    @ManyToOne
-    @JoinColumn(name = "usuario_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "autor_id")
+    @JsonBackReference // Marca la referencia inversa para evitar ciclos
     private Usuario autor;
 
     @OneToMany(mappedBy = "devocional", cascade = CascadeType.ALL)
     private List<Comentario> comentarios;
-
 }
+

@@ -1,6 +1,8 @@
 package dylan.devocionalesspring.entidades;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import  com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dylan.devocionalesspring.enumeraciones.Rol;
 import jakarta.persistence.*;
@@ -8,12 +10,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 @Data
 @NoArgsConstructor
-@Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idUsuario")
 public class Usuario implements Serializable {
 
     @Id
@@ -25,13 +27,11 @@ public class Usuario implements Serializable {
     private String contrasenia;
     private String contrasenia2;
 
-    // private Boolean alta;
-
     @OneToOne(orphanRemoval = true)
     @JoinColumn(name = "imagen_id")
     private Imagen fotoPerfil;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Rol rol;
 
     @OneToMany(mappedBy = "autor")
@@ -40,5 +40,7 @@ public class Usuario implements Serializable {
     @OneToMany(mappedBy = "usuario")
     private List<Comentario> comentarios;
 
+
 }
+
 // private String resetPwToken;
