@@ -3,6 +3,7 @@ package dylan.devocionalesspring.servicios;
 import dylan.devocionalesspring.dto.UsuarioDTO;
 import dylan.devocionalesspring.entidades.Devocional;
 import dylan.devocionalesspring.dto.DevocionalDTO;
+import dylan.devocionalesspring.enumeraciones.Rol;
 import dylan.devocionalesspring.mapper.DevocionalMapper;
 import dylan.devocionalesspring.entidades.Usuario;
 import dylan.devocionalesspring.mapper.UsuarioMapper;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,9 +33,15 @@ public class DevocionalServicio {
     @Autowired
     DevocionalMapper devocionalMapper;
 
-    public DevocionalDTO crearDevocional(DevocionalDTO devocionalDTO) {
-        Devocional devocional = devocionalMapper.toDevocional(devocionalDTO);
-        devocional = devocionalRepositorio.save(devocional);
+    public DevocionalDTO crearDevocional(String nombre, String descripcion, LocalDate fechaCreacion, Usuario usuario) {
+        Devocional devocional = new Devocional();
+        devocional.setNombre(nombre);
+        devocional.setDescripcion(descripcion);
+        devocional.setFechaCreacion(fechaCreacion);
+        devocional.setAutor(usuario);
+
+        devocionalRepositorio.save(devocional);
+
         return devocionalMapper.toDevocionalDTO(devocional);
     }
 

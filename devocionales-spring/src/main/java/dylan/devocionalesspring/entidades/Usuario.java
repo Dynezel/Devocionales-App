@@ -34,7 +34,7 @@ public class Usuario implements Serializable {
     @Enumerated(EnumType.STRING)
     private Rol rol;
 
-    @OneToMany(mappedBy = "autor")
+    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL)
     private List<Devocional> devocionales;
 
     @OneToMany(mappedBy = "usuario")
