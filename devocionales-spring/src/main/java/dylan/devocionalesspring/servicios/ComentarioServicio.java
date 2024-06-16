@@ -1,8 +1,6 @@
 package dylan.devocionalesspring.servicios;
 
 import dylan.devocionalesspring.entidades.Comentario;
-import dylan.devocionalesspring.dto.ComentarioDTO;
-import dylan.devocionalesspring.mapper.ComentarioMapper;
 import dylan.devocionalesspring.repositorios.ComentarioRepositorio;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +14,6 @@ public class ComentarioServicio {
 
     @Autowired
     private ComentarioRepositorio comentarioRepositorio;
-
-    @Autowired
-    ComentarioMapper comentarioMapper;
 
 //    @Transactional
 //    public ComentarioDTO crearComentario(ComentarioDTO comentarioDTO) {

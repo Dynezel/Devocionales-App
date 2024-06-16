@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { conseguirDatos } from "../Servicios/devocionalServicio";
+import { conseguirDevocionalesPorUsuario } from "../Servicios/devocionalServicio";
 import { conseguirDatosBiblia } from "../Servicios/bibliaServicio";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -29,7 +29,7 @@ export default function Devocional() {
   useEffect(() => {
     const traerDatos = async () => {
       try {
-        const datos = await conseguirDatos();
+        const datos = await conseguirDevocionalesPorUsuario(usuarioId);
         console.log("Datos recibidos:", datos);
         setDevocionales(datos);
       } catch (error) {
@@ -37,7 +37,7 @@ export default function Devocional() {
       }
     };
     traerDatos();
-  }, []);
+  }, [usuarioId]);
 
   useEffect(() => {
     const traerDatosBiblia = async () => {
@@ -105,11 +105,11 @@ export default function Devocional() {
   };
 
   const renderDevocionalContent = (devocional) => {
-    if (!devocional || !devocional.autor) {
+    if (!devocional) {
       return <p>Información del devocional no disponible.</p>;
     }
 
-    const { descripcion, fechaCreacion, autor } = devocional;
+    const { descripcion, fechaCreacion, usuario } = devocional;
 
     return (
       <div>
@@ -122,7 +122,7 @@ export default function Devocional() {
         <p>Fecha de Creación: {fechaCreacion || "Fecha no disponible"}</p>
         <p>
           Autor:
-          {autor.idUsuario ? (
+          {autor && autor.idUsuario ? (
             <Link to={`/usuario/perfil/${autor.idUsuario}`}>
               {autor.nombre || "Nombre no disponible"}
             </Link>
@@ -137,8 +137,8 @@ export default function Devocional() {
 
   return (
     <div className="devocionales-container">
-      <div className="devocacionales">
-        {devocionales.map((devocional) => {
+      <div className="devocionales">
+        {devocionales.map(({ devocional, autor }) => {
           if (!devocional || typeof devocional !== "object" || !devocional.id) {
             return (
               <p key={Math.random()}>Datos del devocional no disponibles.</p>
@@ -155,7 +155,7 @@ export default function Devocional() {
                 {devocional.nombre || "Nombre no disponible"}
               </h3>
               {devocionalExpandido === devocional.id &&
-                renderDevocionalContent(devocional)}
+                renderDevocionalContent({ ...devocional, autor })}
             </div>
           );
         })}

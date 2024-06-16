@@ -1,11 +1,8 @@
 package dylan.devocionalesspring.controladores;
 
 import dylan.devocionalesspring.entidades.Devocional;
-import dylan.devocionalesspring.dto.DevocionalDTO;
-import dylan.devocionalesspring.dto.UsuarioDTO;
 import dylan.devocionalesspring.entidades.Usuario;
 import dylan.devocionalesspring.excepciones.UsuarioNoEncontradoExcepcion;
-import dylan.devocionalesspring.mapper.UsuarioMapper;
 import dylan.devocionalesspring.repositorios.DevocionalRepositorio;
 import dylan.devocionalesspring.servicios.DevocionalServicio;
 import dylan.devocionalesspring.servicios.UsuarioServicio;
@@ -17,8 +14,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -34,9 +31,6 @@ public class DevocionalControlador {
     @Autowired
     UsuarioServicio usuarioServicio;
 
-    @Autowired
-    UsuarioMapper usuarioMapper;
-
     @GetMapping("/")
     public String indice() {
         return "Hola, funcionó";
@@ -45,39 +39,42 @@ public class DevocionalControlador {
     @PreAuthorize("hasAnyRole('ROLE_USUARIO','ROLE_ADMINISTRADOR')")
     @GetMapping("/devocionales")
     public List<Devocional> listarDevocionalesConAutor() {
-        return devocionalRepositorio.findAllWithAutor();
+        return devocionalRepositorio.findAll();
+    }
+
+    @GetMapping("/devocionalesPorUsuario/{idUsuario}")
+    public List<Map<String, Object>> obtenerDevocionalesPorUsuario(@PathVariable Long idUsuario) {
+        List<Object[]> resultList = devocionalRepositorio.findDevocionalesWithUserId(idUsuario);
+
+        List<Map<String, Object>> devocionales = new ArrayList<>();
+        for (Object[] result : resultList) {
+            Devocional devocional = (Devocional) result[0];
+            Long creadorId = (Long) result[1];
+
+            Map<String, Object> devocionalMap = new HashMap<>();
+            devocionalMap.put("id", devocional.getId());
+            devocionalMap.put("nombre", devocional.getNombre());
+            devocionalMap.put("descripcion", devocional.getDescripcion());
+            devocionalMap.put("creador_id", creadorId);
+            devocionales.add(devocionalMap);
+        }
+        return devocionales;
     }
 
     @PostMapping("/devocionales/registro")
-    public ResponseEntity<DevocionalDTO> crearDevocional(@RequestBody DevocionalDTO devocionalDTO, Authentication authentication) throws UsuarioNoEncontradoExcepcion {
+    public ResponseEntity<Devocional> crearDevocional(@RequestBody Devocional devocional, Authentication authentication) throws UsuarioNoEncontradoExcepcion {
         String email = authentication.getName();
-        UsuarioDTO usuarioDTO = usuarioServicio.obtenerPerfilUsuarioDTO(email);
-        if (usuarioDTO == null) {
-            throw new UsuarioNoEncontradoExcepcion("Usuario no encontrado: " + email);
-        }
-
-        // Convertimos UsuarioDTO a Usuario
-        Usuario usuario = usuarioMapper.toUsuario(usuarioDTO);
-
-        // Crear Devocional
-        DevocionalDTO creadoDevocional = devocionalServicio.crearDevocional(
-                devocionalDTO.getNombre(),
-                devocionalDTO.getDescripcion(),
-                devocionalDTO.getFechaCreacion(),
-                usuario
-        );
-        return ResponseEntity.status(HttpStatus.CREATED).body(creadoDevocional);
+        Devocional creadoDevocional = usuarioServicio.agregarDevocionalAUsuario(email, devocional);
+        return new ResponseEntity<>(creadoDevocional, HttpStatus.CREATED);
     }
 
-
-
     @PutMapping("/modificar/{id}")
-    public boolean modificarDevocional(@PathVariable int id, @RequestBody DevocionalDTO devocional) {
+    public boolean modificarDevocional(@PathVariable int id, @RequestBody Devocional devocional) {
         return devocionalServicio.modificarDevocional(id, devocional.getNombre(), devocional.getDescripcion());
     }
 
     @GetMapping("/listar")
-    public List<DevocionalDTO> listarDevocionales() {
+    public List<Devocional> listarDevocionales() {
         return devocionalServicio.obtenerTodosDevocionales();
     }
 

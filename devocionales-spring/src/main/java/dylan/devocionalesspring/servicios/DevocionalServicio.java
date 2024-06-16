@@ -1,12 +1,8 @@
 package dylan.devocionalesspring.servicios;
 
-import dylan.devocionalesspring.dto.UsuarioDTO;
 import dylan.devocionalesspring.entidades.Devocional;
-import dylan.devocionalesspring.dto.DevocionalDTO;
 import dylan.devocionalesspring.enumeraciones.Rol;
-import dylan.devocionalesspring.mapper.DevocionalMapper;
 import dylan.devocionalesspring.entidades.Usuario;
-import dylan.devocionalesspring.mapper.UsuarioMapper;
 import dylan.devocionalesspring.repositorios.DevocionalRepositorio;
 import dylan.devocionalesspring.repositorios.UsuarioRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,22 +24,14 @@ public class DevocionalServicio {
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
 
-    @Autowired
-    UsuarioMapper usuarioMapper;
-
-    @Autowired
-    DevocionalMapper devocionalMapper;
-
-    public DevocionalDTO crearDevocional(String nombre, String descripcion, LocalDate fechaCreacion, Usuario usuario) {
+    public Usuario crearDevocional(String nombre, String descripcion, LocalDate fechaCreacion, Usuario usuario) {
         Devocional devocional = new Devocional();
         devocional.setNombre(nombre);
         devocional.setDescripcion(descripcion);
         devocional.setFechaCreacion(fechaCreacion);
-        devocional.setAutor(usuario);
+        usuario.setDevocionales(Collections.singletonList(devocional));
 
-        devocionalRepositorio.save(devocional);
-
-        return devocionalMapper.toDevocionalDTO(devocional);
+        return usuarioRepositorio.save(usuario);
     }
 
     @Transactional
@@ -60,10 +49,8 @@ public class DevocionalServicio {
         }
     }
 
-    public List<DevocionalDTO> obtenerTodosDevocionales() {
-        return devocionalRepositorio.findAll().stream()
-                .map(devocionalMapper::toDevocionalDTO)
-                .collect(Collectors.toList());
+    public List<Devocional> obtenerTodosDevocionales() {
+        return devocionalRepositorio.findAll();
     }
 
     public Optional<Devocional> obtenerDevocionalPorId(int id) {

@@ -1,14 +1,15 @@
 package dylan.devocionalesspring.servicios;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import dylan.devocionalesspring.entidades.Devocional;
 import dylan.devocionalesspring.entidades.Imagen;
 import dylan.devocionalesspring.entidades.Usuario;
-import dylan.devocionalesspring.dto.UsuarioDTO;
-import dylan.devocionalesspring.mapper.UsuarioMapper;
 import dylan.devocionalesspring.enumeraciones.Rol;
 import dylan.devocionalesspring.excepciones.MiExcepcion;
 import dylan.devocionalesspring.excepciones.UsuarioNoEncontradoExcepcion;
@@ -38,9 +39,6 @@ public class UsuarioServicio implements UserDetailsService {
     @Autowired
     private HttpServletRequest request;
 
-    @Autowired
-    UsuarioMapper usuarioMapper;
-
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     //@Autowired
@@ -68,6 +66,14 @@ public class UsuarioServicio implements UserDetailsService {
             usuario.setFotoPerfil(fotoPerfil);
         }
         usuarioRepositorio.save(usuario);
+    }
+
+    public Devocional agregarDevocionalAUsuario(String email, Devocional devocional) throws UsuarioNoEncontradoExcepcion {
+        Usuario usuario = obtenerPerfilUsuario(email);
+        devocional.setFechaCreacion(devocional.getFechaCreacion()); // Fecha de creación actual
+        usuario.getDevocionales().add(devocional);
+        usuarioRepositorio.save(usuario); // Se guardará el usuario con los nuevos devocionales
+        return devocional;
     }
 
     @Transactional
@@ -134,22 +140,6 @@ public class UsuarioServicio implements UserDetailsService {
         }
         usuario.setFotoPerfil(usuario.getFotoPerfil());
         return usuario;
-    }
-
-    // Método para obtener el perfil completo del usuario como UsuarioDTO
-    public UsuarioDTO obtenerPerfilUsuarioDTO(String email) throws UsuarioNoEncontradoExcepcion {
-        Usuario usuario = usuarioRepositorio.buscarPorEmail(email);
-        if (usuario == null) {
-            throw new UsuarioNoEncontradoExcepcion("No se encontró un usuario con el email: " + email);
-        }
-
-        // Aquí puedes realizar cualquier manipulación adicional que necesites en la entidad usuario
-        usuario.setFotoPerfil(usuario.getFotoPerfil()); // Si necesitas actualizar la foto de perfil o algún otro atributo
-
-        // Convertir la entidad Usuario a UsuarioDTO
-        UsuarioDTO usuarioDTO = usuarioMapper.toUsuarioDTO(usuario);
-
-        return usuarioDTO;
     }
 
     public Usuario obtenerUsuarioPorId(Long idUsuario) throws UsuarioNoEncontradoExcepcion {

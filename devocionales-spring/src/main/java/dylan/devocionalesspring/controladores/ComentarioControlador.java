@@ -1,9 +1,6 @@
 package dylan.devocionalesspring.controladores;
 
-import dylan.devocionalesspring.dto.ComentarioDTO;
-import dylan.devocionalesspring.dto.UsuarioDTO;
 import dylan.devocionalesspring.excepciones.UsuarioNoEncontradoExcepcion;
-import dylan.devocionalesspring.mapper.UsuarioMapper;
 import dylan.devocionalesspring.servicios.ComentarioServicio;
 import dylan.devocionalesspring.servicios.DevocionalServicio;
 import dylan.devocionalesspring.servicios.UsuarioServicio;

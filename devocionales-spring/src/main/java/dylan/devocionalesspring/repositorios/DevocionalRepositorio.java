@@ -13,13 +13,10 @@ import java.util.Optional;
 @Repository
 public interface DevocionalRepositorio extends JpaRepository<Devocional, Integer> {
 
-    @Query("SELECT d FROM Devocional d WHERE d.autor.id = :usuarioId")
-    Usuario buscarPorUsuarioId(Long usuarioId);
-
-    @Query("SELECT d FROM Devocional d LEFT JOIN FETCH d.autor")
-    List<Devocional> findAllWithAutor();
-
-    @Query("SELECT d FROM Devocional d LEFT JOIN FETCH d.autor WHERE d.id = :id")
-    Optional<Devocional> findByIdWithAutor(@Param("id") int id);
+    @Query("SELECT d, u.id FROM Devocional d " +
+            "JOIN UsuarioDevocionales ud ON d.id = ud.devocionalesId " +
+            "JOIN Usuario u ON ud.usuarioIdUsuario = u.id " +
+            "WHERE u.id = :usuarioId")
+    List<Object[]> findDevocionalesWithUserId(@Param("usuarioId") Long usuarioId);
 
 }

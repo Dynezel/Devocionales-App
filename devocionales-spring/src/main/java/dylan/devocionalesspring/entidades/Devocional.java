@@ -1,9 +1,6 @@
 package dylan.devocionalesspring.entidades;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dylan.devocionalesspring.enumeraciones.Rol;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -23,11 +20,6 @@ public class Devocional {
     private String nombre;
     private String descripcion;
     private LocalDate fechaCreacion;
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "autor_id")
-    @JsonBackReference // Marca la referencia inversa para evitar ciclos
-    private Usuario autor;
 
     @OneToMany(mappedBy = "devocional", cascade = CascadeType.ALL)
     private List<Comentario> comentarios;

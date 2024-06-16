@@ -28,8 +28,6 @@ public class SeguridadWeb {
         return new BCryptPasswordEncoder();
     }
 
-
-
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(usuarioServicio)

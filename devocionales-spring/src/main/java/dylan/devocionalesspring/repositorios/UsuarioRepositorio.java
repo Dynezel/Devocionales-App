@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface UsuarioRepositorio extends JpaRepository<Usuario, Long> {
 
@@ -17,4 +19,7 @@ public interface UsuarioRepositorio extends JpaRepository<Usuario, Long> {
 
     @Query("SELECT u FROM Usuario u WHERE u.idUsuario =  :idUsuario")
     public Usuario buscarPorIdUsuario(@Param("idUsuario") Long idUsuario);
+
+    @Query(value = "SELECT * FROM usuario u JOIN usuario_devocionales du ON u.id_usuario = du.usuario_id_usuario WHERE du.devocionales_id = :devocionalId", nativeQuery = true)
+    List<Usuario> findUsuariosByDevocionalIdNative(@Param("devocionalId") Long devocionalId);
 }
