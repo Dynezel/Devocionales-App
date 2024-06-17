@@ -4,6 +4,7 @@ import axios from 'axios';
 export default function Comentarios({ devocionalId }) {
   const [comentarios, setComentarios] = useState([]);
   const [nuevoComentario, setNuevoComentario] = useState('');
+  const [fechaCreacion, setFechaCreacion] = useState("")
   const [user, setUser] = useState('');
 
   useEffect(() => {
@@ -22,25 +23,27 @@ export default function Comentarios({ devocionalId }) {
   useEffect(() => {
     const fetchComentarios = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/devocionales/${devocionalId}/comentarios`);
-        console.log(response.data); // Inspecciona la respuesta de la API
+        const response = await axios.get(`http://localhost:8080/${devocionalId}/comentarios`);
         setComentarios(response.data);
       } catch (error) {
         console.error('Error al cargar comentarios', error);
       }
     };
-  
+
     fetchComentarios();
   }, [devocionalId]);
 
   const handleAgregarComentario = async () => {
     try {
-      const response = await axios.post('http://localhost:8080/comentarios', {
+      const fechaActual = new Date();
+      const response = await axios.post(`http://localhost:8080/${devocionalId}/comentarios`, {
         texto: nuevoComentario,
-        devocional: { id: devocionalId },
+        fechaCreacion: fechaActual 
       }, {
         withCredentials: true
       });
+
+      // Actualizar los comentarios con el nuevo comentario creado
       setComentarios([...comentarios, response.data]);
       setNuevoComentario('');
     } catch (error) {

@@ -20,6 +20,6 @@ public interface UsuarioRepositorio extends JpaRepository<Usuario, Long> {
     @Query("SELECT u FROM Usuario u WHERE u.idUsuario =  :idUsuario")
     public Usuario buscarPorIdUsuario(@Param("idUsuario") Long idUsuario);
 
-    @Query(value = "SELECT * FROM usuario u JOIN usuario_devocionales du ON u.id_usuario = du.usuario_id_usuario WHERE du.devocionales_id = :devocionalId", nativeQuery = true)
-    List<Usuario> findUsuariosByDevocionalIdNative(@Param("devocionalId") Long devocionalId);
+    @Query("SELECT u FROM Usuario u LEFT JOIN FETCH u.devocionales WHERE u.idUsuario = :idUsuario")
+    Usuario findUsuarioWithDevocionales(@Param("idUsuario") Long idUsuario);
 }

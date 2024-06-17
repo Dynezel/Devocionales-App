@@ -9,6 +9,7 @@ import dylan.devocionalesspring.entidades.Usuario;
 import dylan.devocionalesspring.enumeraciones.Rol;
 import dylan.devocionalesspring.excepciones.MiExcepcion;
 import dylan.devocionalesspring.excepciones.UsuarioNoEncontradoExcepcion;
+import dylan.devocionalesspring.repositorios.UsuarioRepositorio;
 import dylan.devocionalesspring.servicios.UsuarioDetalles;
 import dylan.devocionalesspring.servicios.UsuarioServicio;
 import jakarta.servlet.http.HttpSession;
@@ -32,7 +33,20 @@ public class UsuarioControlador {
     @Autowired
     private UsuarioServicio usuarioServicio;
 
+    @Autowired
+    private UsuarioRepositorio usuarioRepositorio;
     //registroControlador
+
+    @GetMapping("/{idUsuario}/devocionales")
+    public ResponseEntity<Usuario> obtenerUsuarioConDevocionales(@PathVariable Long idUsuario) {
+        Usuario usuario = usuarioRepositorio.findUsuarioWithDevocionales(idUsuario);
+        if (usuario == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(usuario);
+    }
+
+
     @PostMapping("/registro")
     public ResponseEntity<String> registro(@RequestParam("archivo") MultipartFile archivo,
                                            @RequestParam("nombre") String nombre,

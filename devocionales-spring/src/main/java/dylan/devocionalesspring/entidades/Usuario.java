@@ -8,6 +8,7 @@ import dylan.devocionalesspring.enumeraciones.Rol;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.util.Lazy;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -34,12 +35,8 @@ public class Usuario implements Serializable {
     @Enumerated(EnumType.STRING)
     private Rol rol;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Devocional> devocionales;
-
-    @OneToMany(mappedBy = "usuario")
-    private List<Comentario> comentarios;
-
 
 }
 

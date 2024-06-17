@@ -1,7 +1,10 @@
 package dylan.devocionalesspring.servicios;
 
 import dylan.devocionalesspring.entidades.Comentario;
+import dylan.devocionalesspring.entidades.Devocional;
+import dylan.devocionalesspring.entidades.Usuario;
 import dylan.devocionalesspring.repositorios.ComentarioRepositorio;
+import dylan.devocionalesspring.repositorios.DevocionalRepositorio;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,32 +18,40 @@ public class ComentarioServicio {
     @Autowired
     private ComentarioRepositorio comentarioRepositorio;
 
-//    @Transactional
-//    public ComentarioDTO crearComentario(ComentarioDTO comentarioDTO) {
-//        Comentario comentario = ComentarioMapper.toComentario(comentarioDTO);
-//        comentario = comentarioRepositorio.save(comentario);
-//        return ComentarioMapper.toComentarioDTO(comentario);
-//    }
-//
-//    @Transactional
-//    public ComentarioDTO actualizarComentario(ComentarioDTO comentarioDTO) {
-//        Comentario comentario = comentarioRepositorio.findById(comentarioDTO.getId()).orElseThrow(() -> new IllegalArgumentException("Comentario no encontrado"));
-//        comentario.setTexto(comentarioDTO.getTexto());
-//        comentario.setFechaCreacion(comentarioDTO.getFechaCreacion());
-//        comentario = comentarioRepositorio.save(comentario);
-//        return ComentarioMapper.toComentarioDTO(comentario);
-//    }
-//
-//    @Transactional
-//    public List<ComentarioDTO> obtenerComentariosPorDevocional(Long devocionalId) {
-//        List<Comentario> comentarios = comentarioRepositorio.findByDevocionalId(devocionalId);
-//        return comentarios.stream()
-//                .map(ComentarioMapper::toComentarioDTO)
-//                .collect(Collectors.toList());
-//    }
-//
-//    @Transactional
-//    public void eliminarComentario(Long id) {
-//        comentarioRepositorio.deleteById(id);
-//    }
+    @Autowired
+    private DevocionalRepositorio devocionalRepositorio;
+
+    @Transactional
+    public Comentario crearComentario(Comentario comentario, int devocionalId, Usuario usuario) {
+        // Asociar el usuario al comentario
+        comentario.setUsuario(usuario);
+
+        // Guardar el comentario primero
+        Comentario comentarioGuardado = comentarioRepositorio.save(comentario);
+
+        // Obtener el devocional por su ID
+        Devocional devocional = devocionalRepositorio.findById(devocionalId)
+                .orElseThrow(() -> new IllegalArgumentException("Devocional no encontrado"));
+
+        // Agregar el comentario al devocional
+        devocional.agregarComentario(comentarioGuardado);
+        devocionalRepositorio.save(devocional); // Actualizar el devocional con el nuevo comentario
+
+        return comentarioGuardado;
+    }
+
+
+    @Transactional
+    public Comentario actualizarComentario(Comentario comentario) {
+        comentario = comentarioRepositorio.findById(comentario.getId()).orElseThrow(() -> new IllegalArgumentException("Comentario no encontrado"));
+        comentario.setTexto(comentario.getTexto());
+        comentario.setFechaCreacion(comentario.getFechaCreacion());
+        return comentarioRepositorio.save(comentario);
+    }
+
+
+    @Transactional
+    public void eliminarComentario(Long id) {
+        comentarioRepositorio.deleteById(id);
+    }
 }

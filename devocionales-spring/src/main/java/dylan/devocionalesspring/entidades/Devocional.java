@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,7 +22,12 @@ public class Devocional {
     private String descripcion;
     private LocalDate fechaCreacion;
 
-    @OneToMany(mappedBy = "devocional", cascade = CascadeType.ALL)
-    private List<Comentario> comentarios;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comentario> comentarios = new ArrayList<>();
+
+    // Método para agregar un comentario a la lista
+    public void agregarComentario(Comentario comentario) {
+        comentarios.add(comentario);
+    }
 }
 

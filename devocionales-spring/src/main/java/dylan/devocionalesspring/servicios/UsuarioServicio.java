@@ -68,6 +68,12 @@ public class UsuarioServicio implements UserDetailsService {
         usuarioRepositorio.save(usuario);
     }
 
+    public List<Devocional> obtenerDevocionalesDeUsuario(Long idUsuario) throws UsuarioNoEncontradoExcepcion {
+        Usuario usuario = usuarioRepositorio.findById(idUsuario)
+                .orElseThrow(() -> new UsuarioNoEncontradoExcepcion("Usuario no encontrado con ID: " + idUsuario));
+
+        return usuario.getDevocionales();
+    }
     public Devocional agregarDevocionalAUsuario(String email, Devocional devocional) throws UsuarioNoEncontradoExcepcion {
         Usuario usuario = obtenerPerfilUsuario(email);
         devocional.setFechaCreacion(devocional.getFechaCreacion()); // Fecha de creación actual

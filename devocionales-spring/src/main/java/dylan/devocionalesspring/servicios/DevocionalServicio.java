@@ -24,13 +24,13 @@ public class DevocionalServicio {
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
 
+    @Transactional
     public Usuario crearDevocional(String nombre, String descripcion, LocalDate fechaCreacion, Usuario usuario) {
         Devocional devocional = new Devocional();
         devocional.setNombre(nombre);
         devocional.setDescripcion(descripcion);
         devocional.setFechaCreacion(fechaCreacion);
         usuario.setDevocionales(Collections.singletonList(devocional));
-
         return usuarioRepositorio.save(usuario);
     }
 

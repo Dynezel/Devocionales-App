@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { conseguirDevocionalesPorUsuario } from "../Servicios/devocionalServicio";
-import { conseguirDatosBiblia } from "../Servicios/bibliaServicio";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import { useParams } from "react-router-dom";
+import { conseguirDatosBiblia } from "../Servicios/bibliaServicio";
 import Comentarios from "./Comentarios";
 
 export default function Devocional() {
+  const [usuarios, setUsuarios] = useState([]);
+  const [libros, setLibros] = useState([]);
   const [devocionales, setDevocionales] = useState([]);
   const [devocionalExpandido, setDevocionalExpandido] = useState(null);
   const [bookAbbr, setBookAbbr] = useState("");
@@ -15,7 +17,6 @@ export default function Devocional() {
   const [chapter, setChapter] = useState("");
   const [verse, setVerse] = useState("");
   const [verseData, setVerseData] = useState(null);
-  const [libros, setLibros] = useState([]);
   const [capitulos, setCapitulos] = useState([]);
   const [versiculos, setVersiculos] = useState([]);
 
@@ -26,18 +27,21 @@ export default function Devocional() {
     },
   };
 
+  const { idUsuario } = useParams();
+
   useEffect(() => {
-    const traerDatos = async () => {
+    const obtenerDatos = async () => {
       try {
-        const datos = await conseguirDevocionalesPorUsuario(usuarioId);
-        console.log("Datos recibidos:", datos);
-        setDevocionales(datos);
+        const responseUsuarios = await axios.get(`http://localhost:8080/usuario/lista`);
+        setUsuarios(responseUsuarios.data);
+
       } catch (error) {
-        console.error("Error al traer los datos: ", error);
+        console.error("Error al obtener datos:", error);
       }
     };
-    traerDatos();
-  }, [usuarioId]);
+
+    obtenerDatos();
+  }, [idUsuario]);
 
   useEffect(() => {
     const traerDatosBiblia = async () => {
@@ -109,7 +113,7 @@ export default function Devocional() {
       return <p>Información del devocional no disponible.</p>;
     }
 
-    const { descripcion, fechaCreacion, usuario } = devocional;
+    const { descripcion, fechaCreacion, autor } = devocional;
 
     return (
       <div>
@@ -138,14 +142,8 @@ export default function Devocional() {
   return (
     <div className="devocionales-container">
       <div className="devocionales">
-        {devocionales.map(({ devocional, autor }) => {
-          if (!devocional || typeof devocional !== "object" || !devocional.id) {
-            return (
-              <p key={Math.random()}>Datos del devocional no disponibles.</p>
-            );
-          }
-
-          return (
+        {usuarios.map((usuario) =>
+          usuario.devocionales.map((devocional) => (
             <div key={devocional.id} className="devocional">
               <h3
                 className="titulo"
@@ -155,10 +153,10 @@ export default function Devocional() {
                 {devocional.nombre || "Nombre no disponible"}
               </h3>
               {devocionalExpandido === devocional.id &&
-                renderDevocionalContent({ ...devocional, autor })}
+                renderDevocionalContent({ ...devocional, autor: usuario })}
             </div>
-          );
-        })}
+          ))
+        )}
       </div>
       <div className="versiculos-container">
         <h2>Buscar Capítulo</h2>

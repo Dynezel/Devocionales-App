@@ -4,6 +4,7 @@ import dylan.devocionalesspring.entidades.Devocional;
 import dylan.devocionalesspring.entidades.Usuario;
 import dylan.devocionalesspring.excepciones.UsuarioNoEncontradoExcepcion;
 import dylan.devocionalesspring.repositorios.DevocionalRepositorio;
+import dylan.devocionalesspring.repositorios.UsuarioRepositorio;
 import dylan.devocionalesspring.servicios.DevocionalServicio;
 import dylan.devocionalesspring.servicios.UsuarioServicio;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,9 @@ public class DevocionalControlador {
     DevocionalRepositorio devocionalRepositorio;
 
     @Autowired
+    UsuarioRepositorio usuarioRepositorio;
+
+    @Autowired
     UsuarioServicio usuarioServicio;
 
     @GetMapping("/")
@@ -42,24 +46,6 @@ public class DevocionalControlador {
         return devocionalRepositorio.findAll();
     }
 
-    @GetMapping("/devocionalesPorUsuario/{idUsuario}")
-    public List<Map<String, Object>> obtenerDevocionalesPorUsuario(@PathVariable Long idUsuario) {
-        List<Object[]> resultList = devocionalRepositorio.findDevocionalesWithUserId(idUsuario);
-
-        List<Map<String, Object>> devocionales = new ArrayList<>();
-        for (Object[] result : resultList) {
-            Devocional devocional = (Devocional) result[0];
-            Long creadorId = (Long) result[1];
-
-            Map<String, Object> devocionalMap = new HashMap<>();
-            devocionalMap.put("id", devocional.getId());
-            devocionalMap.put("nombre", devocional.getNombre());
-            devocionalMap.put("descripcion", devocional.getDescripcion());
-            devocionalMap.put("creador_id", creadorId);
-            devocionales.add(devocionalMap);
-        }
-        return devocionales;
-    }
 
     @PostMapping("/devocionales/registro")
     public ResponseEntity<Devocional> crearDevocional(@RequestBody Devocional devocional, Authentication authentication) throws UsuarioNoEncontradoExcepcion {

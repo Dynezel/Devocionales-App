@@ -25,31 +25,7 @@ public class Comentario {
     private LocalDate fechaCreacion;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "usuario_id") // nombre de la columna en Comentario
     private Usuario usuario;
 
-    @ManyToOne
-    @JoinColumn(name = "devocional_id")
-    private Devocional devocional;
-
-
-    public JsonNode asJson() {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.createObjectNode()
-                .put("id", id)
-                .put("texto", texto)
-                .put("fechaCreacion", fechaCreacion.toString())
-                .put("usuario", usuario.getNombre());
-    }
-
-    @Override
-    public String toString() {
-        return "Comentario{" +
-                "id=" + id +
-                ", texto='" + texto + '\'' +
-                ", fechaCreacion=" + fechaCreacion +
-                ", usuario=" + usuario.getNombre() +
-                ", devocional=" + devocional.getNombre() +
-                '}';
-    }
 }
