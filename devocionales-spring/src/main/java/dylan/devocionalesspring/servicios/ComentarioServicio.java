@@ -1,16 +1,22 @@
 package dylan.devocionalesspring.servicios;
 
+import com.sun.jdi.IntegerValue;
 import dylan.devocionalesspring.entidades.Comentario;
 import dylan.devocionalesspring.entidades.Devocional;
 import dylan.devocionalesspring.entidades.Usuario;
 import dylan.devocionalesspring.repositorios.ComentarioRepositorio;
 import dylan.devocionalesspring.repositorios.DevocionalRepositorio;
+import dylan.devocionalesspring.repositorios.UsuarioRepositorio;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static java.lang.String.valueOf;
 
 @Service
 public class ComentarioServicio {
@@ -19,26 +25,50 @@ public class ComentarioServicio {
     private ComentarioRepositorio comentarioRepositorio;
 
     @Autowired
+    private UsuarioRepositorio usuarioRepositorio;
+
+    @Autowired
+    private UsuarioServicio usuarioServicio;
+
+    @Autowired
     private DevocionalRepositorio devocionalRepositorio;
 
     @Transactional
-    public Comentario crearComentario(Comentario comentario, int devocionalId, Usuario usuario) {
-        // Asociar el usuario al comentario
-        comentario.setUsuario(usuario);
+    public List<Comentario> obtenerComentariosPorDevocionalYUsuario(int devocionalId, Long usuarioId) {
+        // Obtener los comentarios asociados al devocional
+        List<Comentario> comentariosDevocional = devocionalRepositorio.findComentariosByDevocionalId(devocionalId);
 
-        // Guardar el comentario primero
+        // Filtrar los comentarios por el usuario
+        return comentariosDevocional.stream()
+                .filter(comentario -> comentario.getIdUsuario().equals(usuarioId))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Comentario crearComentario(String email, int devocionalId, Comentario comentario) throws Exception {
+        Usuario usuario = usuarioServicio.obtenerPerfilUsuario(email);
+
+        Devocional devocional = devocionalRepositorio.findById(devocionalId)
+                .orElseThrow(() -> new Exception("Devocional no encontrado"));
+
+        comentario.setFechaCreacion(LocalDate.now());
+        comentario.setIdUsuario(usuario.getIdUsuario());
+        comentario.setIdDevocional(devocional.getId());
+
+        // Primero guardamos el comentario en la base de datos
         Comentario comentarioGuardado = comentarioRepositorio.save(comentario);
 
-        // Obtener el devocional por su ID
-        Devocional devocional = devocionalRepositorio.findById(devocionalId)
-                .orElseThrow(() -> new IllegalArgumentException("Devocional no encontrado"));
+        // Luego añadimos el comentario a las colecciones de usuario y devocional
+        usuario.getComentarios().add(comentarioGuardado);
+        devocional.getComentarios().add(comentarioGuardado);
 
-        // Agregar el comentario al devocional
-        devocional.agregarComentario(comentarioGuardado);
-        devocionalRepositorio.save(devocional); // Actualizar el devocional con el nuevo comentario
+        // Guardamos las relaciones
+        usuarioRepositorio.save(usuario);
+        devocionalRepositorio.save(devocional);
 
         return comentarioGuardado;
     }
+
 
 
     @Transactional

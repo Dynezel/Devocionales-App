@@ -32,27 +32,29 @@ public class ComentarioControlador {
 
 
     @PostMapping("/devocionales/{devocionalId}/comentarios")
-    public ResponseEntity<Comentario> agregarComentario(@PathVariable int devocionalId, @RequestBody Comentario comentario, Authentication authentication) throws UsuarioNoEncontradoExcepcion {
-        // Aquí debes asociar el comentario al devocional correspondiente
-        Devocional devocional = new Devocional();
-        devocional.setId(devocionalId);
-        comentario.setDevocional(devocional);
-
-        // Obtén el usuario actual (puedes usar un método en tu servicio de usuario para obtenerlo)
-        Usuario usuario = usuarioServicio.obtenerPerfilUsuario(authentication.getName()); // Implementa este método según tu lógica de autenticación
-
-        // Asigna el usuario al comentario
-        comentario.setUsuario(usuario);
-
-        // Guarda el comentario
-        Comentario comentarioGuardado = comentarioServicio.crearComentario(comentario);
-        return ResponseEntity.ok(comentarioGuardado);
+    public ResponseEntity<Comentario> crearComentario(@PathVariable int devocionalId,
+                                                      @RequestBody Comentario comentario,
+                                                      Authentication authentication) {
+        try {
+            String email = authentication.getName();
+            Comentario nuevoComentario = comentarioServicio.crearComentario(email, devocionalId, comentario);
+            return new ResponseEntity<>(nuevoComentario, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/devocionales/{devocionalId}/comentarios")
-    public ResponseEntity<List<Comentario>> obtenerComentariosPorDevocional(@PathVariable Long devocionalId) {
-        List<Comentario> comentarios = comentarioServicio.obtenerComentariosPorDevocional(devocionalId);
-        return ResponseEntity.ok(comentarios);
+    public ResponseEntity<List<Comentario>> obtenerComentariosPorDevocionalYUsuario(
+            @PathVariable int devocionalId,
+            @RequestParam Long usuarioId) {
+        try {
+            List<Comentario> comentarios = comentarioServicio.obtenerComentariosPorDevocionalYUsuario(devocionalId, usuarioId);
+            return new ResponseEntity<>(comentarios, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
+
 
 }

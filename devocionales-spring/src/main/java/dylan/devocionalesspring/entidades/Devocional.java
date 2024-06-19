@@ -22,7 +22,12 @@ public class Devocional {
     private String descripcion;
     private LocalDate fechaCreacion;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "devocional_comentarios",
+            joinColumns = @JoinColumn(name = "devocional_id"),
+            inverseJoinColumns = @JoinColumn(name = "comentarios_id")
+    )
     private List<Comentario> comentarios = new ArrayList<>();
 
     // Método para agregar un comentario a la lista

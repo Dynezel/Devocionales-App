@@ -134,7 +134,7 @@ export default function Devocional() {
             "Información del autor no disponible"
           )}
         </p>
-        <Comentarios devocionalId={devocional.id} />
+        <Comentarios devocionalId={devocional.id} usuarioId={autor.idUsuario} />
       </div>
     );
   };

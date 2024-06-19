@@ -1,5 +1,6 @@
 package dylan.devocionalesspring.repositorios;
 
+import dylan.devocionalesspring.entidades.Comentario;
 import dylan.devocionalesspring.entidades.Devocional;
 import dylan.devocionalesspring.entidades.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,5 +13,8 @@ import java.util.Optional;
 
 @Repository
 public interface DevocionalRepositorio extends JpaRepository<Devocional, Integer> {
+
+    @Query("SELECT d.comentarios FROM Devocional d WHERE d.id = :devocionalId")
+    List<Comentario> findComentariosByDevocionalId(@Param("devocionalId") int devocionalId);
 
 }

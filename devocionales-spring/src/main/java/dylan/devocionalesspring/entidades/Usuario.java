@@ -38,6 +38,16 @@ public class Usuario implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Devocional> devocionales;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(
+            name = "usuario_comentarios",
+            joinColumns = @JoinColumn(name = "usuario_id_usuario"),
+            inverseJoinColumns = @JoinColumn(name = "comentarios_id")
+    )
+    private List<Comentario> comentarios = new ArrayList<>();
+
+
 }
+
 
 // private String resetPwToken;
