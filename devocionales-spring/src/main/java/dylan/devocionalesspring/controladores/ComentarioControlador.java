@@ -43,7 +43,7 @@ public class ComentarioControlador {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
-
+    
     @GetMapping("/devocionales/{devocionalId}/comentarios")
     public ResponseEntity<List<Comentario>> obtenerComentariosPorDevocionalYUsuario(
             @PathVariable int devocionalId,

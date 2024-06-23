@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
@@ -7,35 +7,34 @@ import { useNavigate } from "react-router-dom";
 export default function CrearDevocional() {
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
-  const [estado, setEstado] = useState("");
-  const [fechaCreacion, setFechaCreacion] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();;
-
+    e.preventDefault();
     const URL = "http://localhost:8080/devocionales/registro";
 
     try {
-      const fechaActual = new Date();
-      const response = await axios.post(URL, {
-        nombre,
-        descripcion,
-        fechaCreacion: fechaActual
-      }, {
-        withCredentials: true
-      });
+      const response = await axios.post(
+        URL,
+        {
+          nombre,
+          descripcion,
+          fechaCreacion: new Date().toISOString(), // Enviar la fecha actual en formato ISO
+        },
+        { withCredentials: true } // Asegurarse de que las credenciales se envíen con la solicitud
+      );
+
       console.log("Respuesta del servidor: ", response.data);
-      navigate("/")
+      navigate("/");
     } catch (error) {
-      console.log("Se ha producido un error al cargar el Devocional: ", error);
+      console.error("Se ha producido un error al crear el Devocional: ", error);
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <label htmlFor="descripcion">Descripcion:</label>
+        <label htmlFor="descripcion">Descripción:</label>
         <ReactQuill
           theme="snow"
           value={descripcion}
