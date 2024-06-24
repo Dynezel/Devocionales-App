@@ -12,6 +12,7 @@ export default function Devocional() {
   const [libros, setLibros] = useState([]);
   const [devocionales, setDevocionales] = useState([]);
   const [devocionalExpandido, setDevocionalExpandido] = useState(null);
+  const [comentariosVisibles, setComentariosVisibles] = useState({});
   const [bookAbbr, setBookAbbr] = useState("");
   const [bookName, setBookName] = useState("");
   const [chapter, setChapter] = useState("");
@@ -59,6 +60,13 @@ export default function Devocional() {
     setDevocionalExpandido((prevDevocionalId) =>
       prevDevocionalId === devocionalId ? null : devocionalId
     );
+  };
+
+  const toggleComentarios = (devocionalId) => {
+    setComentariosVisibles((prevState) => ({
+      ...prevState,
+      [devocionalId]: !prevState[devocionalId],
+    }));
   };
 
   const handleBookChange = (e) => {
@@ -134,7 +142,17 @@ export default function Devocional() {
             "Información del autor no disponible"
           )}
         </p>
-        <Comentarios devocionalId={devocional.id} usuarioId={autor.idUsuario} />
+        <button
+          onClick={() => toggleComentarios(devocional.id)}
+          className="mostrar-comentarios-boton"
+        >
+          {comentariosVisibles[devocional.id]
+            ? "Ocultar comentarios"
+            : "Mostrar comentarios"}
+        </button>
+        {comentariosVisibles[devocional.id] && (
+          <Comentarios devocionalId={devocional.id} usuarioId={autor.idUsuario} />
+        )}
       </div>
     );
   };

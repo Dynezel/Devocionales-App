@@ -1,0 +1,73 @@
+/* Comentarios.css */
+
+.comentarios-container {
+    margin: 20px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+  
+  .comentarios-header {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  
+  .comentarios-lista {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .comentarios-lista li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .imagenComentario{
+    width: 5%;
+    height:5%;
+    border-radius: 30%;
+    justify-content: center;
+  }
+  
+  .comentario-texto {
+    max-width: 80%;
+  }
+  
+  .comentario-usuario {
+    font-weight: bold;
+    margin-right: 5px;
+  }
+  
+  .nuevo-comentario-container {
+    margin-top: 15px;
+  }
+  
+  .nuevo-comentario {
+    width: 100%;
+    height: 80px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    resize: vertical;
+    font-size: 1em;
+  }
+  
+  .agregar-comentario-boton {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4caf50;
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+  }
+  
+  .agregar-comentario-boton:hover {
+    background-color: #45a049;
+  }
+  

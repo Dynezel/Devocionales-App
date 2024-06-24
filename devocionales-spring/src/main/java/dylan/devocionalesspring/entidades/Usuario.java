@@ -24,6 +24,8 @@ public class Usuario implements Serializable {
     private Long idUsuario;
     private String nombre;
     private String email;
+    private String nombreUsuario;
+    private String biografia;
     private String celular;
     private String contrasenia;
     private String contrasenia2;

@@ -49,6 +49,8 @@ public class UsuarioServicio implements UserDetailsService {
 
     public void registrarUsuario(String nombre,
                                  String email,
+                                 String nombreUsuario,
+                                 String biografia,
                                  String celular,
                                  String contrasenia,
                                  String contrasenia2,
@@ -57,6 +59,8 @@ public class UsuarioServicio implements UserDetailsService {
         Usuario usuario = new Usuario();
         usuario.setNombre(nombre);
         usuario.setEmail(email);
+        usuario.setNombreUsuario(nombreUsuario);
+        usuario.setBiografia(biografia);
         usuario.setCelular(celular);
         usuario.setContrasenia(new BCryptPasswordEncoder().encode(contrasenia));
         usuario.setRol(Rol.USUARIO);

@@ -4,6 +4,7 @@ import axios from "axios";
 export default function RegistrarUsuario() {
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
+  const [nombreUsuario, setNombreUsuario] = useState("");
   const [contrasenia, setContrasenia] = useState("");
   const [contrasenia2, setContrasenia2] = useState("");
   const [celular, setCelular] = useState("");
@@ -31,6 +32,7 @@ export default function RegistrarUsuario() {
       formData.append("archivo", archivo);
       formData.append("nombre", nombre);
       formData.append("email", email);
+      formData.append("nombreUsuario", nombreUsuario);
       formData.append("celular", celular);
       formData.append("contrasenia", contrasenia);
       formData.append("contrasenia2", contrasenia2);
@@ -67,7 +69,7 @@ export default function RegistrarUsuario() {
     <form onSubmit={handleSignUp} encType="multipart/form-data">
       {error && <div className="error-message">{error}</div>}
       <div>
-        <label htmlFor="nombre">Nombre de Usuario:</label>
+        <label htmlFor="nombre">Nombre:</label>
         <input
           type="text"
           id="nombre"
@@ -83,6 +85,16 @@ export default function RegistrarUsuario() {
           id="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <label htmlFor="nombreUsuario">Nombre de Usuario (ej: @username345):</label>
+        <input
+          type="nombreUsuario"
+          id="nombreUsuario"
+          value={nombreUsuario}
+          onChange={(e) => setNombreUsuario(e.target.value)}
           required
         />
       </div>

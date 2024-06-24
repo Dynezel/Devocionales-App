@@ -101,14 +101,16 @@
 /* Devocionales */
 .perfil-devocionales {
   margin-top: 20px;
+  
 }
 
 /* Devocional Item */
 .devocional-item {
-  border-top: 1px solid #e1e8ed;
   padding-top: 10px;
   margin-top: 10px;
   text-align: center; /* Centrar el contenido del devocional */
+  border-radius: 5px;
+  border: 3px solid rgb(227, 225, 225);
 }
 
 /* Devocional Descripción */
