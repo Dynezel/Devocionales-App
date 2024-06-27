@@ -49,7 +49,7 @@ public class ComentarioControlador {
             @PathVariable int devocionalId,
             @RequestParam Long usuarioId) {
         try {
-            List<Comentario> comentarios = comentarioServicio.obtenerComentariosPorDevocionalYUsuario(devocionalId, usuarioId);
+            List<Comentario> comentarios = comentarioServicio.obtenerComentariosPorDevocional(devocionalId);
             return new ResponseEntity<>(comentarios, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);

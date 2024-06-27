@@ -17,4 +17,7 @@ public interface DevocionalRepositorio extends JpaRepository<Devocional, Integer
     @Query("SELECT d.comentarios FROM Devocional d WHERE d.id = :devocionalId")
     List<Comentario> findComentariosByDevocionalId(@Param("devocionalId") int devocionalId);
 
+    // Método para buscar devocionales por nombre
+    List<Devocional> findByNombreContainingIgnoreCase(String nombre);
+
 }

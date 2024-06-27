@@ -136,6 +136,58 @@ button:focus-visible {
   display: block; /* Muestra el menú cuando se pasa el ratón sobre el nombre de usuario */
 }
 
+/* Contenedor principal */
+.formularioRegistro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh; /* Alinea el formulario verticalmente al centro de la ventana */
+}
+
+/* Contenedor de cada par label-input */
+.form-group {
+  display: flex;
+  align-items: center; /* Centrar verticalmente */
+  justify-content: center; /* Centrar horizontalmente */
+  margin-top: 5px; /* Espacio entre cada par */
+  width: 100%; /* Asegura que el ancho sea 100% del contenedor padre */
+}
+
+/* Estilo para los labels */
+.formularioRegistro label {
+  width: 100px; /* Ancho fijo para alinear */
+  text-align: right; /* Alinea el texto del label a la derecha */
+  margin-right: 15px; /* Espacio entre el label y el input */
+}
+
+/* Estilo para los inputs */
+.formularioRegistro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.formularioRegistro .form-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.formularioRegistro label {
+  display: inline-block;
+  width: 150px;
+  text-align: right;
+  margin-right: 20px;
+  height: auto;
+  vertical-align: middle;
+}
+
+.formularioRegistro input {
+  width: 300px; /* Ajusta este valor según sea necesario */
+}
+
+
 .dropdown-menu li {
   padding: 8px 16px;
 }
@@ -152,8 +204,6 @@ button:focus-visible {
 .nav-items > * {
   margin-right: 40px; /* Ajusta el margen entre los elementos de navegación */
 }
-
-
 
 .icon {
   width: 70px;
@@ -322,15 +372,42 @@ button:focus-visible {
 .devocionales-container {
   display: flex;
   justify-content: space-between;
+  
+}
+
+/* Estilo general para el input de búsqueda */
+.busqueda-input {
+  width: 40%;
+  padding: 10px;         /* Espaciado interno */
+  margin: 10px 0;        /* Margen superior e inferior */
+  border: 2px solid #ccc; /* Borde gris claro */
+  border-radius: 5px;    /* Bordes redondeados */
+  font-size: 16px;       /* Tamaño de la fuente */
+}
+
+/* Estilo del input al recibir foco */
+.busqueda-input:focus {
+  border-color: #4A90E2;  /* Cambiar el color del borde al recibir foco */
+  outline: none;         /* Quitar el borde exterior azul predeterminado */
+  box-shadow: 0 0 5px rgba(74, 144, 226, 0.5); /* Agregar un efecto de sombra */
+}
+
+/* Estilo para cambiar el fondo al hacer hover */
+.busqueda-input:hover {
+  background-color: #525252; /* Fondo gris claro */
 }
 
 .devocionales {
   width: calc(50% - 20px); /* Ancho ajustado para los devocionales */
   margin-right: 20px; /* Espacio entre los contenedores */
+  overflow-y: scroll;
+    max-height: 84vh;
 }
 
 .versiculos-container {
   width: calc(40%); /* Ancho ajustado para los versículos */
+  overflow-y: scroll;
+    max-height: 84vh;
 }
  
 .book-selector {
@@ -394,8 +471,6 @@ button:focus-visible {
   box-shadow: 0 5px #310038;
   transform: translateY(3px);
 }
-
-
 
 /* Estilos responsivos */
 @media (max-width: 767px) {

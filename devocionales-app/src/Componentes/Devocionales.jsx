@@ -20,6 +20,7 @@ export default function Devocional() {
   const [verseData, setVerseData] = useState(null);
   const [capitulos, setCapitulos] = useState([]);
   const [versiculos, setVersiculos] = useState([]);
+  const [filtroTitulo, setFiltroTitulo] = useState(""); // Estado para el filtro de búsqueda
 
   const modules = {
     toolbar: false,
@@ -33,9 +34,10 @@ export default function Devocional() {
   useEffect(() => {
     const obtenerDatos = async () => {
       try {
-        const responseUsuarios = await axios.get(`http://localhost:8080/usuario/lista`);
+        const responseUsuarios = await axios.get(
+          `http://localhost:8080/usuario/lista`
+        );
         setUsuarios(responseUsuarios.data);
-
       } catch (error) {
         console.error("Error al obtener datos:", error);
       }
@@ -56,6 +58,19 @@ export default function Devocional() {
     traerDatosBiblia();
   }, []);
 
+  useEffect(() => {
+    const obtenerDevocionales = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/devocionales`);
+        setDevocionales(response.data);
+      } catch (error) {
+        console.error("Error al obtener devocionales:", error);
+      }
+    };
+
+    obtenerDevocionales();
+  }, []);
+
   const toggleExpandido = (devocionalId) => {
     setDevocionalExpandido((prevDevocionalId) =>
       prevDevocionalId === devocionalId ? null : devocionalId
@@ -68,6 +83,30 @@ export default function Devocional() {
       [devocionalId]: !prevState[devocionalId],
     }));
   };
+
+  const handleBusquedaTitulo = async () => {
+    try {
+      if (filtroTitulo.trim() === "") {
+        // Si el campo de búsqueda está vacío, mostrar la lista completa de devocionales
+        setDevocionales(devocionales); // Restaurar la lista completa
+      } else {
+        // Si hay un término de búsqueda, filtrar devocionales por el título
+        const response = await axios.get(
+          `http://localhost:8080/devocionales/buscar`,
+          {
+            params: { nombre: filtroTitulo },
+          }
+        );
+        setDevocionales(response.data); // Actualizar la lista con los resultados de búsqueda
+      }
+    } catch (error) {
+      console.error("Error al buscar devocionales:", error);
+    }
+  };
+
+  useEffect(() => {
+    handleBusquedaTitulo();
+  }, [filtroTitulo]);
 
   const handleBookChange = (e) => {
     const selectedBookAbbr = e.target.value;
@@ -151,7 +190,10 @@ export default function Devocional() {
             : "Mostrar comentarios"}
         </button>
         {comentariosVisibles[devocional.id] && (
-          <Comentarios devocionalId={devocional.id} usuarioId={autor.idUsuario} />
+          <Comentarios
+            devocionalId={devocional.id}
+            usuarioId={autor.idUsuario}
+          />
         )}
       </div>
     );
@@ -160,8 +202,15 @@ export default function Devocional() {
   return (
     <div className="devocionales-container">
       <div className="devocionales">
-        {usuarios.map((usuario) =>
-          usuario.devocionales.map((devocional) => (
+        <input
+          type="text"
+          placeholder="Buscar por título"
+          value={filtroTitulo}
+          onChange={(e) => setFiltroTitulo(e.target.value)}
+          className="busqueda-input"
+        />
+        {devocionales.length > 0 ? (
+          devocionales.map((devocional) => (
             <div key={devocional.id} className="devocional">
               <h3
                 className="titulo"
@@ -171,9 +220,11 @@ export default function Devocional() {
                 {devocional.nombre || "Nombre no disponible"}
               </h3>
               {devocionalExpandido === devocional.id &&
-                renderDevocionalContent({ ...devocional, autor: usuario })}
+                renderDevocionalContent(devocional)}
             </div>
           ))
+        ) : (
+          <p>No se encontraron devocionales.</p>
         )}
       </div>
       <div className="versiculos-container">

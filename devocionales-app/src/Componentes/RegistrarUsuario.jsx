@@ -66,9 +66,9 @@ export default function RegistrarUsuario() {
 
 
   return (
-    <form onSubmit={handleSignUp} encType="multipart/form-data">
+    <form className="formularioRegistro" onSubmit={handleSignUp} encType="multipart/form-data">
       {error && <div className="error-message">{error}</div>}
-      <div>
+      <div class="form-group">
         <label htmlFor="nombre">Nombre:</label>
         <input
           type="text"
@@ -78,7 +78,7 @@ export default function RegistrarUsuario() {
           required
         />
       </div>
-      <div>
+      <div class="form-group">
         <label htmlFor="email">Correo Electrónico:</label>
         <input
           type="email"
@@ -88,8 +88,8 @@ export default function RegistrarUsuario() {
           required
         />
       </div>
-      <div>
-        <label htmlFor="nombreUsuario">Nombre de Usuario (ej: @username345):</label>
+      <div class="form-group">
+        <label htmlFor="nombreUsuario">Nombre de Usuario (Ejemplo: <br/>@NombreOriginal23):</label>
         <input
           type="nombreUsuario"
           id="nombreUsuario"
@@ -98,7 +98,7 @@ export default function RegistrarUsuario() {
           required
         />
       </div>
-      <div>
+      <div class="form-group">
         <label htmlFor="celular">Número de Teléfono:</label>
         <input
           type="tel"
@@ -108,7 +108,7 @@ export default function RegistrarUsuario() {
           required
         />
       </div>
-      <div>
+      <div class="form-group">
         <label htmlFor="contrasenia">Contraseña:</label>
         <input
           type="password"
@@ -118,7 +118,7 @@ export default function RegistrarUsuario() {
           required
         />
       </div>
-      <div>
+      <div class="form-group">
         <label htmlFor="contrasenia2">Confirmar Contraseña:</label>
         <input
           type="password"
@@ -128,7 +128,7 @@ export default function RegistrarUsuario() {
           required
         />
       </div>
-      <div>
+      <div class="form-group">
         <label htmlFor="archivo">Seleccionar Archivo:</label>
         <input
           type="file"

@@ -49,6 +49,9 @@ export default function Comentarios({ devocionalId, usuarioId }) {
       }, {
         withCredentials: true
       });
+      if(user=== null) {
+        navigate("/usuario/registro");
+      }
 
       const nuevoComentarioConUsuario = {
         ...response.data,
@@ -64,6 +67,17 @@ export default function Comentarios({ devocionalId, usuarioId }) {
   return (
     <div className="comentarios-container">
       <h3 className="comentarios-header">Comentarios</h3>
+      
+      <div className="nuevo-comentario-container">
+        <textarea
+          value={nuevoComentario}
+          onChange={(e) => setNuevoComentario(e.target.value)}
+          placeholder="Escribe tu comentario"
+          className="nuevo-comentario"
+        />
+        <button onClick={handleAgregarComentario} className="agregar-comentario-boton">Agregar Comentario</button>
+      </div>
+
       {comentarios.length > 0 ? (
         <ul className="comentarios-lista">
           {comentarios.map((comentario) => (
@@ -80,15 +94,7 @@ export default function Comentarios({ devocionalId, usuarioId }) {
       ) : (
         <p>No hay comentarios todavía</p>
       )}
-      <div className="nuevo-comentario-container">
-        <textarea
-          value={nuevoComentario}
-          onChange={(e) => setNuevoComentario(e.target.value)}
-          placeholder="Escribe tu comentario"
-          className="nuevo-comentario"
-        />
-        <button onClick={handleAgregarComentario} className="agregar-comentario-boton">Agregar Comentario</button>
-      </div>
+      
     </div>
   );
 }

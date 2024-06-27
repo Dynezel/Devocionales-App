@@ -51,14 +51,14 @@ public class UsuarioControlador {
     public ResponseEntity<String> registro(@RequestParam("archivo") MultipartFile archivo,
                                            @RequestParam("nombre") String nombre,
                                            @RequestParam("email") String email,
-                                           @RequestParam("usuarioNombre") String usuarioNombre,
-                                           @RequestParam("biografia") String biografia,
+                                           @RequestParam("nombreUsuario") String nombreUsuario,
+                                           String biografia,
                                            @RequestParam("celular") String celular,
                                            @RequestParam("contrasenia") String contrasenia,
                                            @RequestParam("contrasenia2") String contrasenia2) {
         try {
             // Aquí puedes usar los datos del formulario junto con el archivo adjunto
-            usuarioServicio.registrarUsuario(nombre, email, usuarioNombre, biografia, celular, contrasenia, contrasenia2, archivo);
+            usuarioServicio.registrarUsuario(nombre, email, nombreUsuario, biografia, celular, contrasenia, contrasenia2, archivo);
 
             return ResponseEntity.ok("Usuario registrado correctamente");
         } catch (MiExcepcion ex) {

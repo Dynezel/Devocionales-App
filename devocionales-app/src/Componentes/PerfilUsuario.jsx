@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { Link, useParams } from 'react-router-dom';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import Comentarios from './Comentarios'; // Asegúrate de que la ruta al componente sea correcta
+import '../css/PerfilUsuario.css'; // Importa tus estilos
 
 export default function Perfil() {
   const { idUsuario } = useParams(); // Captura el idUsuario desde la URL
   const [user, setUser] = useState(null);
   const [imagenPerfil, setImagenPerfil] = useState(null);
+  const modules = {
+    toolbar: false,
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -44,22 +51,63 @@ export default function Perfil() {
   };
 
   return (
-    <div>
+    <div className="perfil-container">
       <h2>Perfil de Usuario</h2>
-      {user ? (
-        <div>
-          <p>Nombre: {user.nombre}</p>
-          <p>Email: {user.email}</p>
-          <p>Celular: {user.celular}</p>
-          {imagenPerfil && (
-            <div>
-              <p>Imagen de perfil:</p>
-              <img src={imagenPerfil} alt="Imagen de perfil" />
+      {user && (
+        <div className="perfil-header">
+          <div className="perfil-info">
+            <div className="perfil-main">
+              {imagenPerfil && (
+                <img className="profile-picture" src={imagenPerfil} alt="Imagen de Perfil" />
+              )}
+              <div className="perfil-details">
+                
+                <p className="perfil-nombre">{user.nombre}</p>
+                <p className="perfil-username">@{user.nombreUsuario}</p>
+                
+              </div>
             </div>
-          )}
+            <div className="perfil-bio">
+              <p className="bio">{user.biografia}</p>
+            </div>
+          </div>
+          <div className="perfil-body">
+            <div className="perfil-stats">
+              {/*<p><strong>Email:</strong> {user.email}</p>
+              <p><strong>Celular:</strong> {user.celular}</p>*/}
+            </div>
+            <div className="perfil-devocionales">
+              <h3>Devocionales Creados</h3>
+              {user.devocionales.length > 0 ? (
+                user.devocionales.map((devocional) => (
+                  <div key={devocional.id} className="devocional-item">
+                    <ReactQuill
+                      theme="snow"
+                      value={devocional.descripcion || "Descripción no disponible"}
+                      readOnly={true}
+                      modules={modules}
+                      className="devocional-descripcion"
+                    />
+                    <p className="devocional-fecha"><strong>Fecha de Creación:</strong> {devocional.fechaCreacion || "Fecha no disponible"}</p>
+                    <p className="devocional-autor">
+                      <strong>Autor:</strong> 
+                      {user.idUsuario ? (
+                        <Link to={`/usuario/perfil/${user.idUsuario}`}>
+                          {user.nombre || "Nombre no disponible"}
+                        </Link>
+                      ) : (
+                        "Información del autor no disponible"
+                      )}
+                    </p>
+                    <Comentarios devocionalId={devocional.id} usuarioId={user.idUsuario} />
+                  </div>
+                ))
+              ) : (
+                <p>No has creado devocionales aún.</p>
+              )}
+            </div>
+          </div>
         </div>
-      ) : (
-        <p>Cargando...</p>
       )}
     </div>
   );

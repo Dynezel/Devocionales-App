@@ -34,14 +34,9 @@ public class ComentarioServicio {
     private DevocionalRepositorio devocionalRepositorio;
 
     @Transactional
-    public List<Comentario> obtenerComentariosPorDevocionalYUsuario(int devocionalId, Long usuarioId) {
-        // Obtener los comentarios asociados al devocional
-        List<Comentario> comentariosDevocional = devocionalRepositorio.findComentariosByDevocionalId(devocionalId);
-
-        // Filtrar los comentarios por el usuario
-        return comentariosDevocional.stream()
-                .filter(comentario -> comentario.getIdUsuario().equals(usuarioId))
-                .collect(Collectors.toList());
+    public List<Comentario> obtenerComentariosPorDevocional(int devocionalId) {
+        // Obtener todos los comentarios asociados al devocional
+        return devocionalRepositorio.findComentariosByDevocionalId(devocionalId);
     }
 
     @Transactional

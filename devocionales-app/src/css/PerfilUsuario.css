@@ -1,7 +1,6 @@
 /* Contenedor principal del perfil */
 .perfil-container {
-  background-color: #fff;
-  color: #333;
+  color: white;
   border: 1px solid #e1e8ed;
   border-radius: 10px;
   width: 100%;
@@ -68,24 +67,28 @@
 .perfil-details h2 {
   margin: 0;
   font-size: 20px;
-  color: #333;
+  color: white;
   margin-top: -10px;
 }
 
-.username {
-  margin: 5px 0;
-  color: #657786;
+.perfil-nombre {
+  margin-top: -20px;
+}
+
+.perfil-username {
+  margin-top: -10px;
+  color: #c8ced2;
   font-size: 14px;
 }
 
 /* Biografía */
 .perfil-bio {
-  margin-top: -10px;
+  margin-top: -20px;
 }
 
 .bio {
   font-size: 14px;
-  color: #333;
+  color: #c8ced2;
 }
 
 /* Cuerpo del perfil */
@@ -130,6 +133,6 @@
 .devocional-fecha, .devocional-autor {
   text-align: center; /* Centrar el texto de la fecha y el autor */
   font-size: 14px;
-  color: #555;
+  color: #ffffff;
   margin: 10px 0;
 }

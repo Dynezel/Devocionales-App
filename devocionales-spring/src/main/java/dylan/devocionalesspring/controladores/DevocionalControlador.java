@@ -69,6 +69,12 @@ public class DevocionalControlador {
         return devocionalServicio.obtenerDevocionalPorId(id);
     }
 
+    // Endpoint para buscar devocionales por título
+    @GetMapping("/devocionales/buscar")
+    public List<Devocional> buscarDevocionalesPorNombre(@RequestParam String nombre) {
+        return devocionalRepositorio.findByNombreContainingIgnoreCase(nombre);
+    }
+
     @DeleteMapping("/eliminar/{id}")
     public void eliminarDevocional(@PathVariable int id) {
         devocionalServicio.eliminarDevocional(id);

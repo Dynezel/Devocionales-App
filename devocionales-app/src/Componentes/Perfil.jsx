@@ -53,18 +53,20 @@ export default function Perfil() {
                 <img className="profile-picture" src={imagenPerfil} alt="Imagen de Perfil" />
               )}
               <div className="perfil-details">
+                
                 <p className="perfil-nombre">{user.nombre}</p>
                 <p className="perfil-username">@{user.nombreUsuario}</p>
+                
               </div>
             </div>
             <div className="perfil-bio">
-              <p className="bio">biografiamxdasi relleno puro aver</p>
+              <p className="bio">{user.biografia}</p>
             </div>
           </div>
           <div className="perfil-body">
             <div className="perfil-stats">
-              <p><strong>Email:</strong> {user.email}</p>
-              <p><strong>Celular:</strong> {user.celular}</p>
+              {/*<p><strong>Email:</strong> {user.email}</p>
+              <p><strong>Celular:</strong> {user.celular}</p>*/}
             </div>
             <div className="perfil-devocionales">
               <h3>Devocionales Creados</h3>
