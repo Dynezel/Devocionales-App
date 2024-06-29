@@ -85,7 +85,7 @@ button:focus-visible {
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid rgb(253, 202, 60);
-  height: 80px;
+  height: 100px;
   width: 1600px;
 }
 
@@ -94,8 +94,18 @@ button:focus-visible {
   justify-content: space-between; /* Mueve todos los elementos al lado derecho */
   align-items: center;
   width: 100%; /* Asegura que el contenedor ocupe todo el ancho de la pantalla */
-  margin-left: 20px; /* Mueve los elementos más hacia la derecha */
+  margin-left: 120px; /* Mueve los elementos más hacia la derecha */
   padding-right: 20px; /* Añade un poco de espacio entre los elementos y el borde derecho */
+}
+
+.logo {
+  width: 19rem;
+  height: 110px;
+  justify-content: baseline;
+  margin-top: -45px;
+}
+.logo.logged-in {
+  margin-left: -120px;
 }
 
 .links {
@@ -203,13 +213,6 @@ button:focus-visible {
 
 .nav-items > * {
   margin-right: 40px; /* Ajusta el margen entre los elementos de navegación */
-}
-
-.icon {
-  width: 70px;
-  height: 70px;
-  justify-content: baseline;
-  margin-right: 70px;
 }
 
 .footer {
@@ -404,10 +407,18 @@ button:focus-visible {
     max-height: 84vh;
 }
 
+.devocional-container {
+  border: 1px solid #ccc; /* Ajusta el color y estilo del borde según tus necesidades */
+  padding: 15px; /* Espacio interior */
+  margin-bottom: 15px; /* Espacio entre devocionales */
+  border-radius: 8px; /* Bordes redondeados */
+}
+
 .versiculos-container {
   width: calc(40%); /* Ancho ajustado para los versículos */
   overflow-y: scroll;
-    max-height: 84vh;
+  max-height: 84vh;
+  padding-right: 5%;
 }
  
 .book-selector {

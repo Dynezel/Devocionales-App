@@ -81,25 +81,29 @@ export default function Perfil() {
               {user.devocionales.length > 0 ? (
                 user.devocionales.map((devocional) => (
                   <div key={devocional.id} className="devocional-item">
-                    <ReactQuill
-                      theme="snow"
-                      value={devocional.descripcion || "Descripción no disponible"}
-                      readOnly={true}
-                      modules={modules}
-                      className="devocional-descripcion"
-                    />
-                    <p className="devocional-fecha"><strong>Fecha de Creación:</strong> {devocional.fechaCreacion || "Fecha no disponible"}</p>
-                    <p className="devocional-autor">
-                      <strong>Autor:</strong> 
-                      {user.idUsuario ? (
-                        <Link to={`/usuario/perfil/${user.idUsuario}`}>
-                          {user.nombre || "Nombre no disponible"}
-                        </Link>
-                      ) : (
-                        "Información del autor no disponible"
-                      )}
-                    </p>
-                    <Comentarios devocionalId={devocional.id} usuarioId={user.idUsuario} />
+                    <div className="devocional-content">
+                    <h2 className="devocional-titulo"> <u> {devocional.nombre || "Título no disponible"} </u> </h2>
+                      <ReactQuill
+                        theme="snow"
+                        value={devocional.descripcion || "Descripción no disponible"}
+                        readOnly={true}
+                        modules={modules}
+                        className="devocional-descripcion"
+                      />
+                      
+                      <p className="devocional-fecha"><strong>Fecha de Creación:</strong> {devocional.fechaCreacion || "Fecha no disponible"}</p>
+                      <p className="devocional-autor">
+                        <strong>Autor:</strong>
+                        {user.idUsuario ? (
+                          <Link to={`/usuario/perfil/${user.idUsuario}`}>
+                            {user.nombre || "Nombre no disponible"}
+                          </Link>
+                        ) : (
+                          "Información del autor no disponible"
+                        )}
+                      </p>
+                      <Comentarios devocionalId={devocional.id} usuarioId={user.idUsuario} />
+                    </div>
                   </div>
                 ))
               ) : (
