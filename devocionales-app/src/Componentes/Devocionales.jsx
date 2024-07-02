@@ -6,6 +6,7 @@ import "react-quill/dist/quill.snow.css";
 import { useParams } from "react-router-dom";
 import { conseguirDatosBiblia } from "../Servicios/bibliaServicio";
 import Comentarios from "./Comentarios";
+import '@fortawesome/fontawesome-free/css/all.css';
 
 export default function Devocional() {
   const [usuarios, setUsuarios] = useState([]);
@@ -25,7 +26,6 @@ export default function Devocional() {
   const [resultadosBusqueda, setResultadosBusqueda] = useState([]); // Estado para los resultados de búsqueda
   const [meGustas, setMeGustas] = useState({}); // Estado para almacenar los "Me Gusta" por devocional
   const [likesPorUsuario, setLikesPorUsuario] = useState([]); // Estado para almacenar los "Me Gusta" de un usuario
-
 
   const modules = {
     toolbar: false,
@@ -54,10 +54,13 @@ export default function Devocional() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/usuario/perfil', { withCredentials: true });
+        const response = await axios.get(
+          "http://localhost:8080/usuario/perfil",
+          { withCredentials: true }
+        );
         setUser(response.data);
       } catch (error) {
-        console.error('Error fetching user', error);
+        console.error("Error fetching user", error);
       }
     };
 
@@ -173,7 +176,7 @@ export default function Devocional() {
         {}
       );
       if (!response.ok) {
-        console.log("Vista Actualizada")
+        console.log("Vista Actualizada");
       }
     } catch (error) {
       console.error(error);
@@ -181,25 +184,49 @@ export default function Devocional() {
   };
 
   // Método para alternar "Me Gusta"
-  const toggleMeGusta = async (devocionalId, idUsuario) => {
-    try {
-      console.log(idUsuario)
-      const response = await axios.post(`http://localhost:8080/api/megusta/toggle`, null, {
-        params: {
-          usuarioId: user.idUsuario, // Verifica que idUsuario tenga un valor válido
-          devocionalId: devocionalId,
-        },
-      });
+
+  const toggleMeGusta = async (devocionalId) => {
+    if (!user || !user.idUsuario) {
+      console.error("Usuario no autenticado");
+      return;
+    }
   
+    try {
+      // Realizar POST para alternar "Me Gusta"
+      const response = await axios.post(
+        `http://localhost:8080/devocionales/${devocionalId}/megusta`,
+        null,
+        {
+          params: {
+            usuarioId: user.idUsuario,
+          },
+        }
+      );
+  
+      // Actualizar "Me Gustas" en el estado local
       const nuevoMeGusta = response.data;
       setMeGustas((prevState) => ({
         ...prevState,
-        [devocionalId]: nuevoMeGusta ? prevState[devocionalId] + 1 : prevState[devocionalId] - 1,
+        [devocionalId]: nuevoMeGusta
+          ? prevState[devocionalId] + 1
+          : prevState[devocionalId] - 1,
+      }));
+  
+      // Obtener "Me Gustas" actualizados y actualizar el estado
+      const meGustasResponse = await axios.get(
+        `http://localhost:8080/devocionales/${devocionalId}/megusta`
+      );
+      const meGustasData = meGustasResponse.data;
+      setMeGustas((prevState) => ({
+        ...prevState,
+        [devocionalId]: meGustasData.length, // Ajusta según cómo manejes los "Me Gusta"
+        
       }));
     } catch (error) {
       console.error("Error al alternar 'Me Gusta':", error);
     }
   };
+  
 
   const renderDevocionalContent = (devocional) => {
     if (!devocional) {
@@ -221,12 +248,13 @@ export default function Devocional() {
           modules={modules}
         />
 
-        <button onClick={() => toggleMeGusta(devocional.id)}>
-          {meGustas[devocional.id] > 0 ? "Quitar Me Gusta" : "Dar Me Gusta"} (
+<button onClick={() => toggleMeGusta(devocional.id)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+          <i className={meGustas[devocional.id] > 0 ? "fas fa-heart" : "far fa-heart"} style={{ color: meGustas[devocional.id] > 0 ? 'red' : 'grey' }}></i>
+          {meGustas[devocional.id] > 0 ? " Quitar Me Gusta" : " Dar Me Gusta"} (
           {meGustas[devocional.id] || 0})
         </button>
         <p>Vistas: {devocional.vistas}</p>
-        <p>Likes: {meGustas[devocional.id] || devocional.likes}</p>
+        <p>Likes: {meGustas[devocional.id] !== undefined ? meGustas[devocional.id] : 0}</p>
 
         <p className="devocional-fecha">
           Fecha de Creación: {fechaCreacion || "Fecha no disponible"}

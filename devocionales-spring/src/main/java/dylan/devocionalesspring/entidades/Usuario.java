@@ -40,8 +40,8 @@ public class Usuario implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Devocional> devocionales;
 
-    @OneToMany(mappedBy = "usuarioId")
-    private List<MeGusta> meGustas;
+    @OneToMany(mappedBy = "usuarioId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MeGusta> meGustas = new ArrayList<>();
 
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

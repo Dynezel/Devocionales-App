@@ -25,8 +25,8 @@ public class Devocional {
     @Column(nullable = false)
     private int vistas = 0;
 
-    @OneToMany(mappedBy = "devocionalId")
-    private List<MeGusta> meGustas;
+    @OneToMany(mappedBy = "devocionalId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MeGusta> meGustas = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(
