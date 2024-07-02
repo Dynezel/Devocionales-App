@@ -26,8 +26,5 @@ public interface DevocionalRepositorio extends JpaRepository<Devocional, Integer
     @Query("UPDATE Devocional d SET d.vistas = d.vistas + 1 WHERE d.id = :id")
     void incrementarVistas(@Param("id") Long id);
 
-    @Modifying
-    @Query("UPDATE Devocional d SET d.likes = d.likes + 1 WHERE d.id = :id")
-    void incrementarLikes(@Param("id") Long id);
 
 }

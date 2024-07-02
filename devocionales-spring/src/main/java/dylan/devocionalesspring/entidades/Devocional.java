@@ -25,8 +25,8 @@ public class Devocional {
     @Column(nullable = false)
     private int vistas = 0;
 
-    @Column(nullable = false)
-    private int likes = 0;
+    @OneToMany(mappedBy = "devocionalId")
+    private List<MeGusta> meGustas;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(

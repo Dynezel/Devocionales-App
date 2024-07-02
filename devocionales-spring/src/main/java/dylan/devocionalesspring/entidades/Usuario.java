@@ -40,6 +40,10 @@ public class Usuario implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Devocional> devocionales;
 
+    @OneToMany(mappedBy = "usuarioId")
+    private List<MeGusta> meGustas;
+
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(
             name = "usuario_comentarios",

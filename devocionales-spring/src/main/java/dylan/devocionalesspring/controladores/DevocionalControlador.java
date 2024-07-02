@@ -60,12 +60,6 @@ public class DevocionalControlador {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{id}/likes")
-    public ResponseEntity<Void> incrementarLikes(@RequestParam Long devocionalId) {
-        devocionalServicio.incrementarLikes(devocionalId);
-        return ResponseEntity.ok().build();
-    }
-
     @PutMapping("/modificar/{id}")
     public boolean modificarDevocional(@PathVariable int id, @RequestBody Devocional devocional) {
         return devocionalServicio.modificarDevocional(id, devocional.getNombre(), devocional.getDescripcion());

@@ -40,11 +40,6 @@ public class DevocionalServicio {
     }
 
     @Transactional
-    public void incrementarLikes(Long devocionalId) {
-        devocionalRepositorio.incrementarLikes(devocionalId);
-    }
-
-    @Transactional
     public boolean modificarDevocional(int id, String nombre, String descripcion) {
         Optional<Devocional> respuesta = devocionalRepositorio.findById(id);
         if (respuesta.isPresent()) {

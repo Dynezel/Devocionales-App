@@ -9,6 +9,7 @@ import Comentarios from "./Comentarios";
 
 export default function Devocional() {
   const [usuarios, setUsuarios] = useState([]);
+  const [user, setUser] = useState([]);
   const [libros, setLibros] = useState([]);
   const [devocionales, setDevocionales] = useState([]);
   const [devocionalExpandido, setDevocionalExpandido] = useState(null);
@@ -22,6 +23,9 @@ export default function Devocional() {
   const [versiculos, setVersiculos] = useState([]);
   const [filtroTitulo, setFiltroTitulo] = useState(""); // Estado para el filtro de búsqueda
   const [resultadosBusqueda, setResultadosBusqueda] = useState([]); // Estado para los resultados de búsqueda
+  const [meGustas, setMeGustas] = useState({}); // Estado para almacenar los "Me Gusta" por devocional
+  const [likesPorUsuario, setLikesPorUsuario] = useState([]); // Estado para almacenar los "Me Gusta" de un usuario
+
 
   const modules = {
     toolbar: false,
@@ -48,6 +52,19 @@ export default function Devocional() {
   }, [idUsuario]);
 
   useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/usuario/perfil', { withCredentials: true });
+        setUser(response.data);
+      } catch (error) {
+        console.error('Error fetching user', error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
     const traerDatosBiblia = async () => {
       try {
         const datos = await conseguirDatosBiblia();
@@ -69,7 +86,7 @@ export default function Devocional() {
       incrementarVistas(id);
     }
   };
-  
+
   const toggleComentarios = (devocionalId) => {
     setComentariosVisibles((prevState) => ({
       ...prevState,
@@ -151,23 +168,38 @@ export default function Devocional() {
 
   const incrementarVistas = async (id) => {
     try {
-      const response = await axios.post(`http://localhost:8080/${id}/vistas`, {
-      });
+      const response = await axios.post(
+        `http://localhost:8080/${id}/vistas`,
+        {}
+      );
       if (!response.ok) {
-        throw new Error('Error al incrementar vistas');
+        console.log("Vista Actualizada")
       }
     } catch (error) {
       console.error(error);
     }
   };
 
-const incrementarLikes = async (devocionalId) => {
+  // Método para alternar "Me Gusta"
+  const toggleMeGusta = async (devocionalId, idUsuario) => {
     try {
-        await axios.post(`http://localhost:8080/${devocionalId}/likes`);
+      console.log(idUsuario)
+      const response = await axios.post(`http://localhost:8080/api/megusta/toggle`, null, {
+        params: {
+          usuarioId: user.idUsuario, // Verifica que idUsuario tenga un valor válido
+          devocionalId: devocionalId,
+        },
+      });
+  
+      const nuevoMeGusta = response.data;
+      setMeGustas((prevState) => ({
+        ...prevState,
+        [devocionalId]: nuevoMeGusta ? prevState[devocionalId] + 1 : prevState[devocionalId] - 1,
+      }));
     } catch (error) {
-        console.error('Error al incrementar likes:', error);
+      console.error("Error al alternar 'Me Gusta':", error);
     }
-};
+  };
 
   const renderDevocionalContent = (devocional) => {
     if (!devocional) {
@@ -178,7 +210,10 @@ const incrementarLikes = async (devocionalId) => {
 
     return (
       <div className="devocional-container">
-        <h2> <u> {nombre || "Nombre no disponible"} </u> </h2>
+        <h2>
+          {" "}
+          <u> {nombre || "Nombre no disponible"} </u>{" "}
+        </h2>
         <ReactQuill
           theme="snow"
           value={descripcion || "Descripción no disponible"}
@@ -186,11 +221,16 @@ const incrementarLikes = async (devocionalId) => {
           modules={modules}
         />
 
-<button onClick={incrementarLikes}>Like</button>
-                    <p>Vistas: {devocional.vistas}</p>
-                    <p>Likes: {devocional.likes}</p>
+        <button onClick={() => toggleMeGusta(devocional.id)}>
+          {meGustas[devocional.id] > 0 ? "Quitar Me Gusta" : "Dar Me Gusta"} (
+          {meGustas[devocional.id] || 0})
+        </button>
+        <p>Vistas: {devocional.vistas}</p>
+        <p>Likes: {meGustas[devocional.id] || devocional.likes}</p>
 
-        <p className="devocional-fecha">Fecha de Creación: {fechaCreacion || "Fecha no disponible"}</p>
+        <p className="devocional-fecha">
+          Fecha de Creación: {fechaCreacion || "Fecha no disponible"}
+        </p>
         <p className="devocional-autor">
           Autor:
           {autor && autor.idUsuario ? (
