@@ -1,7 +1,87 @@
 /* Comentarios.css */
 
 .comentarios-container {
-   
+  margin: 20px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-right: 5px;
+  margin-left: 5px;
+}
+
+.comentarios-header {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.comentarios-lista {
+  list-style-type: none;
+  padding: 0;
+}
+
+.comentarios-lista li {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.imagenComentario {
+  width: 5%;
+  height: 5%;
+  border-radius: 30%;
+  justify-content: center;
+}
+
+.comentario-texto {
+  max-width: 80%;
+}
+
+.comentario-usuario {
+  font-weight: bold;
+  margin-right: 5px;
+  margin-left: 7px;
+}
+
+.nuevo-comentario-container {
+  display: grid; /* Utiliza grid para el contenedor */
+  grid-template-columns: 1fr auto; /* Define dos columnas: la primera toma todo el espacio, la segunda se ajusta al tamaño del botón */
+  gap: 10px; /* Espaciado entre las columnas */
+  align-items: start; /* Alinea el contenido de la fila en la parte superior */
+  margin-top: 10px; /* Añade un margen superior para separación */
+}
+
+
+.nuevo-comentario {
+  width: 95%; /* El textarea toma todo el espacio disponible */
+  padding: 10px; /* Añade un relleno interno */
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  border-radius: 4px; /* Bordes redondeados */
+  resize: both; /* Permite redimensionar en ambas direcciones */
+  max-width: 450px; /* Limita el ancho máximo al 100% del contenedor */
+  max-height: 200px; /* Establece una altura máxima para el textarea */
+}
+
+.agregar-comentario-boton {
+  padding: 10px 20px; /* Añade relleno interno */
+  background-color: #007bff; /* Color de fondo azul */
+  color: white; /* Color del texto blanco */
+  border: none; /* Sin borde */
+  border-radius: 4px; /* Bordes redondeados */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+  height: fit-content; /* Ajusta la altura para que coincida con el contenido */
+}
+
+.agregar-comentario-boton:hover {
+  background-color: #1e8bff;
+}
+
+/* Colores Claros */
+@media (prefers-color-scheme: light) {
+  .comentarios-container {
     margin: 20px 0;
     padding: 10px;
     border: 1px solid #ddd;
@@ -9,18 +89,18 @@
     margin-right: 5px;
     margin-left: 5px;
   }
-  
+
   .comentarios-header {
     font-size: 1.2em;
     margin-bottom: 10px;
     font-weight: bold;
   }
-  
+
   .comentarios-lista {
     list-style-type: none;
     padding: 0;
   }
-  
+
   .comentarios-lista li {
     display: flex;
     align-items: flex-start;
@@ -28,51 +108,51 @@
     padding: 10px;
     border-bottom: 1px solid #eee;
   }
-  
-  .imagenComentario{
+
+  .imagenComentario {
     width: 5%;
-    height:5%;
+    height: 5%;
     border-radius: 30%;
     justify-content: center;
   }
-  
+
   .comentario-texto {
     max-width: 80%;
   }
-  
+
   .comentario-usuario {
     font-weight: bold;
     margin-right: 5px;
     margin-left: 7px;
   }
-  
+
   .nuevo-comentario-container {
-  display: grid;                  /* Utiliza grid para el contenedor */
-  grid-template-columns: 1fr auto; /* Define dos columnas: la primera toma todo el espacio, la segunda se ajusta al tamaño del botón */
-  gap: 10px;                      /* Espaciado entre las columnas */
-  align-items: start;             /* Alinea el contenido de la fila en la parte superior */
-  margin-top: 10px;               /* Añade un margen superior para separación */
-}
+    display: grid; /* Utiliza grid para el contenedor */
+    grid-template-columns: 1fr auto; /* Define dos columnas: la primera toma todo el espacio, la segunda se ajusta al tamaño del botón */
+    gap: 10px; /* Espaciado entre las columnas */
+    align-items: start; /* Alinea el contenido de la fila en la parte superior */
+    margin-top: 10px; /* Añade un margen superior para separación */
+  }
 
-.nuevo-comentario {
-  width: 95%;                    /* El textarea toma todo el espacio disponible */
-  padding: 10px;                  /* Añade un relleno interno */
-  border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  border-radius: 4px;             /* Bordes redondeados */
-}
+  .nuevo-comentario {
+    width: 95%; /* El textarea toma todo el espacio disponible */
+    padding: 10px; /* Añade un relleno interno */
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    border-radius: 4px; /* Bordes redondeados */
+  }
 
-.agregar-comentario-boton {
-  padding: 10px 20px;             /* Añade relleno interno */
-  background-color: #007bff;      /* Color de fondo azul */
-  color: white;                   /* Color del texto blanco */
-  border: none;                   /* Sin borde */
-  border-radius: 4px;             /* Bordes redondeados */
-  cursor: pointer;                /* Cambia el cursor al pasar sobre el botón */
-  height: fit-content;            /* Ajusta la altura para que coincida con el contenido */
-}
-  
+  .agregar-comentario-boton {
+    padding: 10px 20px; /* Añade relleno interno */
+    background-color: #007bff; /* Color de fondo azul */
+    color: white; /* Color del texto blanco */
+    border: none; /* Sin borde */
+    border-radius: 4px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    height: fit-content; /* Ajusta la altura para que coincida con el contenido */
+  }
+
   .agregar-comentario-boton:hover {
     background-color: #1e8bff;
   }
-  
+}

@@ -22,6 +22,12 @@ public class Devocional {
     private String descripcion;
     private LocalDate fechaCreacion;
 
+    @Column(nullable = false)
+    private int vistas = 0;
+
+    @Column(nullable = false)
+    private int likes = 0;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "devocional_comentarios",

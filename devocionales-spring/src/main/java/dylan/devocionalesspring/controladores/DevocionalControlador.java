@@ -54,6 +54,18 @@ public class DevocionalControlador {
         return new ResponseEntity<>(creadoDevocional, HttpStatus.CREATED);
     }
 
+    @PostMapping("/{id}/vistas")
+    public ResponseEntity<Void> incrementarVistas(@PathVariable Long id) {
+        devocionalServicio.incrementarVistas(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/likes")
+    public ResponseEntity<Void> incrementarLikes(@RequestParam Long devocionalId) {
+        devocionalServicio.incrementarLikes(devocionalId);
+        return ResponseEntity.ok().build();
+    }
+
     @PutMapping("/modificar/{id}")
     public boolean modificarDevocional(@PathVariable int id, @RequestBody Devocional devocional) {
         return devocionalServicio.modificarDevocional(id, devocional.getNombre(), devocional.getDescripcion());

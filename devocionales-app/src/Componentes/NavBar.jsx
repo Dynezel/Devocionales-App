@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import LogoImg from "../Images/DevocionalesWeb.png";
+import LogoImg from '../Images/DevocionalesWebIconBlack2.png';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -57,7 +57,7 @@ export default function NavBar() {
             className={`logo ${user ? 'logged-in' : ''}`} 
           />
         </Link>
-        <nav className='links'>
+        <nav className={`links ${user ? 'logged-in' : ''}`}>
           <div className="nav-items">
             <Link to={"/devocionales"}> 
               Devocionales

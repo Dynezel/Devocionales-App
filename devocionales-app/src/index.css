@@ -65,21 +65,6 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
-
 .header {
   display: flex;
   justify-content: space-between;
@@ -99,17 +84,31 @@ button:focus-visible {
 }
 
 .logo {
-  width: 19rem;
+  width: 10rem;
   height: 110px;
   justify-content: baseline;
   margin-top: -45px;
 }
 .logo.logged-in {
   margin-left: -120px;
+  width: 7rem;
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 2em #ffff00);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #ba00fd);
 }
 
 .links {
   margin-left: 1000px;
+  display: flex;
+  align-items: center;
+}
+
+.links.logged-in {
+  margin-left: 1020px;
   display: flex;
   align-items: center;
 }
@@ -244,82 +243,52 @@ button:focus-visible {
   grid-gap: 30px;
 }
 
-/* Estilos personalizados para centrar los encabezados en react-quill */
+/* Centrar el contenido de .ql-editor */
+.ql-editor {
+  width: auto;
+  max-width: 600px; /* Ajusta el ancho máximo según tus necesidades */
+  margin: 0 auto; /* Centra el contenedor horizontalmente */
+  text-align: center; /* Centra el texto dentro del contenedor */
+  min-height: fit-content;
+  overflow-x: auto;
+}
+
+/* Opcional: Ajustes específicos para el texto y títulos dentro de .ql-editor */
+.ql-editor p,
 .ql-editor h1,
 .ql-editor h2,
 .ql-editor h3,
 .ql-editor h4,
 .ql-editor h5,
 .ql-editor h6 {
-  text-align: center;
+  text-align: center; /* Centra todos los encabezados y párrafos */
+  margin: 10px 0; /* Espaciado entre elementos */
 }
 
-/* Establece el tamaño de la altura del editor de react-quill */
-.ql-editor {
-  width: 600px;
-  min-height: fit-content; /* Ajusta el tamaño del ancho según sea necesario */
-  overflow-x: auto;
+/* Asegurarse de que el contenedor .devocional-container esté centrado */
+.devocional-container {
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin: 0 auto 15px; /* Centrando horizontalmente y añadiendo margen inferior */
+  border-radius: 8px;
+  max-width: 800px; /* Ancho máximo del contenedor */
+  text-align: center; /* Centra el contenido dentro del contenedor */
 }
 
+/* Otros estilos preexistentes */
 .titulo {
   border-radius: 5px;
-  border: 3px solid rgb(227, 225, 225);
-
+  border: 3px solid rgb(177, 177, 177);
 }
 
 .titulo:hover {
   background-color: #565656;
-  
 }
 
 .titulo:active {
-  background-color: rgb(46, 46, 46);
+  background-color: rgb(97, 97, 97);
   box-shadow: 0 5px #310038;
   transform: translateY(3px);
-}
-
-#root {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
 }
 
 button {
@@ -343,18 +312,6 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
 .icon {
   width: 70px;
   height: 70px;
@@ -397,7 +354,7 @@ button:focus-visible {
 
 /* Estilo para cambiar el fondo al hacer hover */
 .busqueda-input:hover {
-  background-color: #525252; /* Fondo gris claro */
+  background-color: #979797; /* Fondo gris claro */
 }
 
 .devocionales {
@@ -412,6 +369,10 @@ button:focus-visible {
   padding: 15px; /* Espacio interior */
   margin-bottom: 15px; /* Espacio entre devocionales */
   border-radius: 8px; /* Bordes redondeados */
+}
+
+.mostrar-comentarios-boton {
+  background-color: #d6d6d6;
 }
 
 .versiculos-container {
@@ -468,7 +429,7 @@ button:focus-visible {
 
 .titulo {
   border-radius: 5px;
-  border: 3px solid rgb(227, 225, 225);
+  border: 3px solid rgb(177, 177, 177);
 
 }
 
@@ -478,9 +439,455 @@ button:focus-visible {
 }
 
 .titulo:active {
+  background-color: rgb(97, 97, 97);
+  box-shadow: 0 5px #310038;
+  transform: translateY(3px);
+}
+
+/* Colores Claros */
+@media (prefers-color-scheme: light) {
+  /* General Styles */
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  max-width: 1600px; /* Establece el ancho máximo */
+  margin: 0 auto; /* Centra el contenido horizontalmente */
+}
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light;
+  color: #333333; /* Texto principal */
+  background-color: #f5f5f5; /* Fondo principal */
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #007acc; /* Color de enlace */
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: #005ea1; /* Color de enlace al pasar el mouse */
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #ffffff; /* Fondo del botón */
+  color: #333333; /* Color del texto del botón */
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover {
+  border-color: #007acc; /* Color del borde al pasar el mouse */
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgb(253, 202, 60);
+  height: 100px;
+  width: 1600px;
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between; /* Mueve todos los elementos al lado derecho */
+  align-items: center;
+  width: 100%; /* Asegura que el contenedor ocupe todo el ancho de la pantalla */
+  margin-left: 120px; /* Mueve los elementos más hacia la derecha */
+  padding-right: 20px; /* Añade un poco de espacio entre los elementos y el borde derecho */
+}
+
+.logo {
+  width: 8rem;
+  height: 110px;
+  justify-content: baseline;
+  margin-top: -45px;
+}
+.logo.logged-in {
+  margin-left: -120px;
+  width: 7rem;
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 2em #a47801);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #ba00fd);
+}
+
+.links {
+  margin-left: 1000px;
+  display: flex;
+  align-items: center;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  margin-left: 20px; /* Ajusta el margen entre los enlaces y el perfil de usuario */
+}
+
+.user-profile div {
+  margin-right: 10px;
+}
+
+.user-profile img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%; /* Añade un borde redondeado a la imagen de perfil */
+}
+
+.user-profile .dropdown-menu {
+  position: absolute;
+  top: 100%; /* Coloca el menú debajo del nombre de usuario */
+  right: 0; /* Coloca el menú a la derecha del nombre de usuario */
+  background-color: #f9f9f9;
+  border: 1px solid #afafaf;
+  border-radius: 5px;
+  padding: 8px 0;
+  list-style: none;
+  display: none; /* Inicialmente oculta el menú */
+}
+
+.user-profile:hover .dropdown-menu {
+  display: block; /* Muestra el menú cuando se pasa el ratón sobre el nombre de usuario */
+}
+
+.formularioRegistro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5px;
+  width: 100%;
+}
+
+.formularioRegistro label {
+  width: 100px;
+  text-align: right;
+  margin-right: 15px;
+}
+
+.formularioRegistro input {
+  width: 300px;
+  padding: 8px;
+  border: 1px solid #a4a4a4;
+  border-radius: 4px;
+}
+
+.dropdown-menu li {
+  padding: 8px 16px;
+}
+
+.dropdown-menu li:hover {
+  background-color: #e9e9e9;
+}
+
+.nav-items {
+  display: flex;
+  align-items: center;
+}
+
+.nav-items > * {
+  margin-right: 40px; /* Ajusta el margen entre los elementos de navegación */
+}
+
+.footer {
+  border-top: 1px solid rgb(99, 60, 253);
+  height: 50px;
+  text-align: center;
+}
+
+.detalle {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.detalle img {
+  margin-top: 30px;
+  width: 300px;
+  height: 300px;
+}
+
+.tabla {
+  width: 1000px;
+}
+
+.links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 30px;
+}
+
+/* Estilos personalizados para centrar los encabezados en react-quill */
+.ql-editor h1,
+.ql-editor h2,
+.ql-editor h3,
+.ql-editor h4,
+.ql-editor h5,
+.ql-editor h6 {
+  text-align: center;
+}
+
+/* Establece el tamaño de la altura del editor de react-quill */
+.ql-editor {
+  width: 600px;
+  min-height: fit-content; /* Ajusta el tamaño del ancho según sea necesario */
+  overflow-x: auto;
+}
+
+.titulo {
+  border-radius: 5px;
+  border: 3px solid rgb(227, 225, 225);
+
+}
+
+.titulo:hover {
+  background-color: #787878;
+  
+}
+
+.titulo:active {
   background-color: rgb(46, 46, 46);
   box-shadow: 0 5px #310038;
   transform: translateY(3px);
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(62, 62, 62, 0.87);
+  background-color: #f3f3f3;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #a8a8a8;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover {
+  border-color: #646cff;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.icon {
+  width: 70px;
+  height: 70px;
+  display: inline-flex;
+}
+
+.footer {
+  border-top: 1px solid rgb(253, 202, 60);
+  height: 50px;
+  text-align: center;
+}
+
+.links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 30px;
+}
+.devocionales-container {
+  display: flex;
+  justify-content: space-between;
+  
+}
+
+/* Estilo general para el input de búsqueda */
+.busqueda-input {
+  width: 40%;
+  padding: 10px;         /* Espaciado interno */
+  margin: 10px 0;        /* Margen superior e inferior */
+  border: 2px solid #bebebe; /* Borde gris claro */
+  border-radius: 5px;    /* Bordes redondeados */
+  font-size: 16px;       /* Tamaño de la fuente */
+}
+
+/* Estilo del input al recibir foco */
+.busqueda-input:focus {
+  border-color: #4A90E2;  /* Cambiar el color del borde al recibir foco */
+  outline: none;         /* Quitar el borde exterior azul predeterminado */
+  box-shadow: 0 0 5px rgba(74, 144, 226, 0.5); /* Agregar un efecto de sombra */
+}
+
+/* Estilo para cambiar el fondo al hacer hover */
+.busqueda-input:hover {
+  background-color: #e9e9e9; /* Fondo gris claro */
+}
+
+.devocionales {
+  width: calc(50% - 20px); /* Ancho ajustado para los devocionales */
+  margin-right: 20px; /* Espacio entre los contenedores */
+  overflow-y: scroll;
+    max-height: 84vh;
+}
+
+.devocional-container {
+  border: 1px solid #bcbcbc; /* Ajusta el color y estilo del borde según tus necesidades */
+  padding: 15px; /* Espacio interior */
+  margin-bottom: 15px; /* Espacio entre devocionales */
+  border-radius: 8px; /* Bordes redondeados */
+}
+
+.versiculos-container {
+  width: calc(40%); /* Ancho ajustado para los versículos */
+  overflow-y: scroll;
+  max-height: 84vh;
+  padding-right: 5%;
+}
+ 
+.book-selector {
+  position: relative;
+}
+
+.book-selector input[type="text"] {
+  width: 100%;
+  padding: 8px 30px 8px 10px;
+  font-size: 16px;
+  border: 1px solid #a1a1a1;
+  border-radius: 4px;
+}
+
+.book-selector select {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 30%;
+  border: none;
+  background-color: transparent;
+  color: #000000;
+  font-size: 16px;
+  padding: 8px;
+  appearance: none;
+}
+  
+
+
+/* Estilos personalizados para centrar los encabezados en react-quill */
+.ql-editor h1,
+.ql-editor h2,
+.ql-editor h3,
+.ql-editor h4,
+.ql-editor h5,
+.ql-editor h6 {
+  text-align: center;
+}
+
+/* Establece el tamaño de la altura del editor de react-quill */
+.ql-editor {
+  width: 600px;
+  min-height: fit-content; /* Ajusta el tamaño del ancho según sea necesario */
+  overflow-x: auto;
+}
+
+.titulo {
+  border-radius: 5px;
+  border: 3px solid rgb(227, 225, 225);
+
+}
+
+.titulo:hover {
+  background-color: #e7e7e7;
+  
+}
+
+.titulo:active {
+  background-color: rgb(210, 210, 210);
+  box-shadow: 0 5px #aeaeae;
+  transform: translateY(3px);
+}
 }
 
 /* Estilos responsivos */

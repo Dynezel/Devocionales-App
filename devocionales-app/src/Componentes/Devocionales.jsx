@@ -59,12 +59,17 @@ export default function Devocional() {
     traerDatosBiblia();
   }, []);
 
-  const toggleExpandido = (devocionalId) => {
-    setDevocionalExpandido((prevDevocionalId) =>
-      prevDevocionalId === devocionalId ? null : devocionalId
-    );
+  const toggleExpandido = (id) => {
+    // Si el devocional ya está expandido, lo colapsamos
+    if (devocionalExpandido === id) {
+      setDevocionalExpandido(null);
+    } else {
+      // Si no está expandido, lo expandimos y actualizamos las vistas
+      setDevocionalExpandido(id);
+      incrementarVistas(id);
+    }
   };
-
+  
   const toggleComentarios = (devocionalId) => {
     setComentariosVisibles((prevState) => ({
       ...prevState,
@@ -144,6 +149,26 @@ export default function Devocional() {
     setVerse(selectedVerse);
   };
 
+  const incrementarVistas = async (id) => {
+    try {
+      const response = await axios.post(`http://localhost:8080/${id}/vistas`, {
+      });
+      if (!response.ok) {
+        throw new Error('Error al incrementar vistas');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+const incrementarLikes = async (devocionalId) => {
+    try {
+        await axios.post(`http://localhost:8080/${devocionalId}/likes`);
+    } catch (error) {
+        console.error('Error al incrementar likes:', error);
+    }
+};
+
   const renderDevocionalContent = (devocional) => {
     if (!devocional) {
       return <p>Información del devocional no disponible.</p>;
@@ -160,8 +185,13 @@ export default function Devocional() {
           readOnly={true}
           modules={modules}
         />
-        <p>Fecha de Creación: {fechaCreacion || "Fecha no disponible"}</p>
-        <p>
+
+<button onClick={incrementarLikes}>Like</button>
+                    <p>Vistas: {devocional.vistas}</p>
+                    <p>Likes: {devocional.likes}</p>
+
+        <p className="devocional-fecha">Fecha de Creación: {fechaCreacion || "Fecha no disponible"}</p>
+        <p className="devocional-autor">
           Autor:
           {autor && autor.idUsuario ? (
             <Link to={`/usuario/perfil/${autor.idUsuario}`}>
