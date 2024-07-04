@@ -24,7 +24,7 @@ public class MeGustaControlador {
 
     @PostMapping("/devocionales/{devocionalId}/megusta")
     public ResponseEntity<MeGusta> toggleMeGusta(@PathVariable int devocionalId, Long usuarioId) throws UsuarioNoEncontradoExcepcion {
-        
+
         MeGusta meGusta = meGustaServicio.toggleMeGusta(usuarioId, devocionalId);
         return new ResponseEntity<>(meGusta, meGusta == null ? HttpStatus.OK : HttpStatus.CREATED);
     }

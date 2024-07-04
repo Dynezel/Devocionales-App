@@ -6,7 +6,7 @@ import "react-quill/dist/quill.snow.css";
 import { useParams } from "react-router-dom";
 import { conseguirDatosBiblia } from "../Servicios/bibliaServicio";
 import Comentarios from "./Comentarios";
-import '@fortawesome/fontawesome-free/css/all.css';
+import "@fortawesome/fontawesome-free/css/all.css";
 
 export default function Devocional() {
   const [usuarios, setUsuarios] = useState([]);
@@ -34,7 +34,7 @@ export default function Devocional() {
     },
   };
 
-  const { idUsuario } = useParams();
+  const { idUsuario, devocionalId } = useParams();
 
   useEffect(() => {
     const obtenerDatos = async () => {
@@ -51,6 +51,7 @@ export default function Devocional() {
     obtenerDatos();
   }, [idUsuario]);
 
+  //Llama a los datos del usuario actual
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -87,6 +88,7 @@ export default function Devocional() {
       // Si no está expandido, lo expandimos y actualizamos las vistas
       setDevocionalExpandido(id);
       incrementarVistas(id);
+      obtenerLikes(id);
     }
   };
 
@@ -183,50 +185,73 @@ export default function Devocional() {
     }
   };
 
-  // Método para alternar "Me Gusta"
-
-  const toggleMeGusta = async (devocionalId) => {
+  const obtenerLikes = async (id) => {
     if (!user || !user.idUsuario) {
       console.error("Usuario no autenticado");
       return;
     }
-  
+
     try {
-      // Realizar POST para alternar "Me Gusta"
-      const response = await axios.post(
-        `http://localhost:8080/devocionales/${devocionalId}/megusta`,
-        null,
-        {
-          params: {
-            usuarioId: user.idUsuario,
-          },
-        }
+      const response = await axios.get(
+        `http://localhost:8080/devocionales/${id}/megusta`
       );
-  
-      // Actualizar "Me Gustas" en el estado local
-      const nuevoMeGusta = response.data;
+      const likesData = response.data;
+      const userLiked = likesData.some((like) => like.usuarioId === user.idUsuario);
+
       setMeGustas((prevState) => ({
         ...prevState,
-        [devocionalId]: nuevoMeGusta
-          ? prevState[devocionalId] + 1
-          : prevState[devocionalId] - 1,
+        [id]: likesData.length,
       }));
-  
-      // Obtener "Me Gustas" actualizados y actualizar el estado
-      const meGustasResponse = await axios.get(
-        `http://localhost:8080/devocionales/${devocionalId}/megusta`
-      );
-      const meGustasData = meGustasResponse.data;
-      setMeGustas((prevState) => ({
+
+      setLikesPorUsuario((prevState) => ({
         ...prevState,
-        [devocionalId]: meGustasData.length, // Ajusta según cómo manejes los "Me Gusta"
-        
+        [id]: userLiked,
       }));
     } catch (error) {
-      console.error("Error al alternar 'Me Gusta':", error);
+      console.error("Error al obtener los 'Me Gusta':", error);
     }
   };
+
+  // Método para alternar "Me Gusta"
+    const toggleMeGusta = async (devocionalId) => {
+      if (!user || !user.idUsuario) {
+        console.error("Usuario no autenticado");
+        return;
+      }
   
+      try {
+        const response = await axios.post(
+          `http://localhost:8080/devocionales/${devocionalId}/megusta`,
+          null,
+          {
+            params: {
+              usuarioId: user.idUsuario,
+            },
+          }
+        );
+  
+        const nuevoMeGusta = response.data;
+        setMeGustas((prevState) => ({
+          ...prevState,
+          [devocionalId]: nuevoMeGusta
+            ? prevState[devocionalId] + 1
+            : prevState[devocionalId] - 1,
+        }));
+  
+        const meGustasResponse = await axios.get(
+          `http://localhost:8080/devocionales/${devocionalId}/megusta`
+        );
+        const likesData = meGustasResponse.data;
+        const userLiked = likesData.some((like) => like.usuarioId === user.idUsuario);
+  
+        setLikesPorUsuario((prevState) => ({
+          ...prevState,
+          [devocionalId]: userLiked,
+        }));
+      } catch (error) {
+        console.error("Error al alternar 'Me Gusta':", error);
+      }
+    };
 
   const renderDevocionalContent = (devocional) => {
     if (!devocional) {
@@ -247,14 +272,20 @@ export default function Devocional() {
           readOnly={true}
           modules={modules}
         />
-
-<button onClick={() => toggleMeGusta(devocional.id)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
-          <i className={meGustas[devocional.id] > 0 ? "fas fa-heart" : "far fa-heart"} style={{ color: meGustas[devocional.id] > 0 ? 'red' : 'grey' }}></i>
-          {meGustas[devocional.id] > 0 ? " Quitar Me Gusta" : " Dar Me Gusta"} (
-          {meGustas[devocional.id] || 0})
-        </button>
-        <p>Vistas: {devocional.vistas}</p>
-        <p>Likes: {meGustas[devocional.id] !== undefined ? meGustas[devocional.id] : 0}</p>
+        {/* Contenedor de likes*/ }
+        <div className="likes-container">
+          <span>Vistas: {devocional.vistas}</span>
+        <button
+            onClick={() => toggleMeGusta(devocional.id)}
+            className={`like-button ${likesPorUsuario[devocional.id] ? "liked" : "not-liked"}`}
+          >
+            <i
+              className={`fa-heart ${likesPorUsuario[devocional.id] ? "fas" : "far"}`}
+            ></i>
+            {likesPorUsuario[devocional.id] ? "" : ""}
+            <span> {meGustas[devocional.id] || 0} </span>
+          </button>
+        </div>
 
         <p className="devocional-fecha">
           Fecha de Creación: {fechaCreacion || "Fecha no disponible"}

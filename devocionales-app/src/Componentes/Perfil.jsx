@@ -5,6 +5,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Comentarios from './Comentarios'; // Asegúrate de que la ruta al componente sea correcta
 import '../css/PerfilUsuario.css'; // Importa tus estilos
+import Seguidores from './Seguidores';
 
 export default function Perfil() {
   const [user, setUser] = useState(null);
@@ -56,11 +57,17 @@ export default function Perfil() {
                 
                 <p className="perfil-nombre">{user.nombre}</p>
                 <p className="perfil-username">@{user.nombreUsuario}</p>
+                {/* Incluye el componente Seguidores */}
+                
                 
               </div>
             </div>
             <div className="perfil-bio">
               <p className="bio">{user.biografia}</p>
+              <Seguidores className="seguidores-container"
+                  usuarioId={user.idUsuario}
+                  usuarioActualId={user.idUsuario}
+                />
             </div>
           </div>
           <div className="perfil-body">

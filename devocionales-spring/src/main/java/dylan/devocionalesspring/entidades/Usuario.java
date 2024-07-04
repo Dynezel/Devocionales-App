@@ -52,7 +52,9 @@ public class Usuario implements Serializable {
     )
     private List<Comentario> comentarios = new ArrayList<>();
 
-
+    public Usuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
+    }
 }
 
 
