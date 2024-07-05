@@ -13,6 +13,8 @@ import Welcome from './Componentes/Welcome'
 import Perfil from './Componentes/Perfil'
 import PerfilUsuario from './Componentes/PerfilUsuario'
 import Prueba from './Componentes/Prueba'
+import Mensajeria from './Componentes/Mensajeria'
+import Conversaciones from './Componentes/Conversaciones'
 
 
 function App() {
@@ -30,6 +32,8 @@ function App() {
       <Route path="/usuario/registro" element= { <RegistrarUsuario/> } />
       <Route path="/usuario/perfil" element={<Perfil/>} />
       <Route path="/usuario/perfil/:idUsuario" element={<PerfilUsuario/>} />
+      <Route path="/conversaciones/:usuarioActualId" element={<Conversaciones />} />
+      <Route path="/mensajeria/:usuarioId/:usuarioActualId" element={<Mensajeria/>} />
       <Route path="/login" element= { <Login/> } />
       </Routes>
       <Footer/>

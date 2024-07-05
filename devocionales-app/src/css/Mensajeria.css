@@ -1,0 +1,47 @@
+.mensajeria-popup {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    max-height: 500px;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    transition: all 0.3s;
+  }
+  
+  .mensajeria-popup.minimizado {
+    height: 40px;
+  }
+  
+  .popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    cursor: move;
+  }
+  
+  .mensajes {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  
+  .mensaje {
+    margin-bottom: 10px;
+    padding: 5px;
+    border-radius: 5px;
+  }
+  
+  .mensaje.enviado {
+    background-color: #e0ffe0;
+    text-align: right;
+  }
+  
+  .mensaje.recibido {
+    background-color: #e0e0ff;
+  }
+  

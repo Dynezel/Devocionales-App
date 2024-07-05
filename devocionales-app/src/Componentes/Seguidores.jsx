@@ -70,7 +70,7 @@ export default function Seguidores({ usuarioId, usuarioActualId }) {
         const response = await axios.get(`http://localhost:8080/seguidores/${usuarioId}/seguidos`);
         if (Array.isArray(response.data)) {
           setSeguidos(response.data);
-          console.log(usuarioId, usuarioActualId)
+          console.log("Usuario ", usuarioId, "usuario actual",usuarioActualId)
         } else {
           console.error("La respuesta de seguidos no es un array:", response.data);
         }

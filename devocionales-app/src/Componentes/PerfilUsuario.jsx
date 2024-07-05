@@ -6,15 +6,44 @@ import "react-quill/dist/quill.snow.css";
 import Comentarios from "./Comentarios";
 import Seguidores from "./Seguidores";
 import "../css/PerfilUsuario.css"; // Importa tus estilos
+import Mensajeria from "./Mensajeria";
+import MensajeriaPopup from "./Mensajeria";
 
 export default function Perfil() {
   const { idUsuario } = useParams(); // Captura el idUsuario desde la URL
   const [user, setUser] = useState(null);
   const [usuario, setUsuario] = useState(null);
   const [imagenPerfil, setImagenPerfil] = useState(null);
+  const [mostrarMensajeria, setMostrarMensajeria] = useState(false);
+
+  const handleEnviarMensaje = () => {
+    setMostrarMensajeria(true);
+  };
+
+  const cerrarMensajeria = () => {
+    setMostrarMensajeria(false);
+  };
+
   const modules = {
     toolbar: false,
   };
+
+  //Llama a los datos del usuario actual
+  useEffect(() => {
+    const fetchUsuario = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/usuario/perfil",
+          { withCredentials: true }
+        );
+        setUsuario(response.data);
+      } catch (error) {
+        console.error("Error fetching user", error);
+      }
+    };
+
+    fetchUsuario();
+  }, []);
 
   // Carga al Perfil de un Usuario especifico
   useEffect(() => {
@@ -38,23 +67,6 @@ export default function Perfil() {
       fetchUser();
     }
   }, [idUsuario]);
-
-  //Llama a los datos del usuario actual
-  useEffect(() => {
-    const fetchUsuario = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:8080/usuario/perfil",
-          { withCredentials: true }
-        );
-        setUsuario(response.data);
-      } catch (error) {
-        console.error("Error fetching user", error);
-      }
-    };
-
-    fetchUsuario();
-  }, []);
 
   // Función para cargar la imagen de perfil del usuario
   const cargarImagenPerfil = async (idUsuario) => {
@@ -93,10 +105,23 @@ export default function Perfil() {
                 <p className="perfil-nombre">{user.nombre}</p>
                 <p className="perfil-username">@{user.nombreUsuario}</p>
                 {/* Incluye el componente Seguidores */}
-                <Seguidores className="seguidores-container"
+                <Seguidores
+                  className="seguidores-container"
                   usuarioId={idUsuario}
-                  usuarioActualId={user.idUsuario}
+                  usuarioActualId={usuario.idUsuario}
                 />
+                {idUsuario != usuario.idUsuario && (
+                  <button onClick={handleEnviarMensaje}>
+                    Enviar un mensaje
+                  </button>
+                )}
+                {mostrarMensajeria && (
+                  <MensajeriaPopup
+                  usuarioId={idUsuario}
+                  usuarioActualId={usuario.idUsuario}
+                    onClose={cerrarMensajeria}
+                  />
+                )}
               </div>
             </div>
             <div className="perfil-bio">

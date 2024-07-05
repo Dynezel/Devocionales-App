@@ -554,6 +554,11 @@ button:focus-visible {
   padding-right: 20px; /* Añade un poco de espacio entre los elementos y el borde derecho */
 }
 
+.chat-icon {
+  width: 24px; /* ajusta el tamaño según lo necesites */
+  height: 24px; /* ajusta el tamaño según lo necesites */
+}
+
 .logo {
   width: 8rem;
   height: 110px;
