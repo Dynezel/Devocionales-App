@@ -4,7 +4,7 @@
     right: 20px;
     width: 300px;
     max-height: 500px;
-    background-color: white;
+    background-color: #242424;
     border: 1px solid #ccc;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
@@ -28,20 +28,53 @@
   .mensajes {
     max-height: 300px;
     overflow-y: auto;
+    
   }
   
   .mensaje {
     margin-bottom: 10px;
     padding: 5px;
     border-radius: 5px;
+    border: 1px solid rgb(85, 85, 85) ;
   }
   
-  .mensaje.enviado {
-    background-color: #e0ffe0;
-    text-align: right;
+  .enviado {
+    justify-content: flex-end;
   }
   
-  .mensaje.recibido {
-    background-color: #e0e0ff;
+  .enviado .mensaje-contenido {
+    display: flex;
+    align-items: center;
   }
+  
+  .enviado .mensaje-texto {
+    order: 1;
+    color: white;
+  }
+  
+  .enviado .profile-picture {
+    order: 2;
+    margin-left: 10px;
+  }
+  
+  .recibido {
+    justify-content: flex-start;
+  }
+  
+  .recibido .mensaje-contenido {
+    display: flex;
+    align-items: center;
+  }
+  
+  .recibido .profile-picture {
+    margin-right: 10px;
+  }
+
+.mensajes .profile-picture {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+  margin-top: auto;
+}
   
