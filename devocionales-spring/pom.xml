@@ -82,6 +82,12 @@
 				<version>1.5.2.Final</version>
 				<scope>provided</scope>
 			</dependency>
+			<!--WebSocket-->
+			<!-- https://mvnrepository.com/artifact/org.springframework/spring-websocket -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
+		</dependency>
 
 		<!--JWT Import-->
 		<dependency>

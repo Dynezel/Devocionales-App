@@ -112,6 +112,10 @@ button:focus-visible {
   display: flex;
   align-items: center;
 }
+.notification-bell {
+  height: 1.5em;
+  width: 1.5em;
+}
 
 .user-profile {
   display: flex;

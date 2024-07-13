@@ -1,0 +1,48 @@
+.notificaciones-popup {
+    position: fixed;
+    top: 10%;
+    right: 10%;
+    width: 300px;
+    background-color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 5px;
+    z-index: 1000;
+  }
+  
+  .notificaciones-popup h2 {
+    margin: 0 0 10px;
+    font-size: 1.2em;
+  }
+  
+  .notificaciones-popup ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .notificacion {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+  }
+  
+  .notificacion.no-visto {
+    background-color: #f8d7da;
+  }
+  
+  .notificacion.visto {
+    background-color: #d4edda;
+  }
+  
+  .notificacion p {
+    margin: 0;
+    font-size: 1em;
+  }
+  
+  .notificacion span {
+    font-size: 0.8em;
+    color: #555;
+  }
+  

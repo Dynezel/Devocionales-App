@@ -1,6 +1,7 @@
 package dylan.devocionalesspring.servicios;
 
 import dylan.devocionalesspring.entidades.Mensaje;
+import dylan.devocionalesspring.entidades.Notificacion;
 import dylan.devocionalesspring.entidades.Usuario;
 import dylan.devocionalesspring.repositorios.MensajeRepositorio;
 import dylan.devocionalesspring.repositorios.UsuarioRepositorio;
@@ -19,6 +20,9 @@ public class MensajeServicio {
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
 
+    @Autowired
+    private NotificacionServicio notificacionServicio;
+
     public Mensaje enviarMensaje(Long emisorId, Long receptorId, String contenido) {
         Usuario emisor = usuarioRepositorio.findById(emisorId).orElseThrow(() -> new RuntimeException("Emisor no encontrado"));
         Usuario receptor = usuarioRepositorio.findById(receptorId).orElseThrow(() -> new RuntimeException("Receptor no encontrado"));
@@ -28,6 +32,12 @@ public class MensajeServicio {
         mensaje.setReceptor(receptor);
         mensaje.setContenido(contenido);
         mensaje.setFechaEnvio(LocalDateTime.now());
+        Notificacion notificacion = notificacionServicio.crearNotificacion(
+                "mensaje",
+                "Tienes un nuevo mensaje de " + mensaje.getEmisor().getNombre(),
+                mensaje.getReceptor().getIdUsuario(),
+                mensaje.getEmisor().getIdUsuario()
+        );
 
         return mensajeRepositorio.save(mensaje);
     }
