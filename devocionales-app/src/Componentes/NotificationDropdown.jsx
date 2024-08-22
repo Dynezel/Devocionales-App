@@ -1,22 +1,26 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import "../css/NotificationDropdown.css"; 
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import NotificationBell from '../Images/notification-bell-svgrepo-com.svg';
+import '../css/NotificationDropdown.css';
+import MensajeriaPopup from './Mensajeria';
 
-const NotificationDropdown = ({ userId, setNotificationActiva }) => {
+const NotificationDropdown = ({ user }) => {
   const [notifications, setNotifications] = useState([]);
+  const [notificationActiva, setNotificationActiva] = useState(null);
+  const [dropdownAbierto, setDropdownAbierto] = useState(false);
 
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/notificaciones/${userId}`);
+        const response = await axios.get(`http://localhost:8080/notificaciones/${user.idUsuario}`);
         setNotifications(response.data);
       } catch (error) {
-        console.error("Error fetching notifications", error);
+        console.error('Error fetching notifications', error);
       }
     };
 
     fetchNotifications();
-  }, [userId]);
+  }, [user.idUsuario]);
 
   const handleNotificationClick = async (notification) => {
     try {
@@ -27,36 +31,55 @@ const NotificationDropdown = ({ userId, setNotificationActiva }) => {
         )
       );
 
-      if (notification.tipo === "mensaje") {
+      if (notification.tipo === 'mensaje') {
         setNotificationActiva(notification.usuarioEmisorId);
       } else {
-        // Si no es un mensaje, puedes manejar otros tipos de notificaciones aquí
+        // Maneja otros tipos de notificaciones aquí si es necesario
       }
     } catch (error) {
-      console.error("Error handling notification click", error);
+      console.error('Error handling notification click', error);
     }
   };
 
+  const handleClickIconoNotificacion = () => {
+    setDropdownAbierto(!dropdownAbierto);
+  };
+
   return (
-    <div className="notification-dropdown">
-      <div className="notification-dropdown-content">
-        <h3>Tus Notificaciones</h3>
-        <ul>
-          {notifications.length === 0 ? (
-            <li className="notification-item">No hay nuevas notificaciones</li>
-          ) : (
-            notifications.map((notification) => (
-              <li
-                key={notification.id}
-                className={`notification-item ${notification.visto ? "leida" : "no-leida"}`}
-                onClick={() => handleNotificationClick(notification)}
-              >
-                {notification.mensaje}
-              </li>
-            ))
-          )}
-        </ul>
-      </div>
+    <div className="notification-container">
+      <img
+        src={NotificationBell}
+        className="notification-bell"
+        alt="Notification Bell"
+        onClick={handleClickIconoNotificacion}
+      />
+      {dropdownAbierto && (
+        <div className="notification-dropdown">
+          <h3>Tus Notificaciones</h3>
+          <ul>
+            {notifications.length === 0 ? (
+              <li className="notification-item">No hay nuevas notificaciones</li>
+            ) : (
+              notifications.map((notification) => (
+                <li
+                  key={notification.id}
+                  className={`notification-item ${notification.visto ? 'leida' : 'no-leida'}`}
+                  onClick={() => handleNotificationClick(notification)}
+                >
+                  {notification.mensaje}
+                </li>
+              ))
+            )}
+          </ul>
+        </div>
+      )}
+      {notificationActiva && (
+        <MensajeriaPopup
+          usuarioId={notificationActiva}
+          usuarioActualId={user.idUsuario}
+          onClose={() => setNotificationActiva(null)}
+        />
+      )}
     </div>
   );
 };

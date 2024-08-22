@@ -2,37 +2,72 @@ import React, { useEffect, useState } from "react";
 import LogoImg from "../Images/DevocionalesWebIconBlack2.png";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import DropdownConversaciones from "./ChatDropdown";
-import NotificationDropdown from "./NotificationDropdown"; // Importa el nuevo componente
-import NotificationBell from "../Images/notification-bell-svgrepo-com.svg"; // Ruta al archivo SVG
+import ChatDropdown from "./ChatDropdown";
+import NotificationDropdown from "./NotificationDropdown"; 
 import MensajeriaPopup from "./Mensajeria";
 
 export default function NavBar({ handleConversacionClick }) {
   const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [notificationsOpen, setNotificationsOpen] = useState(false); // Estado para el dropdown de notificaciones
-  const [notificationActiva, setNotificationActiva] = useState(null); // Estado para la notificación activa
-  const navigate = useNavigate(); // Usa useNavigate para la navegación
+  const [notificationsOpen, setNotificationsOpen] = useState(false); 
+  const [notificationActiva, setNotificationActiva] = useState(null); 
+  const [sessionExpired, setSessionExpired] = useState(false); 
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await axios.post("http://localhost:8080/logout", null, { withCredentials: true });
+      console.log("Logout successful, redirecting to login.");
+      setUser(null);
+      navigate("/login");
+    } catch (error) {
+      console.error("Error al cerrar sesión", error);
+    }
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const response = await axios.get("http://localhost:8080/usuario/perfil", { withCredentials: true });
-        setUser(response.data);
+        if (!sessionExpired) {
+          setUser(response.data);
+          console.log("User fetched successfully:", response.data);
+        }
       } catch (error) {
         console.error("Error fetching user", error);
       }
     };
-
+  
     fetchUser();
-  }, []);
+  
+    // Intervalo para verificar la sesión cada 30 segundos
+    const sessionInterval = setInterval(async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/session-status", { withCredentials: true });
+        console.log("Session status:", response.data);
+  
+        if (response.data.status === "unauthenticated" || (response.data.status === "active" && !response.data.active)) {
+          console.log("Session expired or user is unauthenticated, logging out.");
+          setSessionExpired(true);
+          handleLogout(); // Cierra sesión inmediatamente
+        } else {
+          setSessionExpired(false); // Reset session expired flag if session is active
+        }
+      } catch (error) {
+        console.error("Error checking session status", error);
+      }
+    }, 7200000);
+  
+    return () => clearInterval(sessionInterval); 
+  }, [navigate, sessionExpired]);
+  
 
   const handleConversacionesClick = () => {
-    if (user.idUsuario) {
-      console.log(user.idUsuario);
+    if (user?.idUsuario) {
+      console.log("Navigating to conversation with user ID:", user.idUsuario);
       navigate(`/conversaciones/${user.idUsuario}`);
     } else {
-      console.log("error al cargar la id de usuario");
+      console.log("Error: Unable to load user ID.");
     }
   };
 
@@ -46,18 +81,16 @@ export default function NavBar({ handleConversacionClick }) {
           <Link to={"/usuario/registro"}>Regístrate</Link>
           <Link to={"/login"}>Inicia Sesión</Link>
         </nav>
+        {sessionExpired && (
+          <div className="session-expired-message">
+            Tu sesión ha expirado, inicia sesión
+          </div>
+        )}
       </header>
     );
   }
 
-  const handleLogout = async () => {
-    try {
-      await axios.post("http://localhost:8080/logout", null, { withCredentials: true });
-      setUser(null);
-    } catch (error) {
-      console.error("Error al cerrar sesión", error);
-    }
-  };
+
 
   const handleCloseMensajeria = () => {
     setNotificationActiva(null);
@@ -73,22 +106,8 @@ export default function NavBar({ handleConversacionClick }) {
           <div className="nav-items">
             <Link to={"/devocionales"}>Devocionales</Link>
             <Link to={"/devocionales/crear"}>Crear Devocional</Link>
-            <DropdownConversaciones handleConversacionClick={handleConversacionClick} user={user} />
-            <div
-              className="notifications"
-              onMouseEnter={() => setNotificationsOpen(true)}
-              onMouseLeave={() => setNotificationsOpen(false)}
-            >
-              <div className="notifications-icon">
-                <img src={NotificationBell} className="notification-bell" /> {/* Puedes reemplazar esto con un ícono de campana */}
-              </div>
-              {notificationsOpen && (
-                <NotificationDropdown 
-                  userId={user.idUsuario} 
-                  setNotificationActiva={setNotificationActiva} 
-                />
-              )}
-            </div>
+            <ChatDropdown handleConversacionClick={handleConversacionClick} user={user} />
+            <NotificationDropdown user={user} setNotificationActiva={setNotificationActiva} />
             <div className="user-profile" onMouseEnter={() => setMenuOpen(true)} onMouseLeave={() => setMenuOpen(false)}>
               <div>{user.nombre}</div>
               <img
@@ -114,6 +133,11 @@ export default function NavBar({ handleConversacionClick }) {
           usuarioActualId={user.idUsuario}
           onClose={handleCloseMensajeria}
         />
+      )}
+      {sessionExpired && (
+         <div className="session-expired-message">
+          Tu sesión ha expirado, inicia sesión
+        </div>
       )}
     </header>
   );

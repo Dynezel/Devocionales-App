@@ -15,6 +15,7 @@ import PerfilUsuario from './Componentes/PerfilUsuario'
 import Prueba from './Componentes/Prueba'
 import Mensajeria from './Componentes/Mensajeria'
 import Conversaciones from './Componentes/Conversaciones'
+import Devocional from './Componentes/Devocionales'
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
       <NavBar/>
       <Routes>
       <Route path="/" element={<Devocionales />} />
+      <Route path="/devocional/:id" element={<Devocional />} />
       <Route path="/prueba" element={<Prueba />} />
       <Route path="/devocionales/crear" element={<CrearDevocional />} />
       <Route path="/devocionales/modificar/:id" element= { <ModificarDevocional/> } />

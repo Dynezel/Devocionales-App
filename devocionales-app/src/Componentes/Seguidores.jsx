@@ -1,37 +1,57 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import '../css/Seguidores.css';
+import { useNavigate } from "react-router-dom"; // Importa useNavigate para redirección
+import "../css/Seguidores.css";
+import { Link } from "react-router-dom";
 
 export default function Seguidores({ usuarioId, usuarioActualId }) {
   const [seguidores, setSeguidores] = useState([]);
   const [seguidos, setSeguidos] = useState([]);
   const [esSeguido, setEsSeguido] = useState(false);
+  const [mostrarSeguidores, setMostrarSeguidores] = useState(false);
+  const [mostrarSeguidos, setMostrarSeguidos] = useState(false);
+
+  const seguidoresRef = useRef(null);
+  const seguidosRef = useRef(null);
+  const navigate = useNavigate(); // Usa useNavigate para la redirección
 
   useEffect(() => {
     const verificarSeguidor = async () => {
-        try {
-          const response = await axios.get(`http://localhost:8080/seguidores/${usuarioId}/seguidores`);
-          if (Array.isArray(response.data) && response.data.length > 0) {
-            setSeguidores(response.data);
-            setEsSeguido(
-              response.data.some(
-                (seguidor) => seguidor.usuario.idUsuario === usuarioActualId
-              )
-            );
-            console.log(esSeguido)
-          } else {
-            console.error("La respuesta no es un array o está vacío:", response.data);
-          }
-        } catch (error) {
-          console.error("Error al verificar el seguimiento:", error);
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/seguidores/${usuarioId}/seguidores`
+        );
+        if (Array.isArray(response.data) && response.data.length > 0) {
+          setSeguidores(response.data);
+          setEsSeguido(
+            response.data.some(
+              (seguidor) => seguidor.usuario.idUsuario === usuarioActualId
+            )
+          );
+        } else {
+          console.error(
+            "La respuesta no es un array o está vacío:",
+            response.data
+          );
         }
-      };
+      } catch (error) {
+        console.error("Error al verificar el seguimiento:", error);
+      }
+    };
     verificarSeguidor();
   }, [usuarioId, usuarioActualId]);
 
   const seguirUsuario = async () => {
+    if (!usuarioActualId) {
+      alert("Debes iniciar sesión para seguir a un usuario.");
+      navigate("/login"); // Redirige a la página de login si no está autenticado
+      return;
+    }
+
     try {
-      await axios.post(`http://localhost:8080/seguidores/${usuarioActualId}/seguir/${usuarioId}`);
+      await axios.post(
+        `http://localhost:8080/seguidores/${usuarioActualId}/seguir/${usuarioId}`
+      );
       setEsSeguido(true);
       actualizarSeguidores();
     } catch (error) {
@@ -40,6 +60,11 @@ export default function Seguidores({ usuarioId, usuarioActualId }) {
   };
 
   const dejarDeSeguirUsuario = async () => {
+    if (!usuarioActualId) {
+      navigate("/login"); // Redirige a la página de login si no está autenticado
+      return;
+    }
+
     try {
       await axios.delete(
         `http://localhost:8080/seguidores/${usuarioActualId}/dejar-de-seguir/${usuarioId}`
@@ -53,11 +78,16 @@ export default function Seguidores({ usuarioId, usuarioActualId }) {
 
   const actualizarSeguidores = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/seguidores/${usuarioId}/seguidores`);
+      const response = await axios.get(
+        `http://localhost:8080/seguidores/${usuarioId}/seguidores`
+      );
       if (Array.isArray(response.data)) {
         setSeguidores(response.data);
       } else {
-        console.error("La respuesta de seguidores no es un array:", response.data);
+        console.error(
+          "La respuesta de seguidores no es un array:",
+          response.data
+        );
       }
     } catch (error) {
       console.error("Error al obtener los seguidores:", error);
@@ -67,12 +97,16 @@ export default function Seguidores({ usuarioId, usuarioActualId }) {
   useEffect(() => {
     const obtenerSeguidos = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/seguidores/${usuarioId}/seguidos`);
+        const response = await axios.get(
+          `http://localhost:8080/seguidores/${usuarioId}/seguidos`
+        );
         if (Array.isArray(response.data)) {
           setSeguidos(response.data);
-          console.log("Usuario ", usuarioId, "usuario actual",usuarioActualId)
         } else {
-          console.error("La respuesta de seguidos no es un array:", response.data);
+          console.error(
+            "La respuesta de seguidos no es un array:",
+            response.data
+          );
         }
       } catch (error) {
         console.error("Error al obtener los seguidos:", error);
@@ -80,47 +114,102 @@ export default function Seguidores({ usuarioId, usuarioActualId }) {
     };
 
     obtenerSeguidos();
-    actualizarSeguidores(); // Llama a actualizarSeguidores también en el primer montaje o cambio de usuarioId
+    actualizarSeguidores();
   }, [usuarioId]);
 
+  const handleClickOutside = (event) => {
+    if (
+      seguidoresRef.current &&
+      !seguidoresRef.current.contains(event.target)
+    ) {
+      setMostrarSeguidores(false);
+    }
+    if (seguidosRef.current && !seguidosRef.current.contains(event.target)) {
+      setMostrarSeguidos(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div>
-      <h2>Perfil del Usuario</h2>
+    <div className="seguidores-seguidos-container">
+      <div
+        className="seguidores"
+        onClick={() => setMostrarSeguidores(!mostrarSeguidores)}
+      >
+        <p>Seguidores</p>
+        <p>{seguidores.length}</p>
+        {mostrarSeguidores && (
+          <div className="seguidores-lista" ref={seguidoresRef}>
+            <h3>Seguidores</h3>
+            <ul>
+              {seguidores.map((seguidor) => (
+                <li key={seguidor.id}>
+                  <button className="boton-seguidores-seguir">
+                    <Link to={`/usuario/perfil/${seguidor.usuario.idUsuario}`}>
+                      {seguidor.usuario.fotoPerfil ? (
+                        <img
+                          src={`http://localhost:8080/imagen/perfil/${seguidor.usuario.idUsuario}`}
+                          alt="Perfil"
+                        />
+                      ) : (
+                        <div className="placeholder-imagen">P</div>
+                      )}
+                      {seguidor.usuario.nombre}
+                    </Link>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+      <div
+        className="seguidos"
+        onClick={() => setMostrarSeguidos(!mostrarSeguidos)}
+      >
+        <p>Seguidos</p>
+        <p>{seguidos.length}</p>
+        {mostrarSeguidos && (
+          <div className="seguidos-lista" ref={seguidosRef}>
+            <h3>Seguidos</h3>
+            <ul>
+              {seguidos.map((seguido) => (
+                <li key={seguido.id}>
+                  <button className="boton-seguidores-seguir">
+                    <Link to={`/usuario/perfil/${seguido.seguido.idUsuario}`}>
+                      {seguido.seguido.fotoPerfil ? (
+                        <img
+                          src={`http://localhost:8080/imagen/perfil/${seguido.seguido.idUsuario}`}
+                          alt="Imagen de Perfil"
+                        />
+                      ) : (
+                        <div className="placeholder-imagen">P</div>
+                      )}
+                      {seguido.seguido.nombre}
+                    </Link>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
       {usuarioId !== usuarioActualId && (
-        <div>
-          {esSeguido ? (
-            <button onClick={dejarDeSeguirUsuario}>Dejar de Seguir</button>
-          ) : (
-            <button onClick={seguirUsuario}>Seguir</button>
-          )}
+        <div className="botones-container">
+          <button
+            onClick={esSeguido ? dejarDeSeguirUsuario : seguirUsuario}
+            className={esSeguido ? "btn-dejar-seguir" : "btn-seguir"}
+          >
+            {esSeguido ? "Dejar de Seguir" : "Seguir"}
+          </button>
         </div>
       )}
-      <div>
-        <h3>Seguidores</h3>
-        <p>Total: {seguidores.length}</p> {/* Mostrar el número de seguidores */}
-        <ul>
-          {Array.isArray(seguidores) && seguidores.length > 0 ? (
-            seguidores.map((seguidor) => (
-              <li key={seguidor.id}>{seguidor.usuario.nombre}</li>
-            ))
-          ) : (
-            <li>No hay seguidores.</li>
-          )}
-        </ul>
-      </div>
-      <div>
-        <h3>Seguidos</h3>
-        <p>Total: {seguidos.length}</p> {/* Mostrar el número de seguidos */}
-        <ul>
-          {Array.isArray(seguidos) && seguidos.length > 0 ? (
-            seguidos.map((seguido) => (
-              <li key={seguido.id}>{seguido.seguido.nombre}</li>
-            ))
-          ) : (
-            <li>No hay seguidos.</li>
-          )}
-        </ul>
-      </div>
     </div>
   );
 }

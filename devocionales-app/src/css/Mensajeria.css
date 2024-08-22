@@ -2,8 +2,8 @@
     position: fixed;
     bottom: 20px;
     right: 20px;
-    width: 300px;
-    max-height: 500px;
+    width: 17%;
+    max-height: 44%;
     background-color: #242424;
     border: 1px solid #ccc;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -25,10 +25,35 @@
     cursor: move;
   }
   
+  .popup-buttons {
+    display: flex;
+    gap: 3em;
+  }
+  
+  .popup-buttons button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1; /* Asegura que el botón no tenga espacio extra vertical */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto; /* El ancho del botón se adapta al contenido */
+    height: auto; /* El alto del botón se adapta al contenido */
+    min-width: 20px; /* Tamaño mínimo opcional para los iconos */
+    min-height: 20px; /* Tamaño mínimo opcional para los iconos */
+  }
+  
+  .popup-buttons button:hover {
+    color: #ccc;
+  }
+  
   .mensajes {
     max-height: 300px;
     overflow-y: auto;
-    
   }
   
   .mensaje {
@@ -77,4 +102,24 @@
   margin-right: 10px;
   margin-top: auto;
 }
-  
+.mensaje-fecha {
+  font-size: 0.8em;
+  color: #ffffff;
+  margin-top: 2px;
+}
+
+.mensaje.enviado .mensaje-fecha {
+  text-align: right;
+}
+
+.mensaje.recibido .mensaje-fecha {
+  text-align: left;
+}
+
+.mensaje-fecha-separador {
+  text-align: center;
+  margin: 15px 0;
+  font-weight: bold;
+  font-size: 0.9em;
+  color: #ffffff;
+}

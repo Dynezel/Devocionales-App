@@ -6,7 +6,6 @@ import "react-quill/dist/quill.snow.css";
 import Comentarios from "./Comentarios";
 import Seguidores from "./Seguidores";
 import "../css/PerfilUsuario.css"; // Importa tus estilos
-import Mensajeria from "./Mensajeria";
 import MensajeriaPopup from "./Mensajeria";
 
 export default function Perfil() {
@@ -15,8 +14,15 @@ export default function Perfil() {
   const [usuario, setUsuario] = useState(null);
   const [imagenPerfil, setImagenPerfil] = useState(null);
   const [mostrarMensajeria, setMostrarMensajeria] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleEnviarMensaje = () => {
+    if (!usuario) {
+      alert("Debes estar logeado para enviar un mensaje.");
+      // Redirigir a la página de inicio de sesión si no hay usuario logueado
+      window.location.href = "/login";
+      return;
+    }
     setMostrarMensajeria(true);
   };
 
@@ -28,7 +34,7 @@ export default function Perfil() {
     toolbar: false,
   };
 
-  //Llama a los datos del usuario actual
+  // Llama a los datos del usuario actual
   useEffect(() => {
     const fetchUsuario = async () => {
       try {
@@ -39,11 +45,12 @@ export default function Perfil() {
         setUsuario(response.data);
       } catch (error) {
         console.error("Error fetching user", error);
+        setError("Error fetching user");
       }
     };
 
     fetchUsuario();
-  }, []);
+  }, [history]);
 
   // Carga al Perfil de un Usuario especifico
   useEffect(() => {
@@ -60,6 +67,7 @@ export default function Perfil() {
         }
       } catch (error) {
         console.error("Error fetching user", error);
+        setError("Error fetching user profile");
       }
     };
 
@@ -104,81 +112,94 @@ export default function Perfil() {
               <div className="perfil-details">
                 <p className="perfil-nombre">{user.nombre}</p>
                 <p className="perfil-username">@{user.nombreUsuario}</p>
+                <div className="perfil-bio">
+                  <p className="bio">{user.biografia}</p>
+                </div>
                 {/* Incluye el componente Seguidores */}
                 <Seguidores
                   className="seguidores-container"
-                  usuarioId={idUsuario}
-                  usuarioActualId={usuario.idUsuario}
+                  usuarioId={user.idUsuario}
+                  usuarioActualId={usuario ? usuario.idUsuario : null}
+                  onLoginRequired={() => history.push("/login")}
                 />
-                {idUsuario != usuario.idUsuario && (
-                  <button onClick={handleEnviarMensaje}>
-                    Enviar un mensaje
-                  </button>
-                )}
-                {mostrarMensajeria && (
-                  <MensajeriaPopup
-                  usuarioId={idUsuario}
-                  usuarioActualId={usuario.idUsuario}
-                    onClose={cerrarMensajeria}
-                  />
-                )}
+                <div className="botones-container">
+                  {user.idUsuario!== (usuario && usuario.idUsuario) && (
+                    <button
+                      className="btn-seguir"
+                      onClick={handleEnviarMensaje}
+                    >
+                      Enviar un mensaje
+                    </button>
+                  )}
+                  {mostrarMensajeria && (
+                    <MensajeriaPopup
+                      usuarioId={idUsuario}
+                      usuarioActualId={usuario.idUsuario}
+                      onClose={cerrarMensajeria}
+                    />
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="perfil-bio">
-              <p className="bio">{user.biografia}</p>
             </div>
           </div>
           <div className="perfil-body">
             <div className="perfil-stats">
               {/*<p><strong>Email:</strong> {user.email}</p>
-              <p><strong>Celular:</strong> {user.celular}</p>*/}
+    <p><strong>Celular:</strong> {user.celular}</p>*/}
             </div>
             <div className="perfil-devocionales">
-              <h3>Devocionales Creados</h3>
+              <h3>
+                <u>Devocionales Creados</u>
+              </h3>
               {user.devocionales.length > 0 ? (
-                user.devocionales.map((devocional) => (
-                  <div key={devocional.id} className="devocional-item">
-                    <div className="devocional-content">
-                      <h2 className="devocional-titulo">
-                        {" "}
-                        <u>
-                          {" "}
-                          {devocional.nombre || "Título no disponible"}{" "}
-                        </u>{" "}
-                      </h2>
-                      <ReactQuill
-                        theme="snow"
-                        value={
-                          devocional.descripcion || "Descripción no disponible"
-                        }
-                        readOnly={true}
-                        modules={modules}
-                        className="devocional-descripcion"
-                      />
+                user.devocionales.map((devocional, index) => (
+                  <div>
+                    {index != 0 && <hr className="devocional-separador" />}
+                    <div key={devocional.id} className="devocional-item">
+                      {/* Agregar separador solo si no es el último devocional */}
 
-                      <p className="devocional-fecha">
-                        <strong>Fecha de Creación:</strong>{" "}
-                        {devocional.fechaCreacion || "Fecha no disponible"}
-                      </p>
-                      <p className="devocional-autor">
-                        <strong>Autor:</strong>
-                        {user.idUsuario ? (
-                          <Link to={`/usuario/perfil/${user.idUsuario}`}>
-                            {user.nombre || "Nombre no disponible"}
-                          </Link>
-                        ) : (
-                          "Información del autor no disponible"
-                        )}
-                      </p>
-                      <Comentarios
-                        devocionalId={devocional.id}
-                        usuarioId={user.idUsuario}
-                      />
+                      <div className="devocional-content">
+                        <h2 className="devocional-titulo">
+                          {" "}
+                          <u>
+                            {" "}
+                            {devocional.nombre || "Título no disponible"}{" "}
+                          </u>{" "}
+                        </h2>
+                        <ReactQuill
+                          theme="snow"
+                          value={
+                            devocional.descripcion ||
+                            "Descripción no disponible"
+                          }
+                          readOnly={true}
+                          modules={modules}
+                          className="devocional-descripcion"
+                        />
+                        <p className="devocional-fecha">
+                          <strong>Fecha de Creación:</strong>{" "}
+                          {devocional.fechaCreacion || "Fecha no disponible"}
+                        </p>
+                        <p className="devocional-autor">
+                          <strong>Autor:</strong>
+                          {user.idUsuario ? (
+                            <Link to={`/usuario/perfil/${user.idUsuario}`}>
+                              {user.nombre || "Nombre no disponible"}
+                            </Link>
+                          ) : (
+                            "Información del autor no disponible"
+                          )}
+                        </p>
+                        <Comentarios
+                          devocionalId={devocional.id}
+                          usuarioId={user.idUsuario}
+                        />
+                      </div>
                     </div>
                   </div>
                 ))
               ) : (
-                <p>No has creado devocionales aún.</p>
+                <p>Este usuario no creó ningún devocional aún.</p>
               )}
             </div>
           </div>

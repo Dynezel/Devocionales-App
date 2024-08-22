@@ -54,7 +54,7 @@
   border: 3px solid #fff;
   margin-right: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-top: -40px;
+  margin-top: -11em;
 }
 
 /* Detalles del perfil */
@@ -64,15 +64,8 @@
   align-items: flex-start;
 }
 
-.perfil-details h2 {
-  margin: 0;
-  font-size: 20px;
-  color: white;
-  margin-top: -10px;
-}
-
 .perfil-nombre {
-  margin-top: -20px;
+  margin-top: 10px;
 }
 
 .perfil-username {
@@ -83,7 +76,8 @@
 
 /* Biografía */
 .perfil-bio {
-  margin-top: -20px;
+  margin-top: 10px;
+  margin-left: -7em;
 }
 
 .bio {
@@ -101,31 +95,34 @@
   margin: 5px 0;
   font-size: 14px;
 }
+
 /* Devocionales */
 .perfil-devocionales {
   margin-top: 20px;
-  
 }
 
 /* Devocional Item */
 .devocional-item {
-  padding-top: 10px;
+  padding: 10px;
   margin-top: 10px;
   text-align: center; /* Centrar el contenido del devocional */
   border-radius: 5px;
   border: 3px solid rgb(227, 225, 225);
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10%; /* Espacio debajo de cada devocional */
 }
 
 /* Devocional Descripción */
 .devocional-descripcion {
-  display: flex;
-  justify-content: center; /* Centrar horizontalmente el contenido del Quill */
-  align-items: center; /* Centrar verticalmente el contenido del Quill */
-  max-width: 100%;
+  max-width: 100%; /* Asegurarse de que no se desborde el ancho del contenedor */
+  margin: 0 auto; /* Centrar el contenido de la descripción */
 }
 
+/* Editor Quill dentro de la descripción */
 .devocional-descripcion .ql-editor {
-  text-align: center; /* Centrar el texto dentro del editor Quill */
+  text-align: left; /* Alinear texto a la izquierda dentro del editor Quill */
   max-width: 100%;
 }
 
@@ -136,6 +133,36 @@
   color: #ffffff;
   margin: 10px 0;
 }
+
+/* Estilo para el botón de enviar mensaje */
+.enviarMensajeButton {
+  background-color: #244cfe; /* Cambia el color del botón si lo deseas */
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 10px 0; /* Ajusta el margen superior e inferior si es necesario */
+}
+
+.enviarMensajeButton:hover {
+  background-color: #013680; /* Color al pasar el cursor */
+}
+
+/* Contenedor de botones */
+.botones-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Alinea los botones a la izquierda o ajusta según tu diseño */
+}
+
+/* Línea Horizontal entre devocionales */
+.devocional-separador {
+  border: 0;
+  border-top: 3px solid #a6a6a6; /* Color y grosor de la línea */
+  margin-bottom: 10%; /* Espacio arriba y abajo de la línea */
+}
+
 
 /* Colores Claros */
 @media (prefers-color-scheme: light) {

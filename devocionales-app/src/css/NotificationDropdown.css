@@ -1,49 +1,52 @@
-.notifications {
-    position: relative;
-    display: inline-block;
-  }
-  
-  .notifications-icon {
-    cursor: pointer;
-  }
-  
-  .notification-dropdown {
-    display: block;
-    position: absolute;
-    background-color: rgb(128, 128, 128);
-    min-width: 200px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 12;
-    top: 100%;
-    right: 0;
-    margin-left: 50px;
-  }
-  
-  .notification-item {
-    padding: 12px 16px;
-    border-bottom: 1px solid #ddd;
-    cursor: pointer;
-  }
-  
-  .notification-item:last-child {
-    border-bottom: none;
-  }
-  
-  .notification-item:hover {
-    background-color: #5a5a5a;
-  }
-  .notification-item.leida:hover {
-    background-color: #383838;
-  }
-  .notification-item.no-leida:hover {
-    background-color: #444444;
-  }
-  
-  .notification-item.leida {
-    background-color: #4d4d4d; /* Color para notificaciones leídas */
-  }
-  
-  .notification-item.no-leida {
-    background-color: #939393; /* Color para notificaciones no leídas */
-  }
-  
+.notification-container {
+  position: relative;
+  display: inline-block;
+}
+
+.notification-bell {
+  height: 1.5em;
+  width: 1.5em;
+  cursor: pointer;
+}
+
+.notification-dropdown {
+  display: block;
+  position: absolute;
+  background-color: rgb(48, 48, 48);
+  min-width: 200px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  top: 100%; /* Posiciona el dropdown justo debajo del ícono */
+  right: 0; /* Alinea el dropdown con el borde derecho del ícono */
+  padding: 10px;
+  border: 1px solid #3f3f3f;
+  border-radius: 5px;
+}
+
+.notification-dropdown h3 {
+  margin: 0;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.notification-item {
+  padding: 10px;
+  border-bottom: 1px solid #252525;
+  cursor: pointer;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-item:hover {
+  background-color: #2b2b2b;
+}
+
+.notification-item.leida {
+  background-color: #383838; /* Color para notificaciones leídas */
+}
+
+.notification-item.no-leida {
+  background-color: rgb(97, 97, 97); /* Color para notificaciones no leídas */
+}
