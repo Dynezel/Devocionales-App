@@ -24,7 +24,7 @@ public class Imagen implements Serializable {
     private String rutaImagen;
 
     @Lob
-    @Column(name = "contenido", columnDefinition="BLOB")
+    @Column(name = "contenido", columnDefinition="LONGBLOB")
     private byte[] contenido;
 
     @Override
