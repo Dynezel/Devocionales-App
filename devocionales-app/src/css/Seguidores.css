@@ -2,27 +2,13 @@
   width: fit-content;
 }
 
-button {
-  background-color: #007bff;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  min-width: 120px; /* Mantiene el tamaño del botón constante */
-  text-align: center;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
 
 button.seguir {
   background-color: #28a745; /* Color diferente para el botón de "Seguir" */
 }
 
 button.seguir:hover {
-  background-color: #218838;
+  background-color: #884821;
 }
 
 ul {

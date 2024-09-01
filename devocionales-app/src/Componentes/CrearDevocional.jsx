@@ -32,9 +32,22 @@ export default function CrearDevocional() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="devocional-container">
+      <h3> <u> Crear Devocional </u> </h3>
       <div>
-        <label htmlFor="descripcion">Descripción:</label>
+        <label htmlFor="nombreCreacion"> <u> <strong> Titulo: </strong></u></label>
+        <input
+          type="text"
+          id="nombreCreacion"
+          value={nombre}
+          onChange={(event) => setNombre(event.target.value)}
+          required
+          className="titulo-crear"
+        />
+      </div>
+      <div className="separador"> </div>
+      <div className="reactQuill-crear-modificar">
+        <label htmlFor="descripcion">Contenido:</label>
         <ReactQuill
           theme="snow"
           value={descripcion}
@@ -42,16 +55,7 @@ export default function CrearDevocional() {
           required
         />
       </div>
-      <div>
-        <label htmlFor="nombre">Guardar Como:</label>
-        <input
-          type="text"
-          id="nombre"
-          value={nombre}
-          onChange={(event) => setNombre(event.target.value)}
-          required
-        />
-      </div>
+      
       <button type="submit">Enviar</button>
     </form>
   );

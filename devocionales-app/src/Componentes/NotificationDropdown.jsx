@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import NotificationBell from '../Images/notification-bell-svgrepo-com.svg';
+import NotificationBell from '../Images/Notification_Bell_2-transformed.png';
 import '../css/NotificationDropdown.css';
 import MensajeriaPopup from './Mensajeria';
 

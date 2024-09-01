@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
-import iconoChat from '../Images/chat-icon.png'; // Reemplaza con tu ruta real al icono de chat
+import iconoChat from '../Images/chat-icon3.png'; // Reemplaza con tu ruta real al icono de chat
 import '../css/ChatDropdown.css'; // Estilo para el dropdown
 import MensajeriaPopup from './Mensajeria';
 

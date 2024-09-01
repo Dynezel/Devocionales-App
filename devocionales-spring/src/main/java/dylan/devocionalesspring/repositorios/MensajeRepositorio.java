@@ -23,4 +23,8 @@ public interface MensajeRepositorio extends JpaRepository<Mensaje, Long> {
     @Query("SELECT m FROM Mensaje m WHERE (m.emisor.id = :emisorId AND m.receptor.id = :receptorId) OR (m.emisor.id = :receptorId AND m.receptor.id = :emisorId) ORDER BY m.fechaEnvio ASC")
     List<Mensaje> findByUsuarios(@Param("emisorId") Long emisorId, @Param("receptorId") Long receptorId);
 
+    void deleteByEmisor(Usuario emisor);
+
+    void deleteByReceptor(Usuario receptor);
+
 }

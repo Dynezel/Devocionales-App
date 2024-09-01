@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import dylan.devocionalesspring.entidades.Devocional;
 import dylan.devocionalesspring.entidades.Usuario;
 import dylan.devocionalesspring.enumeraciones.Rol;
 import dylan.devocionalesspring.excepciones.MiExcepcion;
@@ -38,12 +39,13 @@ public class UsuarioControlador {
     //registroControlador
 
     @GetMapping("/{idUsuario}/devocionales")
-    public ResponseEntity<Usuario> obtenerUsuarioConDevocionales(@PathVariable Long idUsuario) {
-        Usuario usuario = usuarioRepositorio.findUsuarioWithDevocionales(idUsuario);
-        if (usuario == null) {
+    public ResponseEntity<List<Devocional>> obtenerDevocionalesDeUsuario(@PathVariable Long idUsuario) {
+        try {
+            List<Devocional> devocionales = usuarioServicio.obtenerDevocionalesDeUsuario(idUsuario);
+            return ResponseEntity.ok(devocionales);
+        } catch (UsuarioNoEncontradoExcepcion e) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(usuario);
     }
 
 
@@ -71,9 +73,14 @@ public class UsuarioControlador {
     // Endpoint para obtener el perfil del usuario
     @GetMapping("/perfil")
     public Usuario obtenerPerfilUsuario(Authentication authentication) throws UsuarioNoEncontradoExcepcion {
-        String email = authentication.getName();
-        return usuarioServicio.obtenerPerfilUsuario(email);
+        if (authentication != null) {
+            String email = authentication.getName();
+            return usuarioServicio.obtenerPerfilUsuario(email);
+        } else {
+            return null;
+        }
     }
+
 
     // Endpoint para subir la foto de perfil
     @PreAuthorize("hasAnyRole('ROLE_USUARIO','ROLE_ADMIN')")
@@ -103,12 +110,11 @@ public class UsuarioControlador {
     @PreAuthorize("hasAnyRole('ROLE_USUARIO','ROLE_ADMIN')")
     @PostMapping("/perfil/modificar/{idUsuario}")
     public ResponseEntity<String> modificar(@PathVariable("idUsuario") Long idUsuario,
-                                            @RequestParam("nombre") String nombre,
-                                            @RequestParam("celular") String celular) {
+                                            @Param("nombre") String nombre,
+                                            @Param("celular") String celular) {
         try {
             // Llamada al método del servicio para modificar el usuario
             usuarioServicio.modificarUsuario(idUsuario, nombre, celular);
-
             return ResponseEntity.ok("Nombre y celular del usuario actualizados correctamente");
         } catch (MiExcepcion ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
@@ -124,13 +130,13 @@ public class UsuarioControlador {
         return ResponseEntity.ok(usuarios);
     }
 
-    @GetMapping("/eliminar/{idUsuario}")
-    public ResponseEntity<String> eliminarUsuario(@PathVariable("idUsuario") Long idUsuario) {
+    @DeleteMapping("/eliminar/{idUsuario}")
+    public ResponseEntity<Void> eliminarUsuario(@PathVariable("idUsuario") Long idUsuario) {
         try {
             usuarioServicio.eliminarUsuario(idUsuario);
-            return ResponseEntity.ok("Usuario eliminado correctamente");
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al eliminar el usuario");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -157,7 +163,7 @@ public class UsuarioControlador {
 
     /*
     Evaluando la incorporacion de este metodo para optimizar el codigo de las validaciones. ->  Emi
-    
+
     private ResponseEntity<?> validation(BindingResult result) {
                 Map<String, String> errors = new HashMap<>();
 

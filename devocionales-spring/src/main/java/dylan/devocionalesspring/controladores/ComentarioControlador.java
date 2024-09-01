@@ -4,6 +4,8 @@ import dylan.devocionalesspring.entidades.Comentario;
 import dylan.devocionalesspring.entidades.Devocional;
 import dylan.devocionalesspring.entidades.Usuario;
 import dylan.devocionalesspring.excepciones.UsuarioNoEncontradoExcepcion;
+import dylan.devocionalesspring.repositorios.ComentarioRepositorio;
+import dylan.devocionalesspring.repositorios.UsuarioRepositorio;
 import dylan.devocionalesspring.servicios.ComentarioServicio;
 import dylan.devocionalesspring.servicios.DevocionalServicio;
 import dylan.devocionalesspring.servicios.UsuarioServicio;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class ComentarioControlador {
@@ -29,6 +32,12 @@ public class ComentarioControlador {
 
     @Autowired
     private DevocionalServicio devocionalServicio;
+
+    @Autowired
+    private ComentarioRepositorio comentarioRepositorio;
+
+    @Autowired
+    private UsuarioRepositorio usuarioRepositorio;
 
 
     @PostMapping("/devocionales/{devocionalId}/comentarios")
@@ -56,5 +65,58 @@ public class ComentarioControlador {
         }
     }
 
+    @GetMapping("/comentarios/{devocionalId}")
+    public ResponseEntity<List<Comentario>> obtenerComentarios(@PathVariable int devocionalId) {
+        try {
+            List<Comentario> comentarios = comentarioServicio.obtenerComentariosPorDevocional(devocionalId);
+            return new ResponseEntity<>(comentarios, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/comentarios/{id}")
+    public ResponseEntity<Comentario> actualizarComentario(@PathVariable Long id,
+                                                           @RequestBody Comentario comentarioActualizado,
+                                                           Authentication authentication) {
+        try {
+            // Verifica que el usuario actual sea el propietario del comentario
+            String email = authentication.getName();
+            Usuario usuario = usuarioServicio.obtenerPerfilUsuario(email);
+
+            Comentario comentarioExistente = comentarioServicio.obtenerComentarioPorId(id);
+
+            if (!comentarioExistente.getIdUsuario().equals(usuario.getIdUsuario())) {
+                return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+            }
+
+            // Actualiza el texto del comentario
+            comentarioExistente.setTexto(comentarioActualizado.getTexto());
+            Comentario comentarioGuardado = comentarioServicio.actualizarComentario(comentarioExistente);
+            return new ResponseEntity<>(comentarioGuardado, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/comentarios/{id}")
+    public ResponseEntity<Void> eliminarComentario(@PathVariable Long id) {
+        try {
+            comentarioServicio.eliminarComentario(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/devocionales/{devocionalId}/comentarios")
+    public ResponseEntity<Void> eliminarComentariosPorDevocional(@PathVariable int devocionalId) {
+        try {
+            comentarioServicio.eliminarComentariosPorDevocional(devocionalId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
 }

@@ -1,9 +1,11 @@
 package dylan.devocionalesspring.servicios;
 
+import dylan.devocionalesspring.entidades.Comentario;
 import dylan.devocionalesspring.entidades.Devocional;
 import dylan.devocionalesspring.entidades.MeGusta;
 import dylan.devocionalesspring.enumeraciones.Rol;
 import dylan.devocionalesspring.entidades.Usuario;
+import dylan.devocionalesspring.repositorios.ComentarioRepositorio;
 import dylan.devocionalesspring.repositorios.DevocionalRepositorio;
 import dylan.devocionalesspring.repositorios.UsuarioRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,10 @@ public class DevocionalServicio {
 
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
+    @Autowired
+    private ComentarioRepositorio comentarioRepositorio;
+    @Autowired
+    private ComentarioServicio comentarioServicio;
 
     @Transactional
     public Usuario crearDevocional(String nombre, String descripcion, LocalDate fechaCreacion, Usuario usuario) {
@@ -68,8 +74,23 @@ public class DevocionalServicio {
         return usuarioRepositorio.findById(idUsuario).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
 
+
+
     @Transactional
-    public void eliminarDevocional(int id) {
-        devocionalRepositorio.deleteById(id);
+    public void eliminarDevocional(int id) throws Exception {
+        Optional<Devocional> devocionalOpt = devocionalRepositorio.findById(id);
+        if (devocionalOpt.isPresent()) {
+            Devocional devocional = devocionalOpt.get();
+
+            // Elimina los comentarios asociados utilizando el servicio de Comentario
+            for (Comentario comentario : devocional.getComentarios()) {
+
+            }
+
+            // Elimina el devocional
+            devocionalRepositorio.delete(devocional);
+        } else {
+            throw new Exception("Devocional no encontrado");
+        }
     }
 }

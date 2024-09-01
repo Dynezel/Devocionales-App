@@ -5,6 +5,7 @@ import dylan.devocionalesspring.entidades.Usuario;
 import dylan.devocionalesspring.excepciones.UsuarioNoEncontradoExcepcion;
 import dylan.devocionalesspring.repositorios.DevocionalRepositorio;
 import dylan.devocionalesspring.repositorios.UsuarioRepositorio;
+import dylan.devocionalesspring.servicios.ComentarioServicio;
 import dylan.devocionalesspring.servicios.DevocionalServicio;
 import dylan.devocionalesspring.servicios.UsuarioServicio;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,9 @@ public class DevocionalControlador {
 
     @Autowired
     UsuarioServicio usuarioServicio;
+
+    @Autowired
+    private ComentarioServicio comentarioServicio;
 
     @GetMapping("/")
     public String indice() {
@@ -82,7 +86,26 @@ public class DevocionalControlador {
     }
 
     @DeleteMapping("/eliminar/{id}")
-    public void eliminarDevocional(@PathVariable int id) {
-        devocionalServicio.eliminarDevocional(id);
+    public ResponseEntity<Void> eliminarDevocional(@PathVariable int id, Authentication authentication) throws Exception {
+        String email = authentication.getName();
+        Usuario usuario = usuarioServicio.obtenerPerfilUsuario(email);
+
+        Optional<Devocional> devocionalOpt = devocionalRepositorio.findById(id);
+
+        if (devocionalOpt.isPresent()) {
+            Devocional devocional = devocionalOpt.get();
+
+            // Eliminar todos los comentarios asociados al devocional
+            comentarioServicio.eliminarComentariosDeDevocional(devocional.getId());
+
+            usuario.getDevocionales().remove(devocional); // Eliminar el devocional de la lista del usuario
+            usuarioRepositorio.save(usuario); // Guardar los cambios en el usuario
+            devocionalRepositorio.deleteById(id); // Eliminar el devocional del repositorio
+            return ResponseEntity.noContent().build(); // 204 No Content
+
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // 403 Forbidden si el usuario no tiene permiso
+        }
     }
-}
+
+    }

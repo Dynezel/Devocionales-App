@@ -27,8 +27,9 @@
   }
   
   .chat-icon {
-    width: 24px;
-    height: 24px;
+    margin-top: 30%;
+    width: 2em;
+    height: 2em;
     cursor: pointer; /* Añade esta línea para activar el cursor como selector */
   }
   

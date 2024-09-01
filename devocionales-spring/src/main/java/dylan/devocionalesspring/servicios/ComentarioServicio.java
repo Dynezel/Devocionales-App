@@ -65,7 +65,6 @@ public class ComentarioServicio {
     }
 
 
-
     @Transactional
     public Comentario actualizarComentario(Comentario comentario) {
         comentario = comentarioRepositorio.findById(comentario.getId()).orElseThrow(() -> new IllegalArgumentException("Comentario no encontrado"));
@@ -76,7 +75,64 @@ public class ComentarioServicio {
 
 
     @Transactional
-    public void eliminarComentario(Long id) {
-        comentarioRepositorio.deleteById(id);
+    public void eliminarComentario(Long comentarioId) throws Exception {
+        Comentario comentario = comentarioRepositorio.findById(comentarioId)
+                .orElseThrow(() -> new Exception("Comentario no encontrado"));
+
+        // Primero, eliminamos el comentario de la lista de comentarios en el usuario
+        Usuario usuario = usuarioRepositorio.findById(comentario.getIdUsuario())
+                .orElseThrow(() -> new Exception("Usuario no encontrado"));
+        usuario.getComentarios().remove(comentario);
+        usuarioRepositorio.save(usuario);
+
+        // Luego, eliminamos el comentario de la lista de comentarios en el devocional
+        Devocional devocional = devocionalRepositorio.findById(comentario.getIdDevocional())
+                .orElseThrow(() -> new Exception("Devocional no encontrado"));
+        devocional.getComentarios().remove(comentario);
+        devocionalRepositorio.save(devocional);
+
+        // Finalmente, eliminamos el comentario de la base de datos
+        comentarioRepositorio.delete(comentario);
     }
+
+    @Transactional
+    public void eliminarComentariosDeDevocional(int devocionalId) throws Exception {
+        Devocional devocional = devocionalRepositorio.findById(devocionalId)
+                .orElseThrow(() -> new Exception("Devocional no encontrado"));
+
+        // Iterar sobre todos los comentarios del devocional
+        for (Comentario comentario : devocional.getComentarios()) {
+            eliminarComentario(comentario.getId());
+        }
+    }
+
+    @Transactional
+    public void eliminarComentariosPorDevocional(int devocionalId) throws Exception {
+        Devocional devocional = devocionalRepositorio.findById(devocionalId)
+                .orElseThrow(() -> new Exception("Devocional no encontrado"));
+
+        // Iterar sobre los comentarios y eliminar las referencias en usuarios y devocional
+        for (Comentario comentario : devocional.getComentarios()) {
+            Usuario usuario = usuarioRepositorio.findById(comentario.getIdUsuario())
+                    .orElseThrow(() -> new Exception("Usuario no encontrado"));
+
+            // Eliminar la referencia del comentario en la lista de comentarios del usuario
+            usuario.getComentarios().remove(comentario);
+            usuarioRepositorio.save(usuario);
+        }
+
+        // Ahora se pueden eliminar los comentarios de la base de datos
+        comentarioRepositorio.deleteAll(devocional.getComentarios());
+
+        // Limpiar la lista de comentarios en el devocional
+        devocional.getComentarios().clear();
+        devocionalRepositorio.save(devocional);
+    }
+
+    @Transactional
+    public Comentario obtenerComentarioPorId(Long id) {
+        return comentarioRepositorio.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Comentario no encontrado"));
+    }
+
 }

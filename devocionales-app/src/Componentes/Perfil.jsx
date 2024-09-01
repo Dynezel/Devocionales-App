@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import Comentarios from "./Comentarios"; // Asegúrate de que la ruta al componente sea correcta
-import "../css/PerfilUsuario.css"; // Importa tus estilos
+import Comentarios from "./Comentarios";
+import "../css/PerfilUsuario.css";
 import Seguidores from "./Seguidores";
 
 export default function Perfil() {
   const [user, setUser] = useState(null);
   const [imagenPerfil, setImagenPerfil] = useState(null);
+  const [nombre, setNombre] = useState("");
+  const [celular, setCelular] = useState("");
+  const [error, setError] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const navigate = useNavigate();
+
   const modules = {
     toolbar: false,
   };
@@ -22,12 +28,14 @@ export default function Perfil() {
           { withCredentials: true }
         );
         setUser(response.data);
-        // Si hay una imagen de perfil, cargarla
+        setNombre(response.data.nombre);
+        setCelular(response.data.celular);
         if (response.data.fotoPerfil) {
           cargarImagenPerfil(response.data.idUsuario);
         }
       } catch (error) {
         console.error("Error fetching user", error);
+        setError("Error al cargar el perfil.");
       }
     };
 
@@ -48,10 +56,44 @@ export default function Perfil() {
     }
   };
 
+  const handleModificarPerfil = async (e) => {
+    e.preventDefault();
+
+    try {
+      await axios.post(
+        `http://localhost:8080/usuario/perfil/modificar/${user.idUsuario}`,
+        { nombre, celular },
+        { withCredentials: true }
+      );
+      alert("Perfil modificado correctamente");
+      setIsEditing(false);
+      setUser({ ...user, nombre, celular });
+    } catch (error) {
+      console.error("Error modificando el perfil", error);
+      alert("Error modificando el perfil");
+    }
+  };
+
+  const handleEliminarPerfil = async () => {
+    if (window.confirm("¿Estás seguro de que quieres eliminar tu perfil?")) {
+      try {
+        await axios.delete(
+          `http://localhost:8080/usuario/eliminar/${user.idUsuario}`,
+          { withCredentials: true }
+        );
+        alert("Perfil eliminado correctamente");
+        navigate("/"); // Redirigir al usuario después de eliminar
+      } catch (error) {
+        console.error("Error eliminando el perfil", error);
+        alert("Error eliminando el perfil");
+      }
+    }
+  };
+
   return (
     <div className="perfil-container">
       <h2>Perfil de Usuario</h2>
-      {user && (
+      {user ? (
         <div className="perfil-header">
           <div className="perfil-info">
             <div className="perfil-main">
@@ -63,26 +105,52 @@ export default function Perfil() {
                 />
               )}
               <div className="perfil-details">
-                <p className="perfil-nombre">{user.nombre}</p>
-                <p className="perfil-username">@{user.nombreUsuario}</p>
-                <div className="perfil-bio">
-                  <p className="bio">{user.biografia}</p>
-                </div>
-                {/* Incluye el componente Seguidores */}
-                <Seguidores
-                  className="seguidores-container"
-                  usuarioId={user.idUsuario}
-                  usuarioActualId={user.idUsuario} 
-                />
-                <div className="botones-container"></div>
+                {isEditing ? (
+                  <form onSubmit={handleModificarPerfil}>
+                    <label>
+                      Nombre:
+                      <input
+                        type="text"
+                        value={nombre}
+                        onChange={(e) => setNombre(e.target.value)}
+                      />
+                    </label>
+                    <label>
+                      Celular:
+                      <input
+                        type="text"
+                        value={celular}
+                        onChange={(e) => setCelular(e.target.value)}
+                      />
+                    </label>
+                    <button type="submit">Guardar Cambios</button>
+                    <button type="button" onClick={() => setIsEditing(false)}>
+                      Cancelar
+                    </button>
+                  </form>
+                ) : (
+                  <div>
+                    <p className="perfil-nombre">{user.nombre}</p>
+                    <p className="perfil-username">@{user.nombreUsuario}</p>
+                    <div className="perfil-bio">
+                      <p className="bio">{user.biografia}</p>
+                    </div>
+                    <Seguidores
+                      className="seguidores-container"
+                      usuarioId={user.idUsuario}
+                      usuarioActualId={user.idUsuario}
+                    />
+                    <button onClick={() => setIsEditing(true)}>
+                      Editar Perfil
+                    </button>
+                    <button onClick={handleEliminarPerfil}>Eliminar Perfil</button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
           <div className="perfil-body">
-            <div className="perfil-stats">
-              {/*<p><strong>Email:</strong> {user.email}</p>
-    <p><strong>Celular:</strong> {user.celular}</p>*/}
-            </div>
+            <div className="perfil-stats"></div>
             <div className="perfil-devocionales">
               <h3>
                 <u>Devocionales Creados</u>
@@ -94,18 +162,11 @@ export default function Perfil() {
                     <div className="devocional-item">
                       <div className="devocional-content">
                         <h2 className="devocional-titulo">
-                          {" "}
-                          <u>
-                            {" "}
-                            {devocional.nombre || "Título no disponible"}{" "}
-                          </u>{" "}
+                          <u>{devocional.nombre || "Título no disponible"}</u>
                         </h2>
                         <ReactQuill
                           theme="snow"
-                          value={
-                            devocional.descripcion ||
-                            "Descripción no disponible"
-                          }
+                          value={devocional.descripcion || "Descripción no disponible"}
                           readOnly={true}
                           modules={modules}
                           className="devocional-descripcion"
@@ -138,6 +199,8 @@ export default function Perfil() {
             </div>
           </div>
         </div>
+      ) : (
+        <p>{error || "Cargando perfil..."}</p>
       )}
     </div>
   );

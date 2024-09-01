@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Comentarios from "./Comentarios";
@@ -17,6 +17,7 @@ export default function Devocionales() {
   const [resultadosBusqueda, setResultadosBusqueda] = useState([]);
   const [meGustas, setMeGustas] = useState({});
   const [likesPorUsuario, setLikesPorUsuario] = useState({});
+  const navigate = useNavigate(); // Inicializa useNavigate
 
   const modules = {
     toolbar: false,
@@ -64,14 +65,9 @@ export default function Devocionales() {
     handleBusquedaTitulo();
   }, [devocionales, filtroTitulo]);
 
-  const toggleExpandido = async (id) => {
-    if (devocionalExpandido === id) {
-      setDevocionalExpandido(null);
-    } else {
-      setDevocionalExpandido(id);
-      await incrementarVistas(id);
-      await obtenerLikes(id);
-    }
+  const handleDevocionalClick = (id, autorId) => {
+    navigate(`/devocional/${id}?autorId=${autorId}`);
+    incrementarVistas(id);
   };
 
   const incrementarVistas = async (id) => {
@@ -232,7 +228,7 @@ export default function Devocionales() {
           <div key={devocional.id} className="devocional">
             <h3
               className="titulo"
-              onClick={() => toggleExpandido(devocional.id)}
+              onClick={() => handleDevocionalClick(devocional.id, devocional.autor.idUsuario)}
               style={{ cursor: "pointer" }}
             >
               {devocional.nombre || "Nombre no disponible"}

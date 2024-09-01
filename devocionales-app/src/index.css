@@ -44,26 +44,6 @@ h1 {
   line-height: 1.1;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-
-button:hover {
-  border-color: #646cff;
-}
-
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
 
 .header {
   display: flex;
@@ -113,11 +93,6 @@ button:focus-visible {
   align-items: center;
 }
 
-.notification-bell {
-  height: 1.5em;
-  width: 1.5em;
-}
-
 .user-profile {
   display: flex;
   align-items: center;
@@ -139,13 +114,22 @@ button:focus-visible {
   position: absolute;
   top: 100%; /* Coloca el menú debajo de la imagen de perfil */
   left: 0; /* Alinea el menú con el borde izquierdo de la imagen de perfil */
-  background-color: transparent;
-  border: 1px solid #3b3b3b;
+  background-color: rgb(26, 26, 26);
+  border: 3px solid #3b3b3b;
   border-radius: 5px;
   padding: 8px 0;
   list-style: none;
   display: none; /* Inicialmente oculta el menú */
   z-index: 1; /* Asegura que el menú esté encima de otros elementos */
+  height: 175%;
+  width: 100%;
+}
+.boton-menu-navbar {
+  height:fit-content;
+  width: 100%;
+  border-radius: 0%;
+  border-bottom: 3px solid #8d8d8d;
+  margin-top: -20%;
 }
 
 .user-profile:hover .user-menu {
@@ -278,6 +262,19 @@ button:focus-visible {
   text-align: center; /* Centra todos los encabezados y párrafos */
   margin: 10px 0; /* Espaciado entre elementos */
 }
+.ql-toolbar .ql-stroke {
+  fill: none;
+  stroke: #dfdfdf;
+}
+
+.ql-toolbar .ql-fill {
+  fill: #dfdfdf;
+  stroke: none;
+}
+
+.ql-toolbar .ql-picker {
+  color: #dfdfdf;
+}
 
 /* Asegurarse de que el contenedor .devocional-container esté centrado */
 .devocional-container {
@@ -287,6 +284,19 @@ button:focus-visible {
   border-radius: 8px;
   max-width: 800px; /* Ancho máximo del contenedor */
   text-align: center; /* Centra el contenido dentro del contenedor */
+}
+
+/*Temporal acá, linea para separar entre el titulo y devocional al crear*/
+.separador{
+  margin-top: 5%;
+  margin-bottom: 5%;
+  border-bottom: 3px solid rgb(241, 241, 241);
+}
+label [for="nombreCreacion"]{
+  font-size: 70px;
+}
+.reactQuill-crear-modificar {
+  margin-bottom: 3%;
 }
 
 /* Otros estilos preexistentes */

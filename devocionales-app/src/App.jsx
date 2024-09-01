@@ -15,7 +15,8 @@ import PerfilUsuario from './Componentes/PerfilUsuario'
 import Prueba from './Componentes/Prueba'
 import Mensajeria from './Componentes/Mensajeria'
 import Conversaciones from './Componentes/Conversaciones'
-import Devocional from './Componentes/Devocionales'
+import Devocional from './Componentes/Devocional'
+
 
 
 function App() {

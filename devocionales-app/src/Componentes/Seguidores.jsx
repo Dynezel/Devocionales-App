@@ -150,8 +150,9 @@ export default function Seguidores({ usuarioId, usuarioActualId }) {
             <ul>
               {seguidores.map((seguidor) => (
                 <li key={seguidor.id}>
-                  <button className="boton-seguidores-seguir">
+                  
                     <Link to={`/usuario/perfil/${seguidor.usuario.idUsuario}`}>
+                    <button className="boton-seguidores-seguir">
                       {seguidor.usuario.fotoPerfil ? (
                         <img
                           src={`http://localhost:8080/imagen/perfil/${seguidor.usuario.idUsuario}`}
@@ -161,8 +162,9 @@ export default function Seguidores({ usuarioId, usuarioActualId }) {
                         <div className="placeholder-imagen">P</div>
                       )}
                       {seguidor.usuario.nombre}
+                      </button>
                     </Link>
-                  </button>
+                  
                 </li>
               ))}
             </ul>
@@ -181,8 +183,9 @@ export default function Seguidores({ usuarioId, usuarioActualId }) {
             <ul>
               {seguidos.map((seguido) => (
                 <li key={seguido.id}>
-                  <button className="boton-seguidores-seguir">
+                  
                     <Link to={`/usuario/perfil/${seguido.seguido.idUsuario}`}>
+                    <button className="boton-seguidores-seguir">
                       {seguido.seguido.fotoPerfil ? (
                         <img
                           src={`http://localhost:8080/imagen/perfil/${seguido.seguido.idUsuario}`}
@@ -192,8 +195,8 @@ export default function Seguidores({ usuarioId, usuarioActualId }) {
                         <div className="placeholder-imagen">P</div>
                       )}
                       {seguido.seguido.nombre}
+                      </button>
                     </Link>
-                  </button>
                 </li>
               ))}
             </ul>

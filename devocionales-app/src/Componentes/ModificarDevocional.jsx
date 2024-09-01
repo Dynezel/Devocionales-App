@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
+import ReactQuill from "react-quill";
 
 
 export default function ModificarDevocional() {
@@ -13,7 +14,7 @@ export default function ModificarDevocional() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const URL = `http://localhost:8080/devocionales/modificar/${id}`;
+    const URL = `http://localhost:8080/modificar/${id}`;
 
     try {
       const response = await axios.put(URL, {
@@ -28,32 +29,33 @@ export default function ModificarDevocional() {
     }
   };
 
-  return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <p> {id} </p>
-        <div>
-          <label htmlFor="nombre">Nombre:</label>
-          <input
-            type="text"
-            id="nombre"
-            value={nombre}
-            onChange={(event) => setNombre(event.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="descripcion">Descripcion:</label>
-          <input
-            type="text"
-            id="descripcion"
-            value={descripcion}
-            onChange={(event) => setDescripcion(event.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Enviar</button>
-      </form>
-    </div>
+ return (
+    <form onSubmit={handleSubmit} className="devocional-container">
+
+      <h3> <u> Modificar Devocional </u> </h3>
+      <div>
+        <label htmlFor="nombreCreacion"> <u> <strong> Titulo Nuevo: </strong></u></label>
+        <input
+          type="text"
+          id="nombreCreacion"
+          value={nombre}
+          onChange={(event) => setNombre(event.target.value)}
+          required
+          className="titulo-crear"
+        />
+      </div>
+      <div className="separador"> </div>
+      <div className="reactQuill-crear-modificar">
+        <label htmlFor="descripcion">Contenido Nuevo:</label>
+        <ReactQuill
+          theme="snow"
+          value={descripcion}
+          onChange={(value) => setDescripcion(value)}
+          required
+        />
+      </div>
+      
+      <button type="submit">Enviar</button>
+    </form>
   );
 }

@@ -7,13 +7,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import dylan.devocionalesspring.entidades.Comentario;
 import dylan.devocionalesspring.entidades.Devocional;
 import dylan.devocionalesspring.entidades.Imagen;
 import dylan.devocionalesspring.entidades.Usuario;
 import dylan.devocionalesspring.enumeraciones.Rol;
 import dylan.devocionalesspring.excepciones.MiExcepcion;
 import dylan.devocionalesspring.excepciones.UsuarioNoEncontradoExcepcion;
-import dylan.devocionalesspring.repositorios.UsuarioRepositorio;
+import dylan.devocionalesspring.repositorios.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,17 @@ public class UsuarioServicio implements UserDetailsService {
     private UsuarioRepositorio usuarioRepositorio;
 
     @Autowired
+    private ComentarioRepositorio comentarioRepositorio;
+
+    @Autowired
+    private DevocionalRepositorio devocionalRepositorio;
+
+    @Autowired
+    private MensajeRepositorio mensajeRepositorio;
+
+    @Autowired
+    private SeguidorRepositorio seguidorRepositorio;
+
     private HttpServletRequest request;
 
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -204,15 +216,64 @@ public class UsuarioServicio implements UserDetailsService {
     //}
 
     @Transactional
-    public void eliminarUsuario(Long idCodigoTributario) {
-        Optional<Usuario> respuesta = usuarioRepositorio.findById(idCodigoTributario);
-        if (respuesta.isPresent()) {
-            Usuario usuario = respuesta.get();
+    public void eliminarUsuario(Long usuarioId) throws Exception {
+        Usuario usuario = usuarioRepositorio.findById(usuarioId)
+                .orElseThrow(() -> new Exception("Usuario no encontrado"));
 
-            usuarioRepositorio.delete(usuario);
+        // Eliminar mensajes donde el usuario es el emisor
+        mensajeRepositorio.deleteByEmisor(usuario);
+
+        // Eliminar mensajes donde el usuario es el receptor
+        mensajeRepositorio.deleteByReceptor(usuario);
+
+        // Eliminar relaciones de seguidores y seguidos
+        seguidorRepositorio.deleteByUsuarioOrSeguido(usuario, usuario);
+
+        // Recorrer y eliminar todos los comentarios asociados al usuario
+        for (Comentario comentario : usuario.getComentarios()) {
+            Devocional devocional = devocionalRepositorio.findById(comentario.getIdDevocional())
+                    .orElseThrow(() -> new Exception("Devocional no encontrado"));
+            devocional.getComentarios().remove(comentario);
+            comentarioRepositorio.delete(comentario);
+            devocionalRepositorio.save(devocional);
         }
+
+        // Finalmente, eliminar al usuario de la base de datos
+        usuarioRepositorio.delete(usuario);
     }
 
+    private void eliminarComentario(Long comentarioId) throws Exception {
+        Comentario comentario = comentarioRepositorio.findById(comentarioId)
+                .orElseThrow(() -> new Exception("Comentario no encontrado"));
+
+        // Primero, eliminamos el comentario de la lista de comentarios en el usuario
+        Usuario usuario = usuarioRepositorio.findById(comentario.getIdUsuario())
+                .orElseThrow(() -> new Exception("Usuario no encontrado"));
+        usuario.getComentarios().remove(comentario);
+        usuarioRepositorio.save(usuario);
+
+        // Luego, eliminamos el comentario de la lista de comentarios en el devocional
+        Devocional devocional = devocionalRepositorio.findById(comentario.getIdDevocional())
+                .orElseThrow(() -> new Exception("Devocional no encontrado"));
+        devocional.getComentarios().remove(comentario);
+        devocionalRepositorio.save(devocional);
+
+        // Finalmente, eliminamos el comentario de la base de datos
+        comentarioRepositorio.delete(comentario);
+    }
+
+    private void eliminarDevocional(int devocionalId) throws Exception {
+        Devocional devocional = devocionalRepositorio.findById(devocionalId)
+                .orElseThrow(() -> new Exception("Devocional no encontrado"));
+
+        // Primero, eliminamos los comentarios asociados al devocional
+        for (Comentario comentario : devocional.getComentarios()) {
+            eliminarComentario(comentario.getId());
+        }
+
+        // Finalmente, eliminamos el devocional
+        devocionalRepositorio.delete(devocional);
+    }
     @Transactional(readOnly = true)
     public Usuario obtenerUsuarioPorUsername(String username) throws MiExcepcion {
         Usuario usuario = usuarioRepositorio.buscarPorEmail(username);

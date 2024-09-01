@@ -4,8 +4,9 @@
 }
 
 .notification-bell {
-  height: 1.5em;
-  width: 1.5em;
+  margin-top: 25%;
+  height: 2.1em;
+  width: 2.5em;
   cursor: pointer;
 }
 
