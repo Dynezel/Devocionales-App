@@ -110,8 +110,8 @@ public class UsuarioControlador {
     @PreAuthorize("hasAnyRole('ROLE_USUARIO','ROLE_ADMIN')")
     @PostMapping("/perfil/modificar/{idUsuario}")
     public ResponseEntity<String> modificar(@PathVariable("idUsuario") Long idUsuario,
-                                            @Param("nombre") String nombre,
-                                            @Param("celular") String celular) {
+                                            @RequestParam("nombre") String nombre,
+                                            @RequestParam("celular") String celular) {
         try {
             // Llamada al método del servicio para modificar el usuario
             usuarioServicio.modificarUsuario(idUsuario, nombre, celular);

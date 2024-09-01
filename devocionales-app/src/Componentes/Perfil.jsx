@@ -61,8 +61,8 @@ export default function Perfil() {
 
     try {
       await axios.post(
-        `http://localhost:8080/usuario/perfil/modificar/${user.idUsuario}`,
-        { nombre, celular },
+        `http://localhost:8080/usuario/perfil/modificar/${user.idUsuario}?nombre=${nombre}&celular=${celular}`,
+        {},
         { withCredentials: true }
       );
       alert("Perfil modificado correctamente");

@@ -100,7 +100,9 @@ public class UsuarioServicio implements UserDetailsService {
 
     @Transactional
     public void modificarUsuario(Long idUsuario, String nombre, String celular) throws MiExcepcion {
-        // Validar los datos modificados si es necesario
+        // Validar los datos modificados
+        validarCadena(nombre, "El nombre no puede ser vacío o nulo.");
+        validarCadena(celular, "El celular no puede ser vacío o nulo.");
 
         // Obtener el usuario actual desde el repositorio
         Usuario usuarioActual = getOne(idUsuario);
