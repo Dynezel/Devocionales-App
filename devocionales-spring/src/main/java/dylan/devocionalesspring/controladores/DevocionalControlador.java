@@ -71,7 +71,7 @@ public class DevocionalControlador {
 
     @GetMapping("/listar")
     public List<Devocional> listarDevocionales() {
-        return devocionalServicio.obtenerTodosDevocionales();
+        return devocionalServicio.obtenerDevocionalesPorFecha();
     }
 
     @GetMapping("/encontrar/{id}")

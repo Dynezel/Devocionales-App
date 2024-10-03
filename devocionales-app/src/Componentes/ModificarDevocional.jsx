@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
 import ReactQuill from "react-quill";
@@ -10,6 +10,21 @@ export default function ModificarDevocional() {
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const navigate = useNavigate(); // Obtener el objeto de historial
+
+  useEffect(() => {
+    const obtenerDevocional = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/encontrar/${id}`);
+        const { nombre, descripcion } = response.data;
+        setNombre(nombre);
+        setDescripcion(descripcion);
+      } catch (error) {
+        console.error("Error al obtener el devocional:", error);
+      }
+    };
+  
+    obtenerDevocional();
+  }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -59,6 +59,7 @@ public class UsuarioServicio implements UserDetailsService {
     @Autowired
     private ImagenServicio imagenServicio;
 
+    @Transactional
     public void registrarUsuario(String nombre,
                                  String email,
                                  String nombreUsuario,
@@ -66,7 +67,8 @@ public class UsuarioServicio implements UserDetailsService {
                                  String celular,
                                  String contrasenia,
                                  String contrasenia2,
-                                 MultipartFile archivo) throws MiExcepcion, IOException {
+                                 MultipartFile fotoArchivo,
+                                 MultipartFile bannerArchivo) throws MiExcepcion, IOException {
         validarDatosRegistro(nombre, email, celular, contrasenia, contrasenia2);
         Usuario usuario = new Usuario();
         usuario.setNombre(nombre);
@@ -77,19 +79,28 @@ public class UsuarioServicio implements UserDetailsService {
         usuario.setContrasenia(new BCryptPasswordEncoder().encode(contrasenia));
         usuario.setRol(Rol.USUARIO);
 
-        if (!archivo.isEmpty()) {
-            Imagen fotoPerfil = imagenServicio.guardarImagen(archivo);
+        if (!fotoArchivo.isEmpty()) {
+            Imagen fotoPerfil = imagenServicio.guardarImagen(fotoArchivo);
             usuario.setFotoPerfil(fotoPerfil);
         }
+
+        if (!bannerArchivo.isEmpty()) {
+            Imagen bannerPerfil = imagenServicio.guardarImagen(bannerArchivo);
+            usuario.setBannerPerfil(bannerPerfil);
+        }
+
         usuarioRepositorio.save(usuario);
     }
 
+    @Transactional
     public List<Devocional> obtenerDevocionalesDeUsuario(Long idUsuario) throws UsuarioNoEncontradoExcepcion {
         Usuario usuario = usuarioRepositorio.findById(idUsuario)
                 .orElseThrow(() -> new UsuarioNoEncontradoExcepcion("Usuario no encontrado con ID: " + idUsuario));
 
         return usuario.getDevocionales();
     }
+
+    @Transactional
     public Devocional agregarDevocionalAUsuario(String email, Devocional devocional) throws UsuarioNoEncontradoExcepcion {
         Usuario usuario = obtenerPerfilUsuario(email);
         devocional.setFechaCreacion(devocional.getFechaCreacion()); // Fecha de creación actual
@@ -99,7 +110,8 @@ public class UsuarioServicio implements UserDetailsService {
     }
 
     @Transactional
-    public void modificarUsuario(Long idUsuario, String nombre, String celular) throws MiExcepcion {
+    public void modificarUsuario(Long idUsuario, String nombre, String celular, String biografia,
+                                 MultipartFile imagenPerfil, MultipartFile banner) throws MiExcepcion, IOException {
         // Validar los datos modificados
         validarCadena(nombre, "El nombre no puede ser vacío o nulo.");
         validarCadena(celular, "El celular no puede ser vacío o nulo.");
@@ -107,9 +119,22 @@ public class UsuarioServicio implements UserDetailsService {
         // Obtener el usuario actual desde el repositorio
         Usuario usuarioActual = getOne(idUsuario);
 
-        // Actualizar solo el nombre y el celular
+        // Actualizar nombre y celular
         usuarioActual.setNombre(nombre);
         usuarioActual.setCelular(celular);
+        usuarioActual.setBiografia(biografia);
+
+        // Si se proporcionó una imagen de perfil, actualizarla
+        if (imagenPerfil != null && !imagenPerfil.isEmpty()) {
+            Imagen imagen = imagenServicio.guardarImagen(imagenPerfil);
+            usuarioActual.setFotoPerfil(imagen);
+        }
+
+        // Si se proporcionó un banner, actualizarlo
+        if (banner != null && !banner.isEmpty()) {
+            Imagen bannerImagen = imagenServicio.guardarImagen(banner);
+            usuarioActual.setBannerPerfil(bannerImagen);
+        }
 
         // Guardar los cambios en el repositorio
         usuarioRepositorio.save(usuarioActual);

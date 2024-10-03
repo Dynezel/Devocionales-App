@@ -5,21 +5,24 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Comentarios from "./Comentarios";
 import Seguidores from "./Seguidores";
-import "../css/PerfilUsuario.css"; // Importa tus estilos
+import "../css/PerfilUsuario.css";
 import MensajeriaPopup from "./Mensajeria";
+import bannerDefault from '../Images/banner-default.png';
+import ConfiguracionUsuario from "./ConfiguracionUsuario"; // Importar el componente de configuración
 
-export default function Perfil() {
+export default function PerfilUsuario() {
   const { idUsuario } = useParams(); // Captura el idUsuario desde la URL
   const [user, setUser] = useState(null);
   const [usuario, setUsuario] = useState(null);
   const [imagenPerfil, setImagenPerfil] = useState(null);
+  const [banner, setBanner] = useState(null);
   const [mostrarMensajeria, setMostrarMensajeria] = useState(false);
   const [error, setError] = useState(null);
+  const [showConfig, setShowConfig] = useState(false); // Estado para mostrar el overlay
 
   const handleEnviarMensaje = () => {
     if (!usuario) {
       alert("Debes estar logeado para enviar un mensaje.");
-      // Redirigir a la página de inicio de sesión si no hay usuario logueado
       window.location.href = "/login";
       return;
     }
@@ -50,7 +53,7 @@ export default function Perfil() {
     };
 
     fetchUsuario();
-  }, [history]);
+  }, []);
 
   // Carga al Perfil de un Usuario especifico
   useEffect(() => {
@@ -61,7 +64,6 @@ export default function Perfil() {
         );
         setUser(response.data);
 
-        // Si hay una imagen de perfil, cargarla
         if (response.data.fotoPerfil) {
           cargarImagenPerfil(response.data.idUsuario);
         }
@@ -76,7 +78,6 @@ export default function Perfil() {
     }
   }, [idUsuario]);
 
-  // Función para cargar la imagen de perfil del usuario
   const cargarImagenPerfil = async (idUsuario) => {
     try {
       const response = await axios.get(
@@ -85,8 +86,6 @@ export default function Perfil() {
           responseType: "arraybuffer",
         }
       );
-
-      // Crear una URL de objeto para mostrar la imagen
       const blob = new Blob([response.data], { type: "image/jpeg" });
       const url = URL.createObjectURL(blob);
       setImagenPerfil(url);
@@ -97,9 +96,12 @@ export default function Perfil() {
 
   return (
     <div className="perfil-container">
-      <h2>Perfil de Usuario</h2>
       {user && (
+        <>
         <div className="perfil-header">
+          <div className="banner-picture-container">
+              <img className="banner-picture" src={banner ? banner : bannerDefault} alt="Banner de Usuario" />
+            </div>
           <div className="perfil-info">
             <div className="perfil-main">
               {imagenPerfil && (
@@ -110,20 +112,27 @@ export default function Perfil() {
                 />
               )}
               <div className="perfil-details">
-                <p className="perfil-nombre">{user.nombre}</p>
-                <p className="perfil-username">@{user.nombreUsuario}</p>
+                <h2 className="perfil-nombre">{user.nombre}</h2>
+                <h4 className="perfil-username">@{user.nombreUsuario}</h4>
                 <div className="perfil-bio">
                   <p className="bio">{user.biografia}</p>
                 </div>
-                {/* Incluye el componente Seguidores */}
-                <Seguidores
-                  className="seguidores-container"
-                  usuarioId={user.idUsuario}
-                  usuarioActualId={usuario ? usuario.idUsuario : null}
-                  onLoginRequired={() => history.push("/login")}
-                />
+                </div>
+                <div>
+                {usuario &&
+                  usuario.rol &&
+                  (user.idUsuario === usuario.idUsuario ||
+                    usuario.rol === "ADMINISTRADOR") && (
+                    <button
+                      className="editar-perfil-button"
+                      onClick={() => setShowConfig(true)} // Mostrar el overlay
+                    >
+                      Editar Perfil
+                    </button>
+                  )}
+                  
                 <div className="botones-container">
-                  {user.idUsuario!== (usuario && usuario.idUsuario) && (
+                  {user.idUsuario !== (usuario && usuario.idUsuario) && (
                     <button
                       className="btn-seguir"
                       onClick={handleEnviarMensaje}
@@ -142,11 +151,14 @@ export default function Perfil() {
               </div>
             </div>
           </div>
+          <Seguidores
+                  className="seguidores-container"
+                  usuarioId={user.idUsuario}
+                  usuarioActualId={usuario ? usuario.idUsuario : null}
+                  onLoginRequired={() => history.push("/login")}
+                />
+          
           <div className="perfil-body">
-            <div className="perfil-stats">
-              {/*<p><strong>Email:</strong> {user.email}</p>
-    <p><strong>Celular:</strong> {user.celular}</p>*/}
-            </div>
             <div className="perfil-devocionales">
               <h3>
                 <u>Devocionales Creados</u>
@@ -154,17 +166,11 @@ export default function Perfil() {
               {user.devocionales.length > 0 ? (
                 user.devocionales.map((devocional, index) => (
                   <div>
-                    {index != 0 && <hr className="devocional-separador" />}
+                    {index !== 0 && <hr className="devocional-separador" />}
                     <div key={devocional.id} className="devocional-item">
-                      {/* Agregar separador solo si no es el último devocional */}
-
                       <div className="devocional-content">
                         <h2 className="devocional-titulo">
-                          {" "}
-                          <u>
-                            {" "}
-                            {devocional.nombre || "Título no disponible"}{" "}
-                          </u>{" "}
+                          <u>{devocional.nombre || "Título no disponible"}</u>
                         </h2>
                         <ReactQuill
                           theme="snow"
@@ -199,11 +205,21 @@ export default function Perfil() {
                   </div>
                 ))
               ) : (
-                <p>Este usuario no creó ningún devocional aún.</p>
+                <p>Este usuario no ha creado ningún devocional aún.</p>
               )}
             </div>
           </div>
         </div>
+        </>
+      )}
+      
+      {showConfig && (
+        <ConfiguracionUsuario
+          user={user}
+          setShowConfig={setShowConfig}
+          setUser={setUser}
+          setImagenPerfil={setImagenPerfil} // Actualizar la imagen localmente
+        />
       )}
     </div>
   );

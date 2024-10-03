@@ -34,6 +34,10 @@ public class Usuario implements Serializable {
     @JoinColumn(name = "imagen_id")
     private Imagen fotoPerfil;
 
+    @OneToOne(orphanRemoval = true)
+    @JoinColumn(name = "banner_id")
+    private Imagen bannerPerfil;
+
     @Enumerated(EnumType.STRING)
     private Rol rol;
 

@@ -65,6 +65,24 @@ export default function Devocionales() {
     handleBusquedaTitulo();
   }, [devocionales, filtroTitulo]);
 
+  // Combina los devocionales de todos los usuarios y los ordena por fecha
+  const devocionalesOrdenados = usuarios
+    .flatMap((usuario) =>
+      usuario.devocionales.map((devocional) => ({
+        ...devocional,
+        autor: usuario,
+        // Convierte la fecha de creación en un objeto Date para ordenarla
+        fechaCreacion: new Date(devocional.fechaCreacion),
+      }))
+    )
+    // Ordena por fecha de creación, los más recientes primero
+    .sort((a, b) => b.fechaCreacion - a.fechaCreacion);
+
+  // Si hay un filtro de búsqueda, se filtran los resultados
+  const devocionalesAMostrar = filtroTitulo.trim()
+    ? resultadosBusqueda
+    : devocionalesOrdenados;
+
   const handleDevocionalClick = (id, autorId) => {
     navigate(`/devocional/${id}?autorId=${autorId}`);
     incrementarVistas(id);
@@ -147,6 +165,8 @@ export default function Devocionales() {
 
     const { nombre, descripcion, fechaCreacion, autor } = devocional;
 
+    
+
     return (
       <div className="devocional-container">
         <h2>
@@ -176,7 +196,10 @@ export default function Devocionales() {
         </div>
 
         <p className="devocional-fecha">
-          Fecha de Creación: {fechaCreacion || "Fecha no disponible"}
+          Fecha de Creación:{" "}
+          {devocional.fechaCreacion
+            ? new Date(devocional.fechaCreacion).toLocaleString()
+            : "Fecha no disponible"}
         </p>
         <p className="devocional-autor">
           Autor:
@@ -216,19 +239,13 @@ export default function Devocionales() {
           onChange={(e) => setFiltroTitulo(e.target.value)}
           className="busqueda-input"
         />
-        {(resultadosBusqueda.length > 0
-          ? resultadosBusqueda
-          : usuarios.flatMap((usuario) =>
-              usuario.devocionales.map((devocional) => ({
-                ...devocional,
-                autor: usuario,
-              }))
-            )
-        ).map((devocional) => (
+        {devocionalesAMostrar.map((devocional) => (
           <div key={devocional.id} className="devocional">
             <h3
               className="titulo"
-              onClick={() => handleDevocionalClick(devocional.id, devocional.autor.idUsuario)}
+              onClick={() =>
+                handleDevocionalClick(devocional.id, devocional.autor.idUsuario)
+              }
               style={{ cursor: "pointer" }}
             >
               {devocional.nombre || "Nombre no disponible"}

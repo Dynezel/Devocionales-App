@@ -9,6 +9,7 @@ export default function RegistrarUsuario() {
   const [contrasenia2, setContrasenia2] = useState("");
   const [celular, setCelular] = useState("");
   const [archivo, setArchivo] = useState(null);
+  const [banner, setBanner] = useState(null);
   const [error, setError] = useState("");
 
   const handleSignUp = async (e) => {
@@ -30,6 +31,7 @@ export default function RegistrarUsuario() {
 
       const formData = new FormData();
       formData.append("archivo", archivo);
+      formData.append("banner", banner);
       formData.append("nombre", nombre);
       formData.append("email", email);
       formData.append("nombreUsuario", nombreUsuario);
@@ -129,12 +131,20 @@ export default function RegistrarUsuario() {
         />
       </div>
       <div class="form-group">
-        <label htmlFor="archivo">Seleccionar Archivo:</label>
+        <label htmlFor="archivo">Imagen de Perfil:</label>
         <input
           type="file"
           id="archivo"
           onChange={(e) => setArchivo(e.target.files[0])} // Capturamos el archivo seleccionado
           required
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="banner">Banner de Perfil:</label>
+        <input
+          type="file"
+          id="banner"
+          onChange={(e) => setBanner(e.target.files[0])} // Campo opcional para el banner
         />
       </div>
       <button type="submit">Registrarse</button>

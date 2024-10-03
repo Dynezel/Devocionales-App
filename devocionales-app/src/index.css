@@ -1,8 +1,10 @@
 #root {
-  min-height: 100vh;
+  min-height: 0;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  max-width: 1600px; /* Establece el ancho máximo */
+  max-width: 100%; /* Establece el ancho máximo */
+  max-height: 100vh;
   margin: 0 auto; /* Centra el contenido horizontalmente */
 }
 
@@ -45,30 +47,53 @@ h1 {
 }
 
 
+/* Estilos para dispositivos más grandes */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid rgb(253, 202, 60);
-  height: 100px;
+  height: 7em;
   width: 100em;
+  max-width: 100%;
 }
 
 .nav-container {
   display: flex;
-  justify-content: space-between; /* Mueve todos los elementos al lado derecho */
+  justify-content: space-between;
   align-items: center;
-  width: 100%; /* Asegura que el contenedor ocupe todo el ancho de la pantalla */
-  margin-left: 8em; /* Mueve los elementos más hacia la derecha */
-  padding-right: 20px; /* Añade un poco de espacio entre los elementos y el borde derecho */
+  width: 100%;
+  max-width: 100%;
+  margin-left: 8em;
+  padding-right: 20px;
+}
+
+/* Estilos para el menú hamburguesa */
+.hamburger-menu {
+  display: none;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.hamburger-menu div {
+  width: 25px;
+  height: 3px;
+  background-color: black;
+}
+
+/* Menú activo */
+.hamburger-menu.active div {
+  background-color: #fff;
 }
 
 .logo {
   width: 10rem;
-  height: 110px;
+  height: 150%;
   justify-content: baseline;
-  margin-top: -45px;
+  margin-top: -70%;
 }
+
 .logo.logged-in {
   margin-left: -8rem;
   width: 7rem;
@@ -82,7 +107,6 @@ h1 {
 }
 
 .links {
-  margin-left: 15rem;
   display: flex;
   align-items: center;
 }
@@ -112,24 +136,35 @@ h1 {
 
 .user-profile .user-menu {
   position: absolute;
-  top: 100%; /* Coloca el menú debajo de la imagen de perfil */
-  left: 0; /* Alinea el menú con el borde izquierdo de la imagen de perfil */
+  top: 100%; /* Coloca el menú justo debajo del perfil */
+  left: 50%; /* Centra el menú horizontalmente */
+  transform: translateX(-50%); /* Ajusta para que el menú esté completamente centrado */
   background-color: rgb(26, 26, 26);
   border: 3px solid #3b3b3b;
   border-radius: 5px;
   padding: 8px 0;
   list-style: none;
+  z-index: 1;
+  width: 150px; /* Establece un ancho fijo para el menú */
   display: none; /* Inicialmente oculta el menú */
-  z-index: 1; /* Asegura que el menú esté encima de otros elementos */
-  height: 175%;
-  width: 100%;
+  height: fit-content;
 }
+
 .boton-menu-navbar {
-  height:fit-content;
-  width: 100%;
-  border-radius: 0%;
+  width: 100%; /* Asegura que el botón ocupe todo el ancho del contenedor */
+  padding: 10px 0; /* Añade algo de espacio arriba y abajo del texto */
+  text-align: center; /* Centra el texto dentro del botón */
+  border-radius: 0%; 
   border-bottom: 3px solid #8d8d8d;
-  margin-top: -20%;
+  margin-top: -7px; /* Ajusta el margen para una mejor separación */
+
+}
+.boton-menu-configuracion {
+  width: 100%; /* Asegura que el botón ocupe todo el ancho del contenedor */
+  padding: 10px 0; /* Añade algo de espacio arriba y abajo del texto */
+  text-align: center; /* Centra el texto dentro del botón */
+  border-radius: 0%; 
+  border-bottom: 3px solid #8d8d8d;
 }
 
 .user-profile:hover .user-menu {
@@ -214,7 +249,7 @@ h1 {
 
 .footer {
   border-top: 1px solid rgb(253, 202, 60);
-  height: 50px;
+  height: 20%;
   text-align: center;
 }
 
@@ -276,16 +311,6 @@ h1 {
   color: #dfdfdf;
 }
 
-/* Asegurarse de que el contenedor .devocional-container esté centrado */
-.devocional-container {
-  border: 1px solid #ccc;
-  padding: 15px;
-  margin: 0 auto 15px; /* Centrando horizontalmente y añadiendo margen inferior */
-  border-radius: 8px;
-  max-width: 800px; /* Ancho máximo del contenedor */
-  text-align: center; /* Centra el contenido dentro del contenedor */
-}
-
 /*Temporal acá, linea para separar entre el titulo y devocional al crear*/
 .separador{
   margin-top: 5%;
@@ -340,12 +365,6 @@ button:focus-visible {
   width: 70px;
   height: 70px;
   display: inline-flex;
-}
-
-.footer {
-  border-top: 1px solid rgb(253, 202, 60);
-  height: 50px;
-  text-align: center;
 }
 
 .links {
@@ -722,39 +741,71 @@ button:focus-visible {
 }
 }
 
-/* Estilos responsivos */
-@media (max-width: 767px) {
-  .header {
-    flex-direction: column;
-    align-items: flex-start;
-    height: auto;
-    width: 100%;
-    padding: 10px;
-  }
-
-  .icon {
-    width: 40px;
-    height: 90px;
-    display: inline-flex;
+/* Para dispositivos móviles */
+@media (max-width: 768px) {
+  .hamburger-menu {
+    display: flex;
   }
 
   .links {
-    grid-template-columns: 1fr;
-    grid-gap: 10px;
-    margin-top: 10px;
+    display: none;
   }
 
-  .ql-editor {
-    width: 25em;
-    overflow-x: auto;
-    height: auto;
-  }
-
-  .tabla {
+  .nav-items-mobile {
+    display: flex;
+    flex-direction: column; /* Cambia a columna para apilar los elementos */
+    background-color: #333;
+    padding: 10px;
+    position: absolute;
+    top: 7em;
+    right: 0;
+    left: 0;
     width: 100%;
+    height: calc(100vh - 7em);
+    z-index: 1;
+    justify-content: center;
   }
-  .verse-search-container {
-    width: 100%; /* En dispositivos pequeños, ocupa todo el ancho */
-    margin-left: 0; /* Anula el margen izquierdo */
+
+  .nav-items-mobile a,
+  .nav-items-mobile .user-profile {
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+    border-bottom: 1px solid #fff;
+  }
+
+  .nav-items-mobile .user-profile {
+    flex-direction: column; /* Apila el nombre e imagen de perfil en columna */
+    align-items: center;
+  }
+
+  .nav-items-mobile .profile-image {
+    margin-top: 10px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    
+  }
+
+  .nav-items {
+    flex-direction: column; /* Cambia la dirección de los elementos a columna */
+    width: 100%; /* Asegúrate de que ocupe todo el ancho */
+    justify-content: flex-start;
+    align-items: center;
+  }
+}
+
+/* Media query para pantallas mayores a 768px (escritorio) */
+@media (min-width: 769px) {
+  .hamburger {
+    display: none;
+  }
+
+  .links {
+    display: flex;
+  }
+
+  .mobile-menu {
+    display: none;
   }
 }

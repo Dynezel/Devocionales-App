@@ -50,17 +50,19 @@ public class UsuarioControlador {
 
 
     @PostMapping("/registro")
-    public ResponseEntity<String> registro(@RequestParam("archivo") MultipartFile archivo,
-                                           @RequestParam("nombre") String nombre,
-                                           @RequestParam("email") String email,
-                                           @RequestParam("nombreUsuario") String nombreUsuario,
-                                           String biografia,
-                                           @RequestParam("celular") String celular,
-                                           @RequestParam("contrasenia") String contrasenia,
-                                           @RequestParam("contrasenia2") String contrasenia2) {
+    public ResponseEntity<String> registro(
+            @RequestParam(value = "archivo", required = false) MultipartFile archivo,
+            @RequestParam(value = "banner", required = false) MultipartFile banner,
+            @RequestParam("nombre") String nombre,
+            @RequestParam("email") String email,
+            @RequestParam("nombreUsuario") String nombreUsuario,
+            @RequestParam(value = "biografia", required = false) String biografia,
+            @RequestParam(value = "celular", required = false) String celular,
+            @RequestParam("contrasenia") String contrasenia,
+            @RequestParam("contrasenia2") String contrasenia2) {
         try {
             // Aquí puedes usar los datos del formulario junto con el archivo adjunto
-            usuarioServicio.registrarUsuario(nombre, email, nombreUsuario, biografia, celular, contrasenia, contrasenia2, archivo);
+            usuarioServicio.registrarUsuario(nombre, email, nombreUsuario, biografia, celular, contrasenia, contrasenia2, archivo, banner);
 
             return ResponseEntity.ok("Usuario registrado correctamente");
         } catch (MiExcepcion ex) {
@@ -110,12 +112,15 @@ public class UsuarioControlador {
     @PreAuthorize("hasAnyRole('ROLE_USUARIO','ROLE_ADMIN')")
     @PostMapping("/perfil/modificar/{idUsuario}")
     public ResponseEntity<String> modificar(@PathVariable("idUsuario") Long idUsuario,
-                                            @RequestParam("nombre") String nombre,
-                                            @RequestParam("celular") String celular) {
+                                            @RequestParam(value ="nombre", required = false) String nombre,
+                                            @RequestParam(value ="celular", required = false) String celular,
+                                            @RequestParam(value ="biografia", required = false) String biografia,
+                                            @RequestParam(value ="imagenPerfil", required = false) MultipartFile imagenPerfil,
+                                            @RequestParam(value ="banner", required = false) MultipartFile banner) {
         try {
             // Llamada al método del servicio para modificar el usuario
-            usuarioServicio.modificarUsuario(idUsuario, nombre, celular);
-            return ResponseEntity.ok("Nombre y celular del usuario actualizados correctamente");
+            usuarioServicio.modificarUsuario(idUsuario, nombre, celular, biografia, imagenPerfil, banner);
+            return ResponseEntity.ok("Perfil actualizado correctamente");
         } catch (MiExcepcion ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         } catch (Exception e) {

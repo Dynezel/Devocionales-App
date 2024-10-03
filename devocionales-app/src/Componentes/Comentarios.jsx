@@ -202,7 +202,9 @@ export default function Comentarios({ devocionalId, usuarioId }) {
                   comentario.texto
                 )}
               </div>
-              {user && user.idUsuario === comentario.idUsuario && (
+              {user &&
+          (user.idUsuario === comentario.idUsuario ||
+            user.rol === "ADMINISTRADOR") && (
                 <div
                   className="comentario-menu-container"
                   ref={(el) => (menuRefs.current[comentario.id] = el)}
@@ -215,12 +217,15 @@ export default function Comentarios({ devocionalId, usuarioId }) {
                   </button>
                   {menuActivo === comentario.id && (
                     <div className="comentario-menu-dropdown">
+                      {/* El botón "Editar" solo lo verá el autor */}
+                  {user.idUsuario === comentario.idUsuario && (
                       <button onClick={() => {
                         handleEditarComentario(comentario);
                         setMenuActivo(null); // Cierra el menú al hacer clic en Editar
                       }}>
                         Editar
                       </button>
+                  )}
                       <button onClick={() => {
                         handleEliminarComentario(comentario.id);
                       }}>

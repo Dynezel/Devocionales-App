@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +34,7 @@ public class DevocionalServicio {
     private ComentarioServicio comentarioServicio;
 
     @Transactional
-    public Usuario crearDevocional(String nombre, String descripcion, LocalDate fechaCreacion, Usuario usuario) {
+    public Usuario crearDevocional(String nombre, String descripcion, LocalDateTime fechaCreacion, Usuario usuario) {
         Devocional devocional = new Devocional();
         devocional.setNombre(nombre);
         devocional.setDescripcion(descripcion);
@@ -74,7 +75,9 @@ public class DevocionalServicio {
         return usuarioRepositorio.findById(idUsuario).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
 
-
+    public List<Devocional> obtenerDevocionalesPorFecha() {
+        return devocionalRepositorio.findAllByOrderByFechaCreacionDesc();
+    }
 
     @Transactional
     public void eliminarDevocional(int id) throws Exception {

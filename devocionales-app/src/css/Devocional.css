@@ -4,15 +4,12 @@
   padding: 15px;
   margin: 0 auto 15px;
   border-radius: 8px;
-  max-width: 800px;
   text-align: center;
-  width: 600px; /* Ancho fijo */
+  width: 100%; /* Ancho fijo */
   display: flex;
   flex-direction: column;
   position: relative;
   box-sizing: border-box; /* Asegura que el padding y border se incluyan en el ancho */
-  min-width: 600px; /* Asegura que el contenedor no se reduzca por debajo de 600px */
-  max-width: 600px; /* Asegura que el contenedor no se expanda más allá de 600px */
 }
 
 /* Estilo para el encabezado del devocional */

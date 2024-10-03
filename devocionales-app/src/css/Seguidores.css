@@ -1,7 +1,9 @@
 .seguidores-container {
   width: fit-content;
+  margin: 0 auto; /* Centra el contenedor horizontalmente */
+  text-align: center; /* Centra el texto dentro del contenedor */
+  margin-top: 2%;
 }
-
 
 button.seguir {
   background-color: #28a745; /* Color diferente para el botón de "Seguir" */
@@ -24,9 +26,9 @@ li {
 .seguidores-seguidos-container {
   display: flex;
   gap: 20px;
-  justify-content: center; /* Centra el contenido */
+  justify-content: center; /* Centra el contenido dentro del contenedor */
   align-items: flex-start;
-  margin: 0 auto;
+  margin: 0 auto; /* Centra el contenedor dentro de su contenedor padre */
 }
 
 .seguidores, .seguidos {
@@ -106,7 +108,7 @@ li {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  /* Elimina márgenes específicos aquí */
+  display:flex;
 }
 
 /* Estilo para el botón de dejar de seguir */
@@ -119,6 +121,7 @@ li {
   cursor: pointer;
   /* Elimina márgenes específicos aquí */
 }
+
 .boton-seguidores-seguir {
   width: 100%;
   display: flex;

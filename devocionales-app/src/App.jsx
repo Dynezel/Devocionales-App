@@ -16,6 +16,7 @@ import Prueba from './Componentes/Prueba'
 import Mensajeria from './Componentes/Mensajeria'
 import Conversaciones from './Componentes/Conversaciones'
 import Devocional from './Componentes/Devocional'
+import ConfiguracionUsuario from './Componentes/ConfiguracionUsuario'
 
 
 
@@ -35,6 +36,7 @@ function App() {
       <Route path="/usuario/registro" element= { <RegistrarUsuario/> } />
       <Route path="/usuario/perfil" element={<Perfil/>} />
       <Route path="/usuario/perfil/:idUsuario" element={<PerfilUsuario/>} />
+      <Route path="/usuario/configuracion" element={<ConfiguracionUsuario />} />
       <Route path="/conversaciones/:usuarioActualId" element={<Conversaciones />} />
       <Route path="/mensajeria/:usuarioId/:usuarioActualId" element={<Mensajeria/>} />
       <Route path="/login" element= { <Login/> } />

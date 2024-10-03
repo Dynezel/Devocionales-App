@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class Devocional {
     private int id;
     private String nombre;
     private String descripcion;
-    private LocalDate fechaCreacion;
+    private LocalDateTime fechaCreacion;
 
     @Column(nullable = false)
     private int vistas = 0;

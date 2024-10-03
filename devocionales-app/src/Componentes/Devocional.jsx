@@ -5,7 +5,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Comentarios from "./Comentarios";
 import "@fortawesome/fontawesome-free/css/all.css";
-import '../css/Devocional.css';
+import "../css/Devocional.css";
 
 export default function Devocional() {
   const [devocional, setDevocional] = useState(null);
@@ -14,42 +14,12 @@ export default function Devocional() {
   const [meGustas, setMeGustas] = useState({});
   const [likesPorUsuario, setLikesPorUsuario] = useState({});
   const [user, setUser] = useState(null);
-  const [menuVisible, setMenuVisible] = useState(false); 
+  const [menuVisible, setMenuVisible] = useState(false);
   const location = useLocation();
   const query = new URLSearchParams(location.search);
-  const { id } = useParams(); 
+  const { id } = useParams();
   const autorId = query.get("autorId");
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (id) {
-      const obtenerDevocional = async () => {
-        try {
-          const response = await axios.get(`http://localhost:8080/encontrar/${id}`);
-          setDevocional(response.data);
-        } catch (error) {
-          console.error("Error al obtener el devocional:", error);
-        }
-      };
-
-      obtenerDevocional();
-    }
-  }, [id]);
-
-  useEffect(() => {
-    if (autorId) {
-      const obtenerAutor = async () => {
-        try {
-          const response = await axios.get(`http://localhost:8080/usuario/perfil/${autorId}`);
-          setAutor(response.data);
-        } catch (error) {
-          console.error("Error al obtener el autor:", error);
-        }
-      };
-
-      obtenerAutor();
-    }
-  }, [autorId]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -66,6 +36,40 @@ export default function Devocional() {
 
     fetchUser();
   }, []);
+
+  useEffect(() => {
+    if (id) {
+      const obtenerDevocional = async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:8080/encontrar/${id}`
+          );
+          setDevocional(response.data);
+        } catch (error) {
+          console.error("Error al obtener el devocional:", error);
+        }
+      };
+
+      obtenerDevocional();
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (autorId) {
+      const obtenerAutor = async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:8080/usuario/perfil/${autorId}`
+          );
+          setAutor(response.data);
+        } catch (error) {
+          console.error("Error al obtener el autor:", error);
+        }
+      };
+
+      obtenerAutor();
+    }
+  }, [autorId]);
 
   useEffect(() => {
     const obtenerLikes = async () => {
@@ -154,19 +158,24 @@ export default function Devocional() {
   };
 
   const handleDelete = async () => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar este devocional?")) {
+    if (
+      window.confirm("¿Estás seguro de que deseas eliminar este devocional?")
+    ) {
       try {
         // Elimina todos los comentarios asociados al devocional antes de eliminar el devocional
-        await axios.delete(`http://localhost:8080/devocionales/${devocional.id}/comentarios`, {
-          withCredentials: true
-        });
+        await axios.delete(
+          `http://localhost:8080/devocionales/${devocional.id}/comentarios`,
+          {
+            withCredentials: true,
+          }
+        );
 
         await axios.delete(`http://localhost:8080/eliminar/${devocional.id}`, {
-          withCredentials: true
+          withCredentials: true,
         });
 
         alert("Devocional eliminado con éxito");
-        navigate("/"); 
+        navigate("/");
       } catch (error) {
         console.error("Error al eliminar el devocional asad:", error);
       }
@@ -181,7 +190,12 @@ export default function Devocional() {
     const handleClickOutside = (event) => {
       const menu = document.querySelector(".menu-dropdown");
       const button = document.querySelector(".menu-button");
-      if (menu && !menu.contains(event.target) && button && !button.contains(event.target)) {
+      if (
+        menu &&
+        !menu.contains(event.target) &&
+        button &&
+        !button.contains(event.target)
+      ) {
         setMenuVisible(false);
       }
     };
@@ -196,29 +210,50 @@ export default function Devocional() {
 
   const { nombre, descripcion, fechaCreacion } = devocional;
 
+  // Convierte la fecha de creación
+  const fecha = new Date(fechaCreacion);
+  const fechaFormateada = fecha.toLocaleDateString("es-ES", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+  const horaFormateada = fecha.toLocaleTimeString("es-ES", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+
   return (
     <div className="devocional-container">
       <div className="devocional-header">
         <h2 className="titulo-devocional">
           <u>{nombre || "Nombre no disponible"}</u>
         </h2>
-        {user && autor && user.idUsuario === autor.idUsuario && (
-          <div className="menu-container">
-            <button className="menu-button" onClick={toggleMenu}>
-              <i className="fas fa-ellipsis-v"></i>
-            </button>
-            {menuVisible && (
-              <div className="menu-dropdown">
-                <button onClick={handleEdit} className="edit-button">
-                  Editar
-                </button>
-                <button onClick={handleDelete} className="delete-button">
-                  Eliminar
-                </button>
-              </div>
-            )}
-          </div>
-        )}
+
+        {user &&
+          (user.idUsuario === autor.idUsuario ||
+            user.rol === "ADMINISTRADOR") && (
+            <div className="menu-container">
+              <button className="menu-button" onClick={toggleMenu}>
+                <i className="fas fa-ellipsis-v"></i>
+              </button>
+              {menuVisible && (
+                <div className="menu-dropdown">
+                  {/* El botón "Editar" solo lo verá el autor */}
+                  {user.idUsuario === autor.idUsuario && (
+                    <button onClick={handleEdit} className="edit-button">
+                      Editar
+                    </button>
+                  )}
+
+                  {/* Mostrar el botón de eliminar si el usuario es el autor o un administrador */}
+                  <button onClick={handleDelete} className="delete-button">
+                    Eliminar
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
       </div>
       <ReactQuill
         theme="snow"
@@ -233,7 +268,7 @@ export default function Devocional() {
           className={`like-button ${
             likesPorUsuario[devocional.id] ? "liked" : "not-liked"
           }`}
-          disabled={!user} 
+          disabled={!user}
         >
           <i
             className={`fa-heart ${
@@ -244,7 +279,7 @@ export default function Devocional() {
         </button>
       </div>
       <p className="devocional-fecha">
-        Fecha de Creación: {fechaCreacion || "Fecha no disponible"}
+        Fecha de Creación: {fechaFormateada}, {horaFormateada}
       </p>
       <p className="devocional-autor">
         Autor:

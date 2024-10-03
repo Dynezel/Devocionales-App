@@ -4,6 +4,7 @@
   border: 1px solid #e1e8ed;
   border-radius: 10px;
   width: 100%;
+  height: 100%;
   max-width: 50%;
   margin: 20px auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -31,18 +32,18 @@
   height: 100%;
   object-fit: cover;
 }
-
 /* Información del perfil */
 .perfil-info {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   padding: 0 10px;
 }
 
 .perfil-main {
   display: flex;
-  align-items: center;
+  justify-content: space-between; /* Distribuir espacio entre imagen + datos y el botón */
+  align-items: center; /* Alinear verticalmente todos los elementos */
+  width: 100%;
   margin-bottom: 10px;
 }
 
@@ -54,7 +55,7 @@
   border: 3px solid #fff;
   margin-right: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-top: -11em;
+  margin-top: -8em;
 }
 
 /* Detalles del perfil */
@@ -64,25 +65,39 @@
   align-items: flex-start;
 }
 
+/* Botón de editar perfil */
+.editar-perfil-button {
+  margin-left: auto;
+  background-color: #1da1f2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.editar-perfil-button:hover {
+  background-color: #0d95e8;
+}
+
+/* Detalles del nombre, username y bio */
+.perfil-nombre, .perfil-username, .perfil-bio {
+  margin: 5px 0;
+}
+
 .perfil-nombre {
-  margin-top: 10px;
+  font-weight: bold;
 }
 
 .perfil-username {
-  margin-top: -10px;
   color: #c8ced2;
   font-size: 14px;
-}
-
-/* Biografía */
-.perfil-bio {
-  margin-top: 10px;
-  margin-left: -7em;
 }
 
 .bio {
   font-size: 14px;
   color: #c8ced2;
+  margin-left: 0;
 }
 
 /* Cuerpo del perfil */
@@ -105,65 +120,47 @@
 .devocional-item {
   padding: 10px;
   margin-top: 10px;
-  text-align: center; /* Centrar el contenido del devocional */
+  text-align: center;
   border-radius: 5px;
   border: 3px solid rgb(227, 225, 225);
   max-width: 100%;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 10%; /* Espacio debajo de cada devocional */
+  margin-bottom: 10%;
 }
 
 /* Devocional Descripción */
 .devocional-descripcion {
-  max-width: 100%; /* Asegurarse de que no se desborde el ancho del contenedor */
-  margin: 0 auto; /* Centrar el contenido de la descripción */
+  max-width: 100%;
+  margin: 0 auto;
 }
 
-/* Editor Quill dentro de la descripción */
 .devocional-descripcion .ql-editor {
-  text-align: left; /* Alinear texto a la izquierda dentro del editor Quill */
+  text-align: left;
   max-width: 100%;
 }
 
-/* Fecha del Devocional */
 .devocional-fecha, .devocional-autor {
-  text-align: center; /* Centrar el texto de la fecha y el autor */
+  text-align: center;
   font-size: 14px;
   color: #ffffff;
   margin: 10px 0;
 }
 
-/* Estilo para el botón de enviar mensaje */
-.enviarMensajeButton {
-  background-color: #244cfe; /* Cambia el color del botón si lo deseas */
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin: 10px 0; /* Ajusta el margen superior e inferior si es necesario */
+.banner-picture-container {
+  margin-top: 3%;
+  width: 100%;
+  height: 30vh;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
 }
 
-.enviarMensajeButton:hover {
-  background-color: #013680; /* Color al pasar el cursor */
+.banner-picture {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  display: block;
 }
-
-/* Contenedor de botones */
-.botones-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start; /* Alinea los botones a la izquierda o ajusta según tu diseño */
-}
-
-/* Línea Horizontal entre devocionales */
-.devocional-separador {
-  border: 0;
-  border-top: 3px solid #a6a6a6; /* Color y grosor de la línea */
-  margin-bottom: 10%; /* Espacio arriba y abajo de la línea */
-}
-
-
 /* Colores Claros */
 @media (prefers-color-scheme: light) {
   .perfil-container {
@@ -181,6 +178,7 @@
 .perfil-header {
   position: relative;
   padding: 0 20px;
+  height: 100%;
 }
 
 /* Foto de portada */
