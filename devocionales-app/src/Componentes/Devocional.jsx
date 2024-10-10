@@ -118,18 +118,23 @@ export default function Devocional() {
   };
 
   const toggleMeGusta = async (devocionalId) => {
-    if (!user?.idUsuario) {
-      console.error("Usuario no autenticado");
+    if (!user?.idUsuario || !autor?.idUsuario) {
+      console.error("Usuario no autenticado o autor no disponible");
       return;
     }
-
+  
     try {
       const response = await axios.post(
         `http://localhost:8080/devocionales/${devocionalId}/megusta`,
         null,
-        { params: { usuarioId: user.idUsuario } }
+        {
+          params: {
+            usuarioId: user.idUsuario,
+            usuarioReceptorId: autor.idUsuario // Agrega aquí el usuario receptor
+          }
+        }
       );
-
+  
       const nuevoMeGusta = response.data;
       setMeGustas((prevState) => ({
         ...prevState,

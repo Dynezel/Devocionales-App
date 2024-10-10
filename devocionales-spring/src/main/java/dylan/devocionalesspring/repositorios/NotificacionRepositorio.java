@@ -6,11 +6,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface NotificacionRepositorio extends JpaRepository<Notificacion, Long> {
-    List<Notificacion> findByUsuarioReceptorIdAndVistoFalse(Long usuarioReceptorId);
+    List<Notificacion> findByUsuarioReceptorIdAndVistoFalse(List<Long> usuarioReceptorId);
+
+    Optional<Notificacion> findByTipoAndUsuarioEmisorIdAndUrl(String tipo, Long usuarioEmisorId, String url);
+    void deleteByTipoAndUsuarioEmisorIdAndUrl(String tipo, Long usuarioEmisorId, String url);
 
     @Query("SELECT n FROM Notificacion n WHERE n.usuarioReceptorId = :usuarioReceptorId ORDER BY n.timestamp DESC")
-    List<Notificacion> findByUsuarioReceptorId(@Param("usuarioReceptorId") Long usuarioReceptorId);
+    List<Notificacion> findByUsuarioReceptorId(@Param("usuarioReceptorId") List<Long> usuarioReceptorId);
 
 }

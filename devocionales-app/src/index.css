@@ -248,9 +248,36 @@ h1 {
 }
 
 .footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
   border-top: 1px solid rgb(253, 202, 60);
-  height: 20%;
-  text-align: center;
+  background-color: rgb(28, 28, 28); /* Puedes cambiar el color si deseas */
+  height: 60px; /* Ajusta la altura según prefieras */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Para asegurar que esté encima de otros elementos */
+}
+
+.footer-icons {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  max-width: 400px; /* Limita el ancho para centrar los iconos */
+}
+
+.footer-icons img {
+  width: 40px;
+  height: 40px;
+}
+.chat-icon {
+  margin-top: 25%;
+}
+
+.publicar-icon{
+  margin-top: 25%;
 }
 
 .detalle {
@@ -428,7 +455,7 @@ button:focus-visible {
   width: calc(100% - 20px); /* Ancho ajustado para los devocionales */
   margin-right: 20px; /* Espacio entre los contenedores */
   overflow-y: scroll;
-  max-height: 84vh;
+  max-height: 70vh;
 }
 
 .devocional-container {
@@ -757,11 +784,11 @@ button:focus-visible {
     background-color: #333;
     padding: 10px;
     position: absolute;
-    top: 7em;
+    top: 15em;
     right: 0;
     left: 0;
     width: 100%;
-    height: calc(100vh - 7em);
+    height: calc(50vh - 7em);
     z-index: 1;
     justify-content: center;
   }

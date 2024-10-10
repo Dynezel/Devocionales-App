@@ -302,3 +302,33 @@
   margin: 10px 0;
 }
 }
+@media screen and (max-width: 850px) {
+  .perfil-container {
+    max-width: 90%;
+    margin: 10px auto;
+  }
+
+  .banner-picture-container {
+    height: 20vh;
+  }
+
+  .profile-picture {
+    width: 60px;
+    height: 60px;
+    margin-top: -4em;
+  }
+
+  .editar-perfil-button {
+    padding: 5px 8px;
+    font-size: 14px;
+  }
+
+  .perfil-main {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .perfil-details {
+    margin-left: 10px;
+  }
+}

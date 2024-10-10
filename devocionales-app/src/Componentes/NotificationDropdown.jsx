@@ -3,17 +3,36 @@ import axios from 'axios';
 import NotificationBell from '../Images/Notification_Bell_2-transformed.png';
 import '../css/NotificationDropdown.css';
 import MensajeriaPopup from './Mensajeria';
+import { useNavigate } from 'react-router-dom';
 
 const NotificationDropdown = ({ user }) => {
   const [notifications, setNotifications] = useState([]);
   const [notificationActiva, setNotificationActiva] = useState(null);
   const [dropdownAbierto, setDropdownAbierto] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
         const response = await axios.get(`http://localhost:8080/notificaciones/${user.idUsuario}`);
-        setNotifications(response.data);
+        const notificationsWithImages = await Promise.all(
+          response.data.map(async (notification) => {
+            try {
+              const imageResponse = await axios.get(
+                `http://localhost:8080/imagen/perfil/${notification.usuarioEmisorId}`,
+                { responseType: 'arraybuffer' }
+              );
+              const base64Image = btoa(
+                new Uint8Array(imageResponse.data).reduce((data, byte) => data + String.fromCharCode(byte), '')
+              );
+              return { ...notification, imagenEmisor: `data:image/jpeg;base64,${base64Image}` };
+            } catch {
+              // Asigna una imagen por defecto si ocurre un error al obtener la imagen
+              return { ...notification, imagenEmisor: 'path/to/default-image.jpg' };
+            }
+          })
+        );
+        setNotifications(notificationsWithImages);
       } catch (error) {
         console.error('Error fetching notifications', error);
       }
@@ -33,8 +52,10 @@ const NotificationDropdown = ({ user }) => {
 
       if (notification.tipo === 'mensaje') {
         setNotificationActiva(notification.usuarioEmisorId);
-      } else {
-        // Maneja otros tipos de notificaciones aquí si es necesario
+      }
+      else if (notification.tipo === 'megusta') {
+        // Redirige al devocional utilizando la URL proporcionada en la notificación
+        navigate(notification.url);
       }
     } catch (error) {
       console.error('Error handling notification click', error);
@@ -66,7 +87,8 @@ const NotificationDropdown = ({ user }) => {
                   className={`notification-item ${notification.visto ? 'leida' : 'no-leida'}`}
                   onClick={() => handleNotificationClick(notification)}
                 >
-                  {notification.mensaje}
+                  <img src={notification.imagenEmisor} alt="Emisor" className="notification-emisor-img" />
+                  <span>{notification.mensaje}</span>
                 </li>
               ))
             )}

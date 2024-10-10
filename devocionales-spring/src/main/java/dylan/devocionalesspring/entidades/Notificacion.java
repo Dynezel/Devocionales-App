@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -18,8 +19,9 @@ public class Notificacion {
     private Long id;
     private String tipo; // Ej: mensaje, like, seguimiento
     private String mensaje;
-    private Long usuarioReceptorId;
+    private List<Long> usuarioReceptorId;
     private Long usuarioEmisorId;
+    private String url;
     private boolean visto;
     private LocalDateTime timestamp;
 

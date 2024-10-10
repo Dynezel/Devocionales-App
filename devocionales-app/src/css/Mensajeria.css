@@ -128,7 +128,7 @@
   .mensajeria-popup {
     width: 90vw; /* Ajustar el ancho al 90% del ancho de la pantalla */
     right: 5vw; /* Ajustar el margen derecho */
-    bottom: 10px; /* Reducir el margen inferior */
+    bottom: 20px; /* Reducir el margen inferior */
     max-height: 60vh; /* Aumentar la altura para pantallas pequeñas */
   }
 }

@@ -22,6 +22,8 @@
   padding: 10px;
   border: 1px solid #3f3f3f;
   border-radius: 5px;
+  overflow-y: scroll;
+  max-height: 500px;
 }
 
 .notification-dropdown h3 {
@@ -31,9 +33,16 @@
 }
 
 .notification-item {
+  display: flex;
+  align-items: center;
   padding: 10px;
-  border-bottom: 1px solid #252525;
-  cursor: pointer;
+}
+
+.notification-emisor-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
 }
 
 .notification-item:last-child {

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -34,9 +35,10 @@ public class MensajeServicio {
         mensaje.setFechaEnvio(LocalDateTime.now());
         Notificacion notificacion = notificacionServicio.crearNotificacion(
                 "mensaje",
-                "Tienes un nuevo mensaje de " + mensaje.getEmisor().getNombre(),
-                mensaje.getReceptor().getIdUsuario(),
-                mensaje.getEmisor().getIdUsuario()
+                mensaje.getEmisor().getNombre() + " Te ha enviado un mensaje",
+                Collections.singletonList(mensaje.getReceptor().getIdUsuario()),
+                mensaje.getEmisor().getIdUsuario(),
+                "/asdas"
         );
 
         return mensajeRepositorio.save(mensaje);

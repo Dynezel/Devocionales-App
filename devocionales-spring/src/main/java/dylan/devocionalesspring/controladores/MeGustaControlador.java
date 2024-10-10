@@ -23,9 +23,9 @@ public class MeGustaControlador {
     UsuarioServicio usuarioServicio;
 
     @PostMapping("/devocionales/{devocionalId}/megusta")
-    public ResponseEntity<MeGusta> toggleMeGusta(@PathVariable int devocionalId, Long usuarioId) throws UsuarioNoEncontradoExcepcion {
+    public ResponseEntity<MeGusta> toggleMeGusta(@PathVariable Long devocionalId, Long usuarioId, Long usuarioReceptorId) throws UsuarioNoEncontradoExcepcion {
 
-        MeGusta meGusta = meGustaServicio.toggleMeGusta(usuarioId, devocionalId);
+        MeGusta meGusta = meGustaServicio.toggleMeGusta(usuarioId, Math.toIntExact(devocionalId), usuarioReceptorId);
         return new ResponseEntity<>(meGusta, meGusta == null ? HttpStatus.OK : HttpStatus.CREATED);
     }
 

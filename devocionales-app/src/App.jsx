@@ -9,7 +9,6 @@ import CrearDevocional from './Componentes/CrearDevocional'
 import ModificarDevocional from './Componentes/ModificarDevocional'
 import RegistrarUsuario from './Componentes/RegistrarUsuario'
 import Login from './Componentes/Login'
-import Welcome from './Componentes/Welcome'
 import Perfil from './Componentes/Perfil'
 import PerfilUsuario from './Componentes/PerfilUsuario'
 import Prueba from './Componentes/Prueba'
@@ -17,6 +16,7 @@ import Mensajeria from './Componentes/Mensajeria'
 import Conversaciones from './Componentes/Conversaciones'
 import Devocional from './Componentes/Devocional'
 import ConfiguracionUsuario from './Componentes/ConfiguracionUsuario'
+import Notificaciones from './Componentes/Notificaciones'
 
 
 
@@ -37,6 +37,7 @@ function App() {
       <Route path="/usuario/perfil" element={<Perfil/>} />
       <Route path="/usuario/perfil/:idUsuario" element={<PerfilUsuario/>} />
       <Route path="/usuario/configuracion" element={<ConfiguracionUsuario />} />
+      <Route path="/usuario/notificaciones" element={ <Notificaciones /> } />
       <Route path="/conversaciones/:usuarioActualId" element={<Conversaciones />} />
       <Route path="/mensajeria/:usuarioId/:usuarioActualId" element={<Mensajeria/>} />
       <Route path="/login" element= { <Login/> } />

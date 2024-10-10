@@ -1,7 +1,7 @@
 .versiculos-container {
     width: calc(100%); /* Ancho ajustado para los versículos */
     overflow-y: scroll;
-    max-height: 80vh;
+    max-height: 70vh;
     min-width: 40%;
     max-width: 100%;
     padding-right: 5%;
