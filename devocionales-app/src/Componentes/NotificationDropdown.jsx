@@ -27,7 +27,6 @@ const NotificationDropdown = ({ user }) => {
               );
               return { ...notification, imagenEmisor: `data:image/jpeg;base64,${base64Image}` };
             } catch {
-              // Asigna una imagen por defecto si ocurre un error al obtener la imagen
               return { ...notification, imagenEmisor: 'path/to/default-image.jpg' };
             }
           })
@@ -52,13 +51,33 @@ const NotificationDropdown = ({ user }) => {
 
       if (notification.tipo === 'mensaje') {
         setNotificationActiva(notification.usuarioEmisorId);
-      }
-      else if (notification.tipo === 'megusta') {
-        // Redirige al devocional utilizando la URL proporcionada en la notificación
+      } else if (notification.tipo === 'megusta' || notification.tipo === "comentario") {
         navigate(notification.url);
       }
     } catch (error) {
       console.error('Error handling notification click', error);
+    }
+  };
+
+  const handleAceptarSolicitud = async (usuarioId, amigoId) => {
+    try {
+      await axios.post(`http://localhost:8080/amistades/${usuarioId}/aceptar-solicitud/${amigoId}`);
+      setNotifications((prevNotifications) =>
+        prevNotifications.filter((notification) => notification.usuarioEmisorId !== amigoId)
+      );
+    } catch (error) {
+      console.error('Error accepting friend request', error);
+    }
+  };
+  
+  const handleRechazarSolicitud = async (usuarioId, amigoId) => {
+    try {
+      await axios.delete(`http://localhost:8080/amistades/${usuarioId}/rechazar-solicitud/${amigoId}`);
+      setNotifications((prevNotifications) =>
+        prevNotifications.filter((notification) => notification.usuarioEmisorId !== amigoId)
+      );
+    } catch (error) {
+      console.error('Error rejecting friend request', error);
     }
   };
 
@@ -89,6 +108,13 @@ const NotificationDropdown = ({ user }) => {
                 >
                   <img src={notification.imagenEmisor} alt="Emisor" className="notification-emisor-img" />
                   <span>{notification.mensaje}</span>
+                  
+                  {notification.tipo === 'solicitudamistad' && (
+                    <div className="notification-actions">
+                      <button onClick={() => handleAceptarSolicitud(notification.usuarioEmisorId, user.idUsuario)}>Aceptar</button>
+                      <button onClick={() => handleRechazarSolicitud(notification.usuarioEmisorId, user.idUsuario)}>Rechazar</button>
+                    </div>
+                  )}
                 </li>
               ))
             )}

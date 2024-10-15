@@ -19,8 +19,8 @@ public class Devocional {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String nombre;
-    private String descripcion;
+    private String titulo;
+    private String contenido;
     private LocalDateTime fechaCreacion;
 
     @Column(nullable = false)

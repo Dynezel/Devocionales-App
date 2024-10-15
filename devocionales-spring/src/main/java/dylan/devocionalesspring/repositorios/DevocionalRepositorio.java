@@ -20,7 +20,7 @@ public interface DevocionalRepositorio extends JpaRepository<Devocional, Integer
     List<Comentario> findComentariosByDevocionalId(@Param("devocionalId") int devocionalId);
 
     // Método para buscar devocionales por nombre
-    List<Devocional> findByNombreContainingIgnoreCase(String nombre);
+    List<Devocional> findByTituloContainingIgnoreCase(String nombre);
 
     List<Devocional> findAllByOrderByFechaCreacionDesc();
 

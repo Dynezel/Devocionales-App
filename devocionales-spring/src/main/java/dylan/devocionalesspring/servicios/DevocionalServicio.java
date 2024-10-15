@@ -34,10 +34,10 @@ public class DevocionalServicio {
     private ComentarioServicio comentarioServicio;
 
     @Transactional
-    public Usuario crearDevocional(String nombre, String descripcion, LocalDateTime fechaCreacion, Usuario usuario) {
+    public Usuario crearDevocional(String titulo, String contenido, LocalDateTime fechaCreacion, Usuario usuario) {
         Devocional devocional = new Devocional();
-        devocional.setNombre(nombre);
-        devocional.setDescripcion(descripcion);
+        devocional.setTitulo(titulo);
+        devocional.setContenido(contenido);
         devocional.setFechaCreacion(fechaCreacion);
         usuario.setDevocionales(Collections.singletonList(devocional));
         return usuarioRepositorio.save(usuario);
@@ -49,12 +49,12 @@ public class DevocionalServicio {
     }
 
     @Transactional
-    public boolean modificarDevocional(int id, String nombre, String descripcion) {
+    public boolean modificarDevocional(int id, String titulo, String contenido) {
         Optional<Devocional> respuesta = devocionalRepositorio.findById(id);
         if (respuesta.isPresent()) {
             Devocional devocional = respuesta.get();
-            devocional.setNombre(nombre);
-            devocional.setDescripcion(descripcion);
+            devocional.setTitulo(titulo);
+            devocional.setContenido(contenido);
 
             devocionalRepositorio.save(devocional);
             return true;

@@ -163,18 +163,18 @@ export default function Devocionales() {
   const renderDevocionalContent = (devocional) => {
     if (!devocional) return <p>Información del devocional no disponible.</p>;
 
-    const { nombre, descripcion, fechaCreacion, autor } = devocional;
+    const { titulo, contenido, fechaCreacion, autor } = devocional;
 
     
 
     return (
       <div className="devocional-container">
         <h2>
-          <u>{nombre || "Nombre no disponible"}</u>
+          <u>{titulo || "Titulo no disponible"}</u>
         </h2>
         <ReactQuill
           theme="snow"
-          value={descripcion || "Descripción no disponible"}
+          value={contenido || "Descripción no disponible"}
           readOnly={true}
           modules={modules}
         />
@@ -248,7 +248,7 @@ export default function Devocionales() {
               }
               style={{ cursor: "pointer" }}
             >
-              {devocional.nombre || "Nombre no disponible"}
+              {devocional.titulo || "Titulo no disponible"}
             </h3>
             {devocionalExpandido === devocional.id &&
               renderDevocionalContent(devocional)}

@@ -43,10 +43,12 @@ public class ComentarioControlador {
     @PostMapping("/devocionales/{devocionalId}/comentarios")
     public ResponseEntity<Comentario> crearComentario(@PathVariable int devocionalId,
                                                       @RequestBody Comentario comentario,
+                                                      @RequestParam Long usuarioId,
                                                       Authentication authentication) {
         try {
+            System.out.println("Id del usuario receptor: " + usuarioId);
             String email = authentication.getName();
-            Comentario nuevoComentario = comentarioServicio.crearComentario(email, devocionalId, comentario);
+            Comentario nuevoComentario = comentarioServicio.crearComentario(email, devocionalId, comentario, usuarioId);
             return new ResponseEntity<>(nuevoComentario, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);

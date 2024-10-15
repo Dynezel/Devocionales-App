@@ -66,7 +66,7 @@ public class DevocionalControlador {
 
     @PutMapping("/modificar/{id}")
     public boolean modificarDevocional(@PathVariable int id, @RequestBody Devocional devocional) {
-        return devocionalServicio.modificarDevocional(id, devocional.getNombre(), devocional.getDescripcion());
+        return devocionalServicio.modificarDevocional(id, devocional.getTitulo(), devocional.getContenido());
     }
 
     @GetMapping("/listar")
@@ -81,8 +81,8 @@ public class DevocionalControlador {
 
     // Endpoint para buscar devocionales por título
     @GetMapping("/devocionales/buscar")
-    public List<Devocional> buscarDevocionalesPorNombre(@RequestParam String nombre) {
-        return devocionalRepositorio.findByNombreContainingIgnoreCase(nombre);
+    public List<Devocional> buscarDevocionalesPorTitulo(@RequestParam String titulo) {
+        return devocionalRepositorio.findByTituloContainingIgnoreCase(titulo);
     }
 
     @DeleteMapping("/eliminar/{id}")

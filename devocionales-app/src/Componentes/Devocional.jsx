@@ -213,7 +213,7 @@ export default function Devocional() {
 
   if (!devocional) return <p>Información del devocional no disponible.</p>;
 
-  const { nombre, descripcion, fechaCreacion } = devocional;
+  const { titulo, contenido, fechaCreacion } = devocional;
 
   // Convierte la fecha de creación
   const fecha = new Date(fechaCreacion);
@@ -232,7 +232,7 @@ export default function Devocional() {
     <div className="devocional-container">
       <div className="devocional-header">
         <h2 className="titulo-devocional">
-          <u>{nombre || "Nombre no disponible"}</u>
+          <u>{titulo || "Titulo no disponible"}</u>
         </h2>
 
         {user &&
@@ -262,7 +262,7 @@ export default function Devocional() {
       </div>
       <ReactQuill
         theme="snow"
-        value={descripcion || "Descripción no disponible"}
+        value={contenido || "Descripción no disponible"}
         readOnly={true}
         modules={modules}
       />

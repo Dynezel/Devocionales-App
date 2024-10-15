@@ -22,7 +22,6 @@ public class MeGustaServicio {
     @Autowired
     private NotificacionServicio notificacionServicio;
 
-
     @Autowired
     private MeGustaRepositorio meGustaRepositorio;
 

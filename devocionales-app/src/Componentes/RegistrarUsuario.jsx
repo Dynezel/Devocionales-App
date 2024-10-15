@@ -15,8 +15,6 @@ export default function RegistrarUsuario() {
   const handleSignUp = async (e) => {
     e.preventDefault();
 
-    const URL = "http://localhost:8080/usuario/registro";
-
     try {
       // Validar campos obligatorios y contraseñas coincidentes
       if (!nombre || !email || !contrasenia || !celular) {

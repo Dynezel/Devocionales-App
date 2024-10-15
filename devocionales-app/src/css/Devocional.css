@@ -10,6 +10,7 @@
   flex-direction: column;
   position: relative;
   box-sizing: border-box; /* Asegura que el padding y border se incluyan en el ancho */
+  overflow-y: scroll;
 }
 
 /* Estilo para el encabezado del devocional */

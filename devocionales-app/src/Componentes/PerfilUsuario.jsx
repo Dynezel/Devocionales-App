@@ -7,8 +7,9 @@ import Comentarios from "./Comentarios";
 import Seguidores from "./Seguidores";
 import "../css/PerfilUsuario.css";
 import MensajeriaPopup from "./Mensajeria";
-import bannerDefault from '../Images/banner-default.png';
+import bannerDefault from "../Images/banner-default.png";
 import ConfiguracionUsuario from "./ConfiguracionUsuario"; // Importar el componente de configuración
+import Amigos from "./Amigos";
 
 export default function PerfilUsuario() {
   const { idUsuario } = useParams(); // Captura el idUsuario desde la URL
@@ -98,121 +99,123 @@ export default function PerfilUsuario() {
     <div className="perfil-container">
       {user && (
         <>
-        <div className="perfil-header">
-          <div className="banner-picture-container">
-              <img className="banner-picture" src={banner ? banner : bannerDefault} alt="Banner de Usuario" />
+          <div className="perfil-header">
+            <div className="banner-picture-container">
+              <img
+                className="banner-picture"
+                src={banner ? banner : bannerDefault}
+                alt="Banner de Usuario"
+              />
             </div>
-          <div className="perfil-info">
-            <div className="perfil-main">
-              {imagenPerfil && (
-                <img
-                  className="profile-picture"
-                  src={imagenPerfil}
-                  alt="Imagen de Perfil"
-                />
-              )}
-              <div className="perfil-details">
-                <h2 className="perfil-nombre">{user.nombre}</h2>
-                <h4 className="perfil-username">@{user.nombreUsuario}</h4>
-                <div className="perfil-bio">
-                  <p className="bio">{user.biografia}</p>
-                </div>
+            <div className="perfil-info">
+              <div className="perfil-main">
+                {imagenPerfil && (
+                  <img
+                    className="profile-picture"
+                    src={imagenPerfil}
+                    alt="Imagen de Perfil"
+                  />
+                )}
+                <div className="perfil-details">
+                  <h2 className="perfil-nombre">{user.nombre}</h2>
+                  <h4 className="perfil-username">@{user.nombreUsuario}</h4>
+                  <div className="perfil-bio">
+                    <p className="bio">{user.biografia}</p>
+                  </div>
+                  <Amigos
+                    usuarioId={user.idUsuario}
+                    usuarioActualId={usuario ? usuario.idUsuario : null}
+                    onLoginRequired={() => history.push("/login")}
+                  />
                 </div>
                 <div>
-                {usuario &&
-                  usuario.rol &&
-                  (user.idUsuario === usuario.idUsuario ||
-                    usuario.rol === "ADMINISTRADOR") && (
-                    <button
-                      className="editar-perfil-button"
-                      onClick={() => setShowConfig(true)} // Mostrar el overlay
-                    >
-                      Editar Perfil
-                    </button>
-                  )}
-                  
-                <div className="botones-container">
-                  {user.idUsuario !== (usuario && usuario.idUsuario) && (
-                    <button
-                      className="btn-seguir"
-                      onClick={handleEnviarMensaje}
-                    >
-                      Enviar un mensaje
-                    </button>
-                  )}
-                  {mostrarMensajeria && (
-                    <MensajeriaPopup
-                      usuarioId={idUsuario}
-                      usuarioActualId={usuario.idUsuario}
-                      onClose={cerrarMensajeria}
-                    />
-                  )}
+                  {usuario &&
+                    usuario.rol &&
+                    (user.idUsuario === usuario.idUsuario ||
+                      usuario.rol === "ADMINISTRADOR") && (
+                      <button
+                        className="editar-perfil-button"
+                        onClick={() => setShowConfig(true)} // Mostrar el overlay
+                      >
+                        Editar Perfil
+                      </button>
+                    )}
+
+                  <div className="botones-container">
+                    {user.idUsuario !== (usuario && usuario.idUsuario) && (
+                      <button
+                        className="btn-seguir"
+                        onClick={handleEnviarMensaje}
+                      >
+                        Enviar un mensaje
+                      </button>
+                    )}
+                    {mostrarMensajeria && (
+                      <MensajeriaPopup
+                        usuarioId={idUsuario}
+                        usuarioActualId={usuario.idUsuario}
+                        onClose={cerrarMensajeria}
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <Seguidores
-                  className="seguidores-container"
-                  usuarioId={user.idUsuario}
-                  usuarioActualId={usuario ? usuario.idUsuario : null}
-                  onLoginRequired={() => history.push("/login")}
-                />
-          
-          <div className="perfil-body">
-            <div className="perfil-devocionales">
-              <h3>
-                <u>Devocionales Creados</u>
-              </h3>
-              {user.devocionales.length > 0 ? (
-                user.devocionales.map((devocional, index) => (
-                  <div>
-                    {index !== 0 && <hr className="devocional-separador" />}
-                    <div key={devocional.id} className="devocional-item">
-                      <div className="devocional-content">
-                        <h2 className="devocional-titulo">
-                          <u>{devocional.nombre || "Título no disponible"}</u>
-                        </h2>
-                        <ReactQuill
-                          theme="snow"
-                          value={
-                            devocional.descripcion ||
-                            "Descripción no disponible"
-                          }
-                          readOnly={true}
-                          modules={modules}
-                          className="devocional-descripcion"
-                        />
-                        <p className="devocional-fecha">
-                          <strong>Fecha de Creación:</strong>{" "}
-                          {devocional.fechaCreacion || "Fecha no disponible"}
-                        </p>
-                        <p className="devocional-autor">
-                          <strong>Autor:</strong>
-                          {user.idUsuario ? (
-                            <Link to={`/usuario/perfil/${user.idUsuario}`}>
-                              {user.nombre || "Nombre no disponible"}
-                            </Link>
-                          ) : (
-                            "Información del autor no disponible"
-                          )}
-                        </p>
-                        <Comentarios
-                          devocionalId={devocional.id}
-                          usuarioId={user.idUsuario}
-                        />
+            <div className="perfil-body">
+              <div className="perfil-devocionales">
+                <h3>
+                  <u>Devocionales Creados</u>
+                </h3>
+                {user.devocionales.length > 0 ? (
+                  user.devocionales.map((devocional, index) => (
+                    <div>
+                      {index !== 0 && <hr className="devocional-separador" />}
+                      <div key={devocional.id} className="devocional-item">
+                        <div className="devocional-content">
+                          <h2 className="devocional-titulo">
+                            <u>{devocional.nombre || "Título no disponible"}</u>
+                          </h2>
+                          <ReactQuill
+                            theme="snow"
+                            value={
+                              devocional.descripcion ||
+                              "Descripción no disponible"
+                            }
+                            readOnly={true}
+                            modules={modules}
+                            className="devocional-descripcion"
+                          />
+                          <p className="devocional-fecha">
+                            <strong>Fecha de Creación:</strong>{" "}
+                            {devocional.fechaCreacion || "Fecha no disponible"}
+                          </p>
+                          <p className="devocional-autor">
+                            <strong>Autor:</strong>
+                            {user.idUsuario ? (
+                              <Link to={`/usuario/perfil/${user.idUsuario}`}>
+                                {user.nombre || "Nombre no disponible"}
+                              </Link>
+                            ) : (
+                              "Información del autor no disponible"
+                            )}
+                          </p>
+                          <Comentarios
+                            devocionalId={devocional.id}
+                            usuarioId={user.idUsuario}
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))
-              ) : (
-                <p>Este usuario no ha creado ningún devocional aún.</p>
-              )}
+                  ))
+                ) : (
+                  <p>Este usuario no ha creado ningún devocional aún.</p>
+                )}
+              </div>
             </div>
           </div>
-        </div>
         </>
       )}
-      
+
       {showConfig && (
         <ConfiguracionUsuario
           user={user}

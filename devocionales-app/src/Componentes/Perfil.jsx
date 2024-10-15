@@ -5,9 +5,9 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Comentarios from "./Comentarios";
 import "../css/PerfilUsuario.css";
-import Seguidores from "./Seguidores";
-import bannerDefault from '../Images/banner-default.png';
+import bannerDefault from "../Images/banner-default.png";
 import ConfiguracionUsuario from "./ConfiguracionUsuario";
+import Amigos from "./Amigos";
 
 export default function Perfil() {
   const [user, setUser] = useState(null);
@@ -76,15 +76,17 @@ export default function Perfil() {
     }
   };
 
-  
-
   return (
     <div className="perfil-container">
       {user ? (
         <>
           <div className="perfil-header">
             <div className="banner-picture-container">
-              <img className="banner-picture" src={banner ? banner : bannerDefault} alt="Banner de Usuario" />
+              <img
+                className="banner-picture"
+                src={banner ? banner : bannerDefault}
+                alt="Banner de Usuario"
+              />
             </div>
             <div className="perfil-info">
               <div className="perfil-main">
@@ -98,9 +100,15 @@ export default function Perfil() {
                 <div className="perfil-details">
                   <h2 className="perfil-nombre">{user.nombre}</h2>
                   <h4 className="perfil-username">@{user.nombreUsuario}</h4>
+                  <div className="seguidores-container">
+            <Amigos
+              usuarioId={user.idUsuario}
+              usuarioActualId={user.idUsuario}
+            />
+          </div>
                   <div className="perfil-bio">
-                  <p className="bio">{user.biografia}</p>
-                </div>
+                    <p className="bio">{user.biografia}</p>
+                  </div>
                 </div>
                 <button
                   className="editar-perfil-button"
@@ -113,16 +121,13 @@ export default function Perfil() {
           </div>
 
           {/* Sección de Seguidores */}
-          <div className="seguidores-container">
-            <Seguidores
-              usuarioId={user.idUsuario}
-              usuarioActualId={user.idUsuario}
-            />
-          </div>
+          
 
           {/* Sección de Devocionales */}
           <div className="perfil-devocionales">
-            <h3><u>Devocionales Creados</u></h3>
+            <h3>
+              <u>Devocionales Creados</u>
+            </h3>
             {user.devocionales && user.devocionales.length > 0 ? (
               user.devocionales.map((devocional, index) => (
                 <div key={devocional.id}>
@@ -134,13 +139,16 @@ export default function Perfil() {
                       </h2>
                       <ReactQuill
                         theme="snow"
-                        value={devocional.descripcion || "Descripción no disponible"}
+                        value={
+                          devocional.descripcion || "Descripción no disponible"
+                        }
                         readOnly={true}
                         modules={modules}
                         className="devocional-descripcion"
                       />
                       <p className="devocional-fecha">
-                        <strong>Fecha de Creación:</strong> {devocional.fechaCreacion || "Fecha no disponible"}
+                        <strong>Fecha de Creación:</strong>{" "}
+                        {devocional.fechaCreacion || "Fecha no disponible"}
                       </p>
                       <p className="devocional-autor">
                         <strong>Autor:</strong>

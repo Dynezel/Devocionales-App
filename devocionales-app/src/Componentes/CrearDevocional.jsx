@@ -5,8 +5,8 @@ import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
 
 export default function CrearDevocional() {
-  const [nombre, setNombre] = useState("");
-  const [descripcion, setDescripcion] = useState("");
+  const [titulo, setTitulo] = useState("");
+  const [contenido, setContenido] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -17,8 +17,8 @@ export default function CrearDevocional() {
       const response = await axios.post(
         URL,
         {
-          nombre,
-          descripcion,
+          titulo,
+          contenido,
           fechaCreacion: new Date().toISOString(), // Enviar la fecha actual en formato ISO
         },
         { withCredentials: true } // Asegurarse de que las credenciales se envíen con la solicitud
@@ -28,7 +28,7 @@ export default function CrearDevocional() {
       navigate("/");
     } catch (error) {
       console.error("Se ha producido un error al crear el Devocional: ", error);
-    }
+    }setTitulo
   };
 
   return (
@@ -39,8 +39,8 @@ export default function CrearDevocional() {
         <input
           type="text"
           id="nombreCreacion"
-          value={nombre}
-          onChange={(event) => setNombre(event.target.value)}
+          value={titulo}
+          onChange={(event) => setTitulo(event.target.value)}
           required
           className="titulo-crear"
         />
@@ -50,8 +50,8 @@ export default function CrearDevocional() {
         <label htmlFor="descripcion">Contenido:</label>
         <ReactQuill
           theme="snow"
-          value={descripcion}
-          onChange={(value) => setDescripcion(value)}
+          value={contenido}
+          onChange={(value) => setContenido(value)}
           required
         />
       </div>

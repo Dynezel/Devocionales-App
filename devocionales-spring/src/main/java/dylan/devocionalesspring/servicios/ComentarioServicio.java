@@ -3,15 +3,19 @@ package dylan.devocionalesspring.servicios;
 import com.sun.jdi.IntegerValue;
 import dylan.devocionalesspring.entidades.Comentario;
 import dylan.devocionalesspring.entidades.Devocional;
+import dylan.devocionalesspring.entidades.Notificacion;
 import dylan.devocionalesspring.entidades.Usuario;
 import dylan.devocionalesspring.repositorios.ComentarioRepositorio;
 import dylan.devocionalesspring.repositorios.DevocionalRepositorio;
+import dylan.devocionalesspring.repositorios.NotificacionRepositorio;
 import dylan.devocionalesspring.repositorios.UsuarioRepositorio;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,6 +29,9 @@ public class ComentarioServicio {
     private ComentarioRepositorio comentarioRepositorio;
 
     @Autowired
+    private NotificacionServicio notificacionServicio;
+
+    @Autowired
     private UsuarioRepositorio usuarioRepositorio;
 
     @Autowired
@@ -33,6 +40,9 @@ public class ComentarioServicio {
     @Autowired
     private DevocionalRepositorio devocionalRepositorio;
 
+    @Autowired
+    private NotificacionRepositorio notificacionRepositorio;
+
     @Transactional
     public List<Comentario> obtenerComentariosPorDevocional(int devocionalId) {
         // Obtener todos los comentarios asociados al devocional
@@ -40,7 +50,7 @@ public class ComentarioServicio {
     }
 
     @Transactional
-    public Comentario crearComentario(String email, int devocionalId, Comentario comentario) throws Exception {
+    public Comentario crearComentario(String email, int devocionalId, Comentario comentario, Long usuarioReceptorId) throws Exception {
         Usuario usuario = usuarioServicio.obtenerPerfilUsuario(email);
 
         Devocional devocional = devocionalRepositorio.findById(devocionalId)
@@ -60,6 +70,28 @@ public class ComentarioServicio {
         // Guardamos las relaciones
         usuarioRepositorio.save(usuario);
         devocionalRepositorio.save(devocional);
+
+        if (!usuario.getIdUsuario().equals(usuarioReceptorId)) { // Evitar notificación si el usuario comenta en su propio devocional
+            // URL de notificación para dirigir al devocional comentado
+            String urlNotificacion = "/devocional/" + devocionalId + "?autorId=" + usuarioReceptorId;
+
+            // Buscar si ya existe una notificación de comentario en este devocional
+            Optional<Notificacion> notificacionExistente = notificacionRepositorio.findByTipoAndUsuarioEmisorIdAndUrl(
+                    "comentario", usuario.getIdUsuario(), urlNotificacion
+            );
+
+            if(notificacionExistente.isEmpty()) {
+                // Crear una nueva notificación si no existe una previa
+                Notificacion notificacion = notificacionServicio.crearNotificacion(
+                        "comentario",
+                        usuario.getNombre() + " ha comentado en tu devocional",
+                        Collections.singletonList(usuarioReceptorId),
+                        usuario.getIdUsuario(),
+                        urlNotificacion
+                );
+                notificacionRepositorio.save(notificacion);
+            }
+        }
 
         return comentarioGuardado;
     }

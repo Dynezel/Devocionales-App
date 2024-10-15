@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "../css/Comentarios.css"; // Importa los estilos CSS
+import { useNavigate } from 'react-router-dom';
 
 export default function Comentarios({ devocionalId, usuarioId }) {
   const [comentarios, setComentarios] = useState([]);
@@ -9,6 +10,7 @@ export default function Comentarios({ devocionalId, usuarioId }) {
   const [comentarioEditado, setComentarioEditado] = useState(null);
   const [textoEditado, setTextoEditado] = useState("");
   const [menuActivo, setMenuActivo] = useState(null);
+  const navigate = useNavigate();
   const menuRefs = useRef({}); // Objeto para almacenar referencias de los menús desplegables
 
   useEffect(() => {
@@ -48,6 +50,8 @@ export default function Comentarios({ devocionalId, usuarioId }) {
         );
 
         setComentarios(comentariosConUsuario);
+
+        console.log(usuarioId);
       } catch (error) {
         console.error("Error al cargar comentarios", error);
       }
@@ -58,8 +62,14 @@ export default function Comentarios({ devocionalId, usuarioId }) {
 
   const handleAgregarComentario = async () => {
     try {
+      // Asegúrate de que el usuario esté autenticado antes de agregar un comentario
+      if (!user) {
+        navigate("/usuario/registro");
+        return;
+      }
+  
       const response = await axios.post(
-        `http://localhost:8080/devocionales/${devocionalId}/comentarios`,
+        `http://localhost:8080/devocionales/${devocionalId}/comentarios?usuarioId=${usuarioId}`,
         {
           texto: nuevoComentario,
         },
@@ -67,10 +77,7 @@ export default function Comentarios({ devocionalId, usuarioId }) {
           withCredentials: true,
         }
       );
-      if (user === null) {
-        navigate("/usuario/registro");
-      }
-
+  
       const nuevoComentarioConUsuario = {
         ...response.data,
         usuario: user,
@@ -203,38 +210,41 @@ export default function Comentarios({ devocionalId, usuarioId }) {
                 )}
               </div>
               {user &&
-          (user.idUsuario === comentario.idUsuario ||
-            user.rol === "ADMINISTRADOR") && (
-                <div
-                  className="comentario-menu-container"
-                  ref={(el) => (menuRefs.current[comentario.id] = el)}
-                >
-                  <button
-                    className="comentario-menu-button"
-                    onClick={() => handleMenuClick(comentario.id)}
+                (user.idUsuario === comentario.idUsuario ||
+                  user.rol === "ADMINISTRADOR") && (
+                  <div
+                    className="comentario-menu-container"
+                    ref={(el) => (menuRefs.current[comentario.id] = el)}
                   >
-                    <i className="fas fa-ellipsis-v"></i>
-                  </button>
-                  {menuActivo === comentario.id && (
-                    <div className="comentario-menu-dropdown">
-                      {/* El botón "Editar" solo lo verá el autor */}
-                  {user.idUsuario === comentario.idUsuario && (
-                      <button onClick={() => {
-                        handleEditarComentario(comentario);
-                        setMenuActivo(null); // Cierra el menú al hacer clic en Editar
-                      }}>
-                        Editar
-                      </button>
-                  )}
-                      <button onClick={() => {
-                        handleEliminarComentario(comentario.id);
-                      }}>
-                        Eliminar
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
+                    <button
+                      className="comentario-menu-button"
+                      onClick={() => handleMenuClick(comentario.id)}
+                    >
+                      <i className="fas fa-ellipsis-v"></i>
+                    </button>
+                    {menuActivo === comentario.id && (
+                      <div className="comentario-menu-dropdown">
+                        {user.idUsuario === comentario.idUsuario && (
+                          <button
+                            onClick={() => {
+                              handleEditarComentario(comentario);
+                              setMenuActivo(null); // Cierra el menú al hacer clic en Editar
+                            }}
+                          >
+                            Editar
+                          </button>
+                        )}
+                        <button
+                          onClick={() => {
+                            handleEliminarComentario(comentario.id);
+                          }}
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
             </li>
           ))}
         </ul>
