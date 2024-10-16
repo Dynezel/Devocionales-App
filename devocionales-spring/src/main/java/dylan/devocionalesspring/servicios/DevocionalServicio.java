@@ -1,13 +1,8 @@
 package dylan.devocionalesspring.servicios;
 
-import dylan.devocionalesspring.entidades.Comentario;
-import dylan.devocionalesspring.entidades.Devocional;
-import dylan.devocionalesspring.entidades.MeGusta;
+import dylan.devocionalesspring.entidades.*;
 import dylan.devocionalesspring.enumeraciones.Rol;
-import dylan.devocionalesspring.entidades.Usuario;
-import dylan.devocionalesspring.repositorios.ComentarioRepositorio;
-import dylan.devocionalesspring.repositorios.DevocionalRepositorio;
-import dylan.devocionalesspring.repositorios.UsuarioRepositorio;
+import dylan.devocionalesspring.repositorios.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,11 +20,15 @@ public class DevocionalServicio {
 
     @Autowired
     private DevocionalRepositorio devocionalRepositorio;
-
+    @Autowired
+    private NotificacionRepositorio notificacionRepositorio;
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
     @Autowired
     private ComentarioRepositorio comentarioRepositorio;
+
+    @Autowired
+    private AmistadRepositorio amistadRepositorio;
     @Autowired
     private ComentarioServicio comentarioServicio;
 

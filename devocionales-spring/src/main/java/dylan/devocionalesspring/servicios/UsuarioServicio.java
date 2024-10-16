@@ -2,15 +2,10 @@ package dylan.devocionalesspring.servicios;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
-import dylan.devocionalesspring.entidades.Comentario;
-import dylan.devocionalesspring.entidades.Devocional;
-import dylan.devocionalesspring.entidades.Imagen;
-import dylan.devocionalesspring.entidades.Usuario;
+import dylan.devocionalesspring.entidades.*;
 import dylan.devocionalesspring.enumeraciones.Rol;
 import dylan.devocionalesspring.excepciones.MiExcepcion;
 import dylan.devocionalesspring.excepciones.UsuarioNoEncontradoExcepcion;
@@ -44,10 +39,19 @@ public class UsuarioServicio implements UserDetailsService {
     private DevocionalRepositorio devocionalRepositorio;
 
     @Autowired
+    private NotificacionRepositorio notificacionRepositorio;
+
+    @Autowired
     private MensajeRepositorio mensajeRepositorio;
 
     @Autowired
     private SeguidorRepositorio seguidorRepositorio;
+
+    @Autowired
+    private AmistadRepositorio amistadRepositorio;
+
+    @Autowired
+    private NotificacionServicio notificacionServicio;
 
     private HttpServletRequest request;
 
@@ -102,11 +106,49 @@ public class UsuarioServicio implements UserDetailsService {
 
     @Transactional
     public Devocional agregarDevocionalAUsuario(String email, Devocional devocional) throws UsuarioNoEncontradoExcepcion {
+        // Obtener el usuario que está creando el devocional
         Usuario usuario = obtenerPerfilUsuario(email);
-        devocional.setFechaCreacion(devocional.getFechaCreacion()); // Fecha de creación actual
-        usuario.getDevocionales().add(devocional);
-        usuarioRepositorio.save(usuario); // Se guardará el usuario con los nuevos devocionales
-        return devocional;
+
+        // Configurar la fecha de creación del devocional
+        devocional.setFechaCreacion(LocalDateTime.now());
+
+        // Guardar el devocional para obtener el ID asignado por la base de datos
+        Devocional devocionalGuardado = devocionalRepositorio.save(devocional);
+
+        // Asociar el devocional guardado al usuario
+        usuario.getDevocionales().add(devocionalGuardado);
+        usuarioRepositorio.save(usuario);
+
+        // Obtener amistades aceptadas del usuario
+        List<Amistad> amistades = amistadRepositorio.findByUsuarioSolicitanteOrUsuarioAmigoAndEstado(
+                usuario, usuario, Amistad.EstadoAmistad.ACEPTADA);
+
+        // Crear una notificación para cada amigo
+        amistades.forEach(amistad -> {
+            // Obtener el usuario amigo correspondiente en cada amistad
+            Usuario amigo = amistad.getUsuarioAmigo().equals(usuario) ? amistad.getUsuarioSolicitante() : amistad.getUsuarioAmigo();
+
+            // Generar URL de notificación para el devocional creado, ahora con ID asignado
+            String urlNotificacion = "/devocional/" + devocionalGuardado.getId() + "?autorId=" + usuario.getIdUsuario();
+
+            // Verificar si ya existe una notificación similar
+            Optional<Notificacion> notificacionExistente = notificacionRepositorio.findByTipoAndUsuarioEmisorIdAndUrl(
+                    "devocionalcreado", usuario.getIdUsuario(), urlNotificacion);
+
+            if (notificacionExistente.isEmpty()) {
+                // Crear y guardar una nueva notificación si no existe
+                Notificacion notificacion = notificacionServicio.crearNotificacion(
+                        "devocionalcreado",
+                        usuario.getNombre() + " ha publicado un nuevo devocional: " + devocionalGuardado.getTitulo(),
+                        Collections.singletonList(amigo.getIdUsuario()),
+                        usuario.getIdUsuario(),
+                        urlNotificacion
+                );
+                notificacionRepositorio.save(notificacion);
+            }
+        });
+
+        return devocionalGuardado;
     }
 
     @Transactional

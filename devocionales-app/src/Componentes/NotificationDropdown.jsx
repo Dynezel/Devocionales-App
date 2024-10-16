@@ -51,7 +51,7 @@ const NotificationDropdown = ({ user }) => {
 
       if (notification.tipo === 'mensaje') {
         setNotificationActiva(notification.usuarioEmisorId);
-      } else if (notification.tipo === 'megusta' || notification.tipo === "comentario") {
+      } else if (notification.tipo === 'megusta' || notification.tipo === "comentario" || notification.tipo === "devocionalcreado") {
         navigate(notification.url);
       }
     } catch (error) {
