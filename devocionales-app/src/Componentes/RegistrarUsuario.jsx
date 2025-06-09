@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import imageDefault from '../Images/default-image-profile.png'
+import bannerDefault from "../Images/banner-default.png";
 
 export default function RegistrarUsuario() {
   const [nombre, setNombre] = useState("");
@@ -25,6 +27,12 @@ export default function RegistrarUsuario() {
       if (contrasenia !== contrasenia2) {
         setError("Las contraseñas no coinciden.");
         return;
+      }
+      if (!archivo){
+        setArchivo({imageDefault})
+      }
+      if (!banner) {
+        setBanner({bannerDefault})
       }
 
       const formData = new FormData();
