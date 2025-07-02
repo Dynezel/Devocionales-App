@@ -6,4 +6,9 @@ public class MiExcepcion extends Exception {
         super(msg);
     }
 
+
+    public String usuarioEncontrado(String msg, String email) {
+        return("El usuario con el email: " + email + " Ya existe");
+    }
+
 }

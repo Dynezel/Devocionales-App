@@ -38,7 +38,7 @@ public class SeguridadWeb {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://localhost:5173"); // La URL de tu frontend React
+        config.addAllowedOrigin("https://devocionales-app-frontend.vercel.app"); // La URL de tu frontend React
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setAllowCredentials(true); // Permitir cookies de sesión
