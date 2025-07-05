@@ -16,11 +16,8 @@ public class Imagen implements Serializable {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
-
     private String nombre;
-
     private String mime;
-
     private String rutaImagen;
 
     @Lob

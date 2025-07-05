@@ -2,6 +2,8 @@ package dylan.devocionalesspring;
 
 import dylan.devocionalesspring.servicios.UsuarioServicio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -9,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.messaging.MessageSecurityMetadataSourceRegistry;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -38,7 +41,7 @@ public class SeguridadWeb {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("https://devocionales-app-frontend.vercel.app"); // La URL de tu frontend React
+        config.addAllowedOrigin("http://localhost:5173"); // La URL de tu frontend React
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setAllowCredentials(true); // Permitir cookies de sesión
@@ -68,5 +71,12 @@ public class SeguridadWeb {
                         .permitAll())
                 .cors(withDefaults());
         return http.build();
+    }
+
+    @Bean
+    public ServletWebServerFactory servletContainer() {
+        TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();
+        factory.addContextCustomizers(context -> context.setUseHttpOnly(true));
+        return factory;
     }
 }

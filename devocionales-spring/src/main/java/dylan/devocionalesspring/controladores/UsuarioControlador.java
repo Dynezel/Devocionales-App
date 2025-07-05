@@ -66,9 +66,9 @@ public class UsuarioControlador {
 
             return ResponseEntity.ok("Usuario registrado correctamente");
         } catch (MiExcepcion ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Hola: " + ex.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor, AYUDAAA");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("El siguiente error ha sido arrojado: " + e.getMessage());
         }
     }
 

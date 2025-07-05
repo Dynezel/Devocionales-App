@@ -26,7 +26,6 @@ public class MensajeControlador {
     private MensajeRepositorio mensajeRepositorio;
 
     @PostMapping("/enviar")
-    @SendTo("/topic/build")
     public ResponseEntity<Mensaje> enviarMensaje(@RequestBody @Payload Map<String, String> payload) {
         Long emisorId = Long.parseLong(payload.get("emisorId"));
         Long receptorId = Long.parseLong(payload.get("receptorId"));
@@ -37,24 +36,22 @@ public class MensajeControlador {
     }
 
     @GetMapping("/usuario/{receptorId}")
-    @SendTo("/topic/build")
     public ResponseEntity<List<Mensaje>> obtenerMensajes(@PathVariable Long receptorId) {
         List<Mensaje> mensajes = mensajeServicio.obtenerMensajes(receptorId);
         return ResponseEntity.ok(mensajes);
     }
 
     @GetMapping("/conversaciones/{usuarioActualId}")
-    @SendTo("/topic/build")
     public List<Usuario> obtenerConversaciones(@PathVariable("usuarioActualId") Long usuarioActualId) {
         return mensajeRepositorio.findConversacionesPorUsuario(usuarioActualId);
     }
 
     @GetMapping("/conversacion")
-    @SendTo("/topic/build")
-    public ResponseEntity<List<Mensaje>> obtenerConversacion(@RequestParam Long emisorId, @RequestParam Long receptorId,
-                                                             SimpMessageHeaderAccessor headerAccessor) {
+    public ResponseEntity<List<Mensaje>> obtenerConversacion(
+            @RequestParam Long emisorId,
+            @RequestParam Long receptorId) {
+
         List<Mensaje> conversacion = mensajeServicio.obtenerConversacion(emisorId, receptorId);
-        headerAccessor.getSessionAttributes().put("username", receptorId);
         return ResponseEntity.ok(conversacion);
     }
 }

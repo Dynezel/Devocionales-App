@@ -83,12 +83,12 @@ public class UsuarioServicio implements UserDetailsService {
         usuario.setContrasenia(new BCryptPasswordEncoder().encode(contrasenia));
         usuario.setRol(Rol.USUARIO);
 
-        if (!fotoArchivo.isEmpty()) {
+        if (fotoArchivo != null && !fotoArchivo.isEmpty()) {
             Imagen fotoPerfil = imagenServicio.guardarImagen(fotoArchivo);
             usuario.setFotoPerfil(fotoPerfil);
         }
 
-        if (!bannerArchivo.isEmpty()) {
+        if (bannerArchivo != null && !bannerArchivo.isEmpty()) {
             Imagen bannerPerfil = imagenServicio.guardarImagen(bannerArchivo);
             usuario.setBannerPerfil(bannerPerfil);
         }
