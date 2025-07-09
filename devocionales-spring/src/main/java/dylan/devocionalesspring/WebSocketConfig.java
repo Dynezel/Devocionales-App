@@ -20,6 +20,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws-notifications").setAllowedOrigins("https://devocionales-app-frontend.vercel.app").withSockJS(); //En producción, reemplazar setAllowedOrigins("*") por dominios específicos.
+        registry.addEndpoint("/ws-notifications").setAllowedOrigins("https://devocionales-app-frontend.vercel.app").withSockJS();
     }
 }
