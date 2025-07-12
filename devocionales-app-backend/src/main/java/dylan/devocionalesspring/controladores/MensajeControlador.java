@@ -6,6 +6,7 @@ import dylan.devocionalesspring.repositorios.MensajeRepositorio;
 import dylan.devocionalesspring.servicios.MensajeServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -32,13 +33,19 @@ public class MensajeControlador {
         String contenido = payload.get("contenido");
 
         Mensaje mensaje = mensajeServicio.enviarMensaje(emisorId, receptorId, contenido);
-        return ResponseEntity.ok(mensaje);
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(mensaje);
     }
 
     @GetMapping("/usuario/{receptorId}")
     public ResponseEntity<List<Mensaje>> obtenerMensajes(@PathVariable Long receptorId) {
         List<Mensaje> mensajes = mensajeServicio.obtenerMensajes(receptorId);
-        return ResponseEntity.ok(mensajes);
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(mensajes);
     }
 
     @GetMapping("/conversaciones/{usuarioActualId}")
@@ -52,6 +59,9 @@ public class MensajeControlador {
             @RequestParam Long receptorId) {
 
         List<Mensaje> conversacion = mensajeServicio.obtenerConversacion(emisorId, receptorId);
-        return ResponseEntity.ok(conversacion);
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(conversacion);
     }
 }
